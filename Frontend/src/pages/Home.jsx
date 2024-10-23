@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../components/navbar'
+import ImageCarousel from '../components/home/ImageCarousel'
 
 const Home = () => {
   return (
     <div>
       <Navbar />
-      <h1>this is the home page
-      </h1>
+      <div className='w-full'>
+      <ImageCarousel />
+      </div>    
     </div>
   )
 }
