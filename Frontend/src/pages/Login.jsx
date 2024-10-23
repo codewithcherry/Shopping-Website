@@ -1,10 +1,11 @@
 import React from 'react'
 import Navbar from '../components/navbar'
+import LoginForm from '../components/Authentication/Login/LoginForm'
 const Login = () => {
   return (
     <div>
         <Navbar />
-        <h1>This is Login page</h1>
+        <LoginForm />
     </div>
   )
 }
