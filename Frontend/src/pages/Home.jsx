@@ -6,9 +6,9 @@ const Home = () => {
   return (
     <div>
       <Navbar />
-      <div className='w-full'>
+      
       <ImageCarousel />
-      </div>    
+         
     </div>
   )
 }

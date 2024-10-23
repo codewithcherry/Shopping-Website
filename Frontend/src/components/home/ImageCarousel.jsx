@@ -15,7 +15,7 @@ const Carousel = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       nextImage();
-    }, 4000); // Change image every 3 seconds
+    }, 3000); // Change image every 3 seconds
 
     return () => clearInterval(intervalId); // Cleanup on unmount
   }, [currentIndex]);
@@ -39,7 +39,7 @@ const Carousel = () => {
   };
 
   return (
-    <div className="relative w-full max-w-[1244px] max-h-[500px] mx-auto overflow-hidden">
+    <div className="relative -z-1 w-full mt-[0.5px] max-h-[500px] mx-auto overflow-hidden">
       <div
         className={`flex transition-transform duration-500 ease-in-out transform`}
         style={{
