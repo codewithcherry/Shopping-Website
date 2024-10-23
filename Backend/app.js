@@ -17,7 +17,7 @@ const corsOptions={
 //cnfigure cors
 app.use(cors(corsOptions));
 // Define a simple route
-app.use(shopRouter);
+app.use('/products',shopRouter);
 
 //connect database
 
