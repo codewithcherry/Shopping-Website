@@ -1,11 +1,12 @@
 import React from 'react'
 import Navbar from '../components/navbar'
+import SignupForm from '../components/Authentication/Signup/SignupForm'
 
 const Signup = () => {
   return (
     <div>
         <Navbar />
-      <h1>This is the signup page</h1>
+        <SignupForm />
     </div>
   )
 }
