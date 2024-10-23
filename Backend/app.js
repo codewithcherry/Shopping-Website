@@ -1,5 +1,7 @@
 const express = require('express');
 const cors=require('cors');
+const shopRouter=require("./routes/shopRoute");
+
 const app = express();
 
 
@@ -13,9 +15,7 @@ const corsOptions={
 //cnfigure cors
 app.use(cors(corsOptions));
 // Define a simple route
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
+app.use(shopRouter);
 
 // Start the server
 const PORT =3000;
