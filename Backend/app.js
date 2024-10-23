@@ -1,10 +1,12 @@
 const express = require('express');
 const cors=require('cors');
+require('dotenv').config();
+const DB=require("./database/database");
 const shopRouter=require("./routes/shopRoute");
 
 const app = express();
 
-
+const URI=process.env.MONGO_URI;
 const corsOptions={
   origin: ['http://localhost:3000','http://localhost:5173', 'https://yourfrontenddomain.com'], // Replace with your allowed domains
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods
@@ -16,6 +18,10 @@ const corsOptions={
 app.use(cors(corsOptions));
 // Define a simple route
 app.use(shopRouter);
+
+//connect database
+
+DB.connectDb(URI);
 
 // Start the server
 const PORT =3000;
