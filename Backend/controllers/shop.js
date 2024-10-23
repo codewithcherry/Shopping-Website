@@ -1,3 +1,14 @@
+const Product=require("../models/product");
+
 exports.getHome=(req,res,next)=>{
-    res.send('this is home page');
+    Product.find().
+    then(products=>{
+        res.status(200).json({
+            success: true,
+            products: products
+          });
+    })
+    .catch(err=>{
+        console.log(error);
+    })
 }
