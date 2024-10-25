@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'; // Correct import
-import {Link} from 'react-router-dom'
+import {Link,useNavigation} from 'react-router-dom'
 import Alert from '../../Alert/Alert';
+import axios from 'axios'
 
 const SignupForm = () => {
   const [email, setEmail] = useState('');
@@ -10,13 +11,40 @@ const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(false); // Toggle for password visibility
   const [alert, setAlert] = useState();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password === confirmPassword) {
-      setAlert({type:'success',message:'Account created successfully'});
-      // Add your form handling logic here
-    } else {
-      setAlert({type:'error',message:'Passwords do not match'});
+    if(password!==confirmPassword){
+      setAlert(
+        {
+          type:'error',
+          message:"Passwords doesnot match"
+        })
+    }
+    else{
+      const data=JSON.stringify({email:email,password:password});
+      const config={
+                    headers: {
+                      'Content-Type': 'application/json',
+                            }
+                    };
+      axios.post("http://localhost:3000/register",data,config)
+      .then(res=>{
+        setAlert({type:res.data.type,message:res.data.message})
+          if(res.data.type=="success"){
+            setEmail('')
+            setPassword('')
+            setConfirmPassword('')
+            useNavigation("/login")
+          }
+      })
+      .catch(err=>{
+        setAlert(
+          {
+            type:'error',
+            message:"error in posting"
+          }
+        )
+      })
     }
   };
 
