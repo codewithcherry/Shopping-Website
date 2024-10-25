@@ -2,31 +2,34 @@ const User = require("../models/user");
 const bcrypt = require('bcrypt');
 
 exports.registerAccount = async (req, res, next) => {
-  const { email, password } = req.body; // Destructuring for cleaner access
-  User.findOne({ useremail: email })
-    .then(user => {
-      if (user) {
-        return res.status(200).json({ type: "info", message: "User with same emailid exists" });
-      }
-      return bcrypt.hash(password, 12);
-    })
-    .then(hashedPassword => {
-      if (!hashedPassword) return; // Check if the password hash succeeded
+  const { email, password } = req.body;
 
-      const newUser = new User({
-        useremail: email,
-        password: hashedPassword
-      });
+  try {
+    // Check if the user already exists
+    const existingUser = await User.findOne({ useremail: email });
+    if (existingUser) {
+      return res.status(200).json({ type: "info", message: "User with same email already exists" });
+    }
 
-      return newUser.save();
-    })
-    .then(result => {
-      if (result) {
-        return res.json({ type: "success", message: "Account created successfully" });
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({ type: "error", message: "Account signup failed" });
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 12);
+    if (!hashedPassword) {
+      return res.status(500).json({ type: "error", message: "Password hashing failed" });
+    }
+
+    // Create the new user object
+    const newUser = new User({
+      useremail: email,
+      password: hashedPassword,
     });
+
+    // Save the new user
+    const result = await newUser.save();
+    if (result) {
+      return res.json({ type: "success", message: "Account created successfully" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ type: "error", message: "Account signup failed" });
+  }
 };
