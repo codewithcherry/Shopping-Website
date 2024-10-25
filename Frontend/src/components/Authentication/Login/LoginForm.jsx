@@ -1,16 +1,40 @@
 import React from 'react'
 import { useState } from 'react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'; // Correct Heroicons import
+import axios from 'axios' ;
+import Alert from '../../Alert/Alert';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false); // Toggle for password visibility
-  
-    const handleSubmit = (e) => {
+    const [alert,setAlert]=useState()
+
+    const navigate=useNavigate()
+
+    const handleSubmit = async(e) => {
       e.preventDefault();
       console.log('Login form submitted');
       // Add your form handling logic here
+      const data=JSON.stringify({email:email,password:password});
+      const config={
+        headers: { 'Content-Type': 'application/json' }
+      }
+      axios.post("http://localhost:3000/login", data, config)
+        .then(res => {
+          setAlert({ type: res.data.type, message: res.data.message });
+          if (res.data.type === "success") {
+            navigate("/")     
+          }
+        })
+        .catch(err => {
+          // console.log(err.response.data)
+          setAlert({
+            type: err.response.data.type,
+            message: err.response.data.message,
+          });
+        })
     };
   
     const togglePasswordVisibility = () => {
@@ -18,6 +42,8 @@ const LoginForm = () => {
     };
   
     return (
+      <>
+      {alert&& <Alert type={alert.type} message={alert.message} onclose={()=>{setAlert(null)}}/>}
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-8">
           <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">
@@ -98,6 +124,7 @@ const LoginForm = () => {
           </form>
         </div>
       </div>
+      </>
     );
 }
 
