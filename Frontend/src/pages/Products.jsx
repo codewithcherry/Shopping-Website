@@ -21,8 +21,8 @@ const Products = () => {
     axios.get(`http://localhost:3000/products?page=`+page)
       .then(result => {
         // Use result.data instead of result.json() since Axios automatically parses JSON
-        console.log(result.data.products);
-        console.log(result.data.pagination);
+        // console.log(result.data.products);
+        // console.log(result.data.pagination);
         setProducts(result.data.products); 
         setPagination(result.data.pagination);
       })

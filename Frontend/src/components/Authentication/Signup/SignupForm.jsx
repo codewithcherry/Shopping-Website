@@ -13,7 +13,7 @@ const SignupForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (password === confirmPassword) {
-      console.log('Login form submitted');
+      setAlert({type:'success',message:'Account created successfully'});
       // Add your form handling logic here
     } else {
       setAlert({type:'error',message:'Passwords do not match'});
