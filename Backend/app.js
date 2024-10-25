@@ -3,6 +3,7 @@ const cors=require('cors');
 require('dotenv').config();
 const DB=require("./database/database");
 const shopRouter=require("./routes/shopRoute");
+const authRouter=require("./routes/authRoute");
 
 const app = express();
 
@@ -18,6 +19,7 @@ const corsOptions={
 app.use(cors(corsOptions));
 // Define a simple route
 app.use('/products',shopRouter);
+app.use(authRouter);
 
 //connect database
 
