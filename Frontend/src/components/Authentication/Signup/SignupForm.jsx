@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'; // Correct import
 import {Link} from 'react-router-dom'
+import Alert from '../../Alert/Alert';
 
 const SignupForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false); // Toggle for password visibility
+  const [alert, setAlert] = useState();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,7 +16,7 @@ const SignupForm = () => {
       console.log('Login form submitted');
       // Add your form handling logic here
     } else {
-      console.log('Passwords do not match');
+      setAlert({type:'error',message:'Passwords do not match'});
     }
   };
 
@@ -23,7 +25,9 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <>
+    {alert&&< Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">     
       <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-8">
         <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">
           Signup to create Account
@@ -130,6 +134,7 @@ const SignupForm = () => {
         </form>
       </div>
     </div>
+    </>
   );
 };
 
