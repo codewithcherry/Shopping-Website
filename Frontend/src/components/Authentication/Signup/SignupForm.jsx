@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'; // Correct import
-import {Link,useNavigation} from 'react-router-dom'
+import {Link,useNavigate} from 'react-router-dom'
 import Alert from '../../Alert/Alert';
 import axios from 'axios'
 
@@ -10,41 +10,42 @@ const SignupForm = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false); // Toggle for password visibility
   const [alert, setAlert] = useState();
+  const navigate = useNavigate(); // useNavigate at the component top level
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(password!==confirmPassword){
-      setAlert(
-        {
-          type:'error',
-          message:"Passwords doesnot match"
+
+    if (password !== confirmPassword) {
+      setAlert({
+        type: 'error',
+        message: "Passwords do not match",
+      });
+    } else {
+      const data = JSON.stringify({ email, password });
+      const config = {
+        headers: { 'Content-Type': 'application/json' },
+      };
+
+      axios.post("http://localhost:3000/register", data, config)
+        .then(res => {
+          setAlert({ type: res.data.type, message: res.data.message });
+          
+          if (res.data.type === "success") {
+            setEmail('');
+            setPassword('');
+            setConfirmPassword('');
+            setTimeout(()=>{
+              navigate("/login")
+            },3000)
+             // Navigate to login after successful signup
+          }
         })
-    }
-    else{
-      const data=JSON.stringify({email:email,password:password});
-      const config={
-                    headers: {
-                      'Content-Type': 'application/json',
-                            }
-                    };
-      axios.post("http://localhost:3000/register",data,config)
-      .then(res=>{
-        setAlert({type:res.data.type,message:res.data.message})
-          if(res.data.type=="success"){
-            setEmail('')
-            setPassword('')
-            setConfirmPassword('')
-            useNavigation("/login")
-          }
-      })
-      .catch(err=>{
-        setAlert(
-          {
-            type:'error',
-            message:"error in posting"
-          }
-        )
-      })
+        .catch(err => {
+          setAlert({
+            type: 'error',
+            message: "Error in posting",
+          });
+        });
     }
   };
 
