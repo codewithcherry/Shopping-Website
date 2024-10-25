@@ -33,3 +33,26 @@ exports.registerAccount = async (req, res, next) => {
     res.status(500).json({ type: "error", message: "Account signup failed" });
   }
 };
+
+
+exports.loginToAccount = async (req, res, next) => {
+  const { email, password } = req.body;
+  // console.log(email, password);
+
+  try {
+    const user = await User.findOne({ useremail: email });
+    if (!user) {
+      return res.status(404).json({ type:"error", message: "User does not exist" });
+    }
+    const isMatch = await bcrypt.compare(password, user.password); // Compare with the user's hashed password
+    if (isMatch) {
+      return res.status(200).json({type:"success", message: "Login successful" });
+    } else {
+      return res.status(401).json({ type:"error",message: "Password does not match" });
+    }
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    return res.status(500).json({ type:"error",message: "Internal server error" });
+  }
+};
+
