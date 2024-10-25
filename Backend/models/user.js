@@ -44,11 +44,9 @@ const orderSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: false,
-    unique: true,
-    trim: true,
+    required:false
   },
-  email: {
+  useremail: {
     type: String,
     required: true,
     unique: true,

@@ -22,7 +22,7 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json())
 // Define a simple route
 app.use('/products',shopRouter);
-app.use('/',authRouter);
+app.use(authRouter);
 
 //connect database
 
