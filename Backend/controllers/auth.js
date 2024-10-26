@@ -50,7 +50,7 @@ exports.loginToAccount = async (req, res, next) => {
     if (isMatch) {
       // Generate a JWT with the user info
     const token = jwt.sign(
-      { userId: user._id, useremail: user.useremail}, // Payload (user info)
+      { userId: user._id, useremail: user.useremail,role:user.role}, // Payload (user info)
       jwt_secret, // Secret key
       { expiresIn: '1h' } // Token expiry time
     );
