@@ -1,4 +1,5 @@
 const Product=require("../models/product");
+const User=require("../models/user");
 
 exports.getHome=(req,res,next)=>{
     const page=req.query.page;
@@ -25,4 +26,18 @@ exports.getHome=(req,res,next)=>{
     .catch(err=>{
         console.log(err);
     })
+}
+
+exports.getCart=(req,res,next)=>{
+    const user=req.user;
+
+    User.findById(user.userId)
+    .then(user=>{
+        res.json(user)
+    })
+    .catch(err=>{
+        res.status(404).json("cart not found")
+    })
+
+    
 }

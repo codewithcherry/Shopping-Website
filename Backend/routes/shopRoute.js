@@ -5,6 +5,6 @@ const validateController=require('../controllers/validate');
 const router=express.Router()
 
 router.get("/",shopController.getHome);
-router.get("/cart",validateController.validate,shopController.getCart)
+router.get("/cart",validateController.authenticate,shopController.getCart)
 
 module.exports=router;
