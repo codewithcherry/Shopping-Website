@@ -19,3 +19,20 @@ exports.validate=(req,res,next)=>{
     }
 
 }
+
+exports.authenticate=(req,res,next)=>{
+    const token=req.headers["authorization"].split(" ")[1];
+    if(token){
+         try{
+            const user= jwt.verify(token,jwt_secret)
+            req.user=user
+            next();
+         }
+         catch (err) {
+            res.status(401).json("unauthorised user login to access")
+          }          
+    }
+    else{
+        res.status(403).json("unauthorised user login to access")
+    }
+}
