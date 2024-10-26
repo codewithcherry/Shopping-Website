@@ -4,6 +4,7 @@ require('dotenv').config();
 const DB=require("./database/database");
 const shopRouter=require("./routes/shopRoute");
 const authRouter=require("./routes/authRoute");
+const validateRouter=require('./routes/validateRoutes');
 const bodyParser=require('body-parser')
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(cors(corsOptions));
 //configure body-parser to deal incoming json
 app.use(bodyParser.json())
 // Define a simple route
+app.use(validateRouter);
 app.use('/products',shopRouter);
 app.use(authRouter);
 
