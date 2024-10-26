@@ -1,13 +1,47 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink ,useNavigate} from "react-router-dom";
 import Logo from "../assets/images/Logo.png";
+import axios from 'axios'
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [islogged,setIsLogged]=useState(false)
+  const navigate=useNavigate()
+
+  useEffect(() => {
+    const validateToken = async () => {
+      const token = localStorage.getItem('jwtToken');
+      if (token) {
+        try {
+          const response = await axios.get("http://localhost:3000/validate", {
+            headers: { "Authorization": `Bearer ${token}` },
+          });
+          
+          setIsLogged(true); // Assuming you have a state to track login
+        } catch (error) {
+          console.error("Token validation failed:", error);
+          setIsLogged(false); // Handle invalid token or server error
+        }
+      } else {
+        setIsLogged(false); // No token found
+      }
+    };
+  
+    validateToken();
+  }, []);
+  
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  const handleLogout =()=>{
+    
+    localStorage.removeItem('jwtToken')
+    setIsLogged(false)
+    navigate("/")
+
+  }
 
   return (
     <nav className="bg-indigo-300 shadow-lg">
@@ -42,7 +76,8 @@ const Navbar = () => {
             >
               Products
             </NavLink>
-            <NavLink
+            {
+              !islogged && <NavLink
               to="/orders"
               className={({ isActive }) =>
                 isActive
@@ -52,6 +87,7 @@ const Navbar = () => {
             >
               orders
             </NavLink>
+            }
             <NavLink
               to="/cart"
               className={({ isActive }) =>
@@ -62,7 +98,7 @@ const Navbar = () => {
             >
               Cart
             </NavLink>
-            <NavLink
+            {!islogged && <NavLink
               to="/login"
               className={({ isActive }) =>
                 isActive
@@ -71,8 +107,9 @@ const Navbar = () => {
               }
             >
               Login
-            </NavLink>
-            <NavLink
+            </NavLink>}
+            {
+              !islogged && <NavLink
               to="/signup"
               className={({ isActive }) =>
                 isActive
@@ -81,7 +118,9 @@ const Navbar = () => {
               }
             >
               Signup
-            </NavLink>
+            </NavLink>           
+            }
+            {islogged && <button className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2" onClick={handleLogout}>logout</button>}
           </div>
 
           {/* Mobile Menu Button */}
@@ -135,28 +174,51 @@ const Navbar = () => {
           >
             Products
           </NavLink>
-          <NavLink
-            to="/login"
-            className={({ isActive }) =>
-              isActive
-                ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
-                : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+          {
+              !islogged && <NavLink
+              to="/orders"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
+                  : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+              }
+            >
+              orders
+            </NavLink>
             }
-            onClick={toggleMobileMenu} // Close menu on link click
-          >
-            Login
-          </NavLink>
-          <NavLink
-            to="/signup"
-            className={({ isActive }) =>
-              isActive
-                ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
-                : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+            <NavLink
+              to="/cart"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
+                  : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+              }
+            >
+              Cart
+            </NavLink>
+            {!islogged && <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
+                  : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+              }
+            >
+              Login
+            </NavLink>}
+            {
+              !islogged && <NavLink
+              to="/signup"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
+                  : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+              }
+            >
+              Signup
+            </NavLink>           
             }
-            onClick={toggleMobileMenu} // Close menu on link click
-          >
-            Signup
-          </NavLink>
+            {islogged && <button className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2" onClick={handleLogout}>logout</button>}
         </div>
       )}
     </nav>
