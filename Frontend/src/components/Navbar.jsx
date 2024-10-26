@@ -77,7 +77,7 @@ const Navbar = () => {
               Products
             </NavLink>
             {
-              !islogged && <NavLink
+              islogged && <NavLink
               to="/orders"
               className={({ isActive }) =>
                 isActive
@@ -175,7 +175,7 @@ const Navbar = () => {
             Products
           </NavLink>
           {
-              !islogged && <NavLink
+              islogged && <NavLink
               to="/orders"
               className={({ isActive }) =>
                 isActive
