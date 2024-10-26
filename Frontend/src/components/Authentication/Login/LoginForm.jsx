@@ -25,6 +25,7 @@ const LoginForm = () => {
         .then(res => {
           setAlert({ type: res.data.type, message: res.data.message });
           if (res.data.type === "success") {
+            sessionStorage.setItem('jwtToken', res.data.token);
             navigate("/")     
           }
         })
