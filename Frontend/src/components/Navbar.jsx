@@ -43,6 +43,26 @@ const Navbar = () => {
               Products
             </NavLink>
             <NavLink
+              to="/orders"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
+                  : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+              }
+            >
+              orders
+            </NavLink>
+            <NavLink
+              to="/cart"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
+                  : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+              }
+            >
+              Cart
+            </NavLink>
+            <NavLink
               to="/login"
               className={({ isActive }) =>
                 isActive
