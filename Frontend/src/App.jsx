@@ -8,6 +8,8 @@ import NotFound from './pages/NotFound';
 import Orders from './pages/Orders';
 import Cart from './pages/Cart';
 import Admin from './pages/Admin/Admin';
+import Dashboard from './pages/Admin/Dashboard';
+import AdminHome from './components/Admin/AdminHome';
 
 function App() {
   return (
@@ -20,7 +22,10 @@ function App() {
         <Route path="/products" element={<Products/>} />
         <Route path="/orders" element={<Orders />}/> 
         <Route path="/cart" element={<Cart/>}/> 
-        <Route path='/admin' element={<Admin />}/>
+        <Route path='/admin' element={<Admin />} />
+        <Route path='/admin/dashboard' element={<Dashboard />} >
+              <Route path='' element={<AdminHome />} /> 
+        </Route>
         <Route path="*" element={<NotFound />}/> 
       </Routes>
     </Router>
