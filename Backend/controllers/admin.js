@@ -30,3 +30,8 @@ exports.adminLogin = async (req, res, next) => {
         return res.status(500).json({type:"error",message:"Internal server error"});
     }
 };
+
+exports.getDashboard=(req,res,next)=>{
+    const user=req.user;
+    console.log(user);
+}
