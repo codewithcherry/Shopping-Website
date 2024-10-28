@@ -1,8 +1,7 @@
-import React from 'react'
-import { Link , useLocation} from 'react-router-dom';
+import React, { useEffect } from 'react'
+import { Link , useLocation,useNavigate} from 'react-router-dom';
 import {
     HomeIcon,
-    HeartIcon,
     InboxIcon,
     ClipboardIcon,
     TableCellsIcon,
@@ -10,13 +9,12 @@ import {
     CheckCircleIcon,
     UserIcon,
     DocumentTextIcon,
-    ChartBarIcon,
     CogIcon,
     PowerIcon,
     Bars3Icon,
   } from '@heroicons/react/24/outline';
-import { Tooltip } from 'react-tooltip';
 import { useState } from 'react';
+import { isTokenExpired } from './admin';
 
 
 const NavItem = ({ item, isOpen, isActive }) => (
@@ -36,7 +34,7 @@ const NavItem = ({ item, isOpen, isActive }) => (
 const SideNavigation = () => {
     const [isOpen, setIsOpen] = useState(true);
     const location = useLocation();
-  
+    const navigate =useNavigate();
     const navItems = [
       { name: 'Dashboard', icon: HomeIcon, path: '/admin/dashboard' },
       { name: 'Products', icon: TableCellsIcon, path: '/admin/dashboard/products' },
@@ -56,8 +54,34 @@ const SideNavigation = () => {
   
     const footerItems = [
       { name: 'Settings', icon: CogIcon, path: '/admin/dashboard/settings' },
-      { name: 'Logout', icon: PowerIcon, path: '/admin/dashboard/logout' },
+      // { name: 'Logout', icon: PowerIcon, path: '/admin/dashboard/logout' },
     ];
+
+    const signout=()=>{
+      const token=localStorage.getItem("adminToken")
+      if(token){
+        localStorage.removeItem('adminToken')
+      }
+      return navigate("/admin")
+    }
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        const token = localStorage.getItem("adminToken");
+        if (isTokenExpired(token)) {
+          console.log("Token removed");
+          localStorage.removeItem("adminToken");
+          navigate('/admin', { 
+            state: { 
+              type: "info", 
+              message: "Login to your account/session expired" 
+            } 
+          });
+        }
+      }, 60000); // Check every 60 seconds
+  
+      return () => clearInterval(interval); // Corrected cleanup function
+    }, [navigate]);
     return (
       <>
         {/* Sidebar */}
@@ -122,6 +146,13 @@ const SideNavigation = () => {
                 isActive={location.pathname === item.path}
               />
             ))}
+          </div>
+          {/* signout */}
+          <div className="mt-auto">
+            <div className='flex items-center space-x-3 text-md p-2 my-2 rounded-md hover:bg-indigo-600 hover:text-white hover:cursor-pointer transition-colors duration-200' onClick={signout}>
+              <PowerIcon className={isOpen?"w-4 h-4":'w-5 h-5 rounded-full'}/>
+              <span className={`${isOpen ? 'block' : 'hidden'} origin-left duration-200`}>signout</span>
+            </div>
           </div>
         </div>
         </>
