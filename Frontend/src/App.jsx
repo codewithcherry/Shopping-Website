@@ -9,7 +9,17 @@ import Orders from './pages/Orders';
 import Cart from './pages/Cart';
 import Admin from './pages/Admin/Admin';
 import Dashboard from './pages/Admin/Dashboard';
-import AdminHome from './components/Admin/AdminHome';
+import AdminHome from './components/Admin/Dashboard/AdminHome';
+import AdminProducts from './components/Admin/Dashboard/AdminProducts';
+import AdminInbox from './components/Admin/Dashboard/AdminInbox';
+import AdminOrderlist from './components/Admin/Dashboard/AdminOrderlist';
+import AdminProductStock from './components/Admin/Dashboard/AdminProductStock';
+import AdminCalender from './components/Admin/Dashboard/AdminCalender';
+import AdminTodo from './components/Admin/Dashboard/AdminTodo';
+import AdminContact from './components/Admin/Dashboard/AdminContact';
+import AdminInvoice from './components/Admin/Dashboard/AdminInvoice';
+import AdminTeam from './components/Admin/Dashboard/AdminTeam';
+import AdminSettings from './components/Admin/Dashboard/AdminSettings';
 
 function App() {
   return (
@@ -25,6 +35,16 @@ function App() {
         <Route path='/admin' element={<Admin />} />
         <Route path='/admin/dashboard' element={<Dashboard />} >
               <Route path='' element={<AdminHome />} /> 
+              <Route path='products' element={<AdminProducts/>} /> 
+              <Route path='inbox' element={<AdminInbox />} /> 
+              <Route path='orders' element={<AdminOrderlist/>} /> 
+              <Route path='product-stock' element={<AdminProductStock />} /> 
+              <Route path='calendar' element={<AdminCalender />} /> 
+              <Route path='to-do' element={<AdminTodo />} />
+              <Route path='contact' element={<AdminContact/>} />  
+              <Route path='invoice' element={<AdminInvoice />} />
+              <Route path='team' element={<AdminTeam/>} />  
+              <Route path='settings' element={<AdminSettings />} /> 
         </Route>
         <Route path="*" element={<NotFound />}/> 
       </Routes>

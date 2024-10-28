@@ -42,13 +42,12 @@ const SideNavigation = () => {
       { name: 'Products', icon: TableCellsIcon, path: '/admin/dashboard/products' },
       { name: 'Inbox', icon: InboxIcon, path: '/admin/dashboard/inbox' },
       { name: 'Order Lists', icon: ClipboardIcon, path: '/admin/dashboard/orders' },
-      { name: 'Product Stock', icon: ClipboardIcon, path: '/admin/dashboard/stock' },
+      { name: 'Product Stock', icon: ClipboardIcon, path: '/admin/dashboard/product-stock' },
     ];
   
     const pages = [
-      { name: 'Pricing', icon: ChartBarIcon, path: '/admin/dashboard/pricing' },
       { name: 'Calendar', icon: CalendarIcon, path: '/admin/dashboard/calendar' },
-      { name: 'To-Do', icon: CheckCircleIcon, path: '/admin/dashboard/todo' },
+      { name: 'To-Do', icon: CheckCircleIcon, path: '/admin/dashboard/to-do' },
       { name: 'Contact', icon: UserIcon, path: '/admin/dashboard/contact' },
       { name: 'Invoice', icon: DocumentTextIcon, path: '/admin/dashboard/invoice' },
       { name: 'Team', icon: UserIcon, path: '/admin/dashboard/team' },
