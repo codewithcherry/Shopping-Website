@@ -2,15 +2,18 @@ import React, { useState } from 'react';
 import { EyeIcon, EyeSlashIcon} from '@heroicons/react/24/outline';
 import Alert from '../Alert/Alert'
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
 
 const AdminLogin = () => {
+    const navigate=useNavigate()
+    const location=useLocation()
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [alert,setAlert]=useState('');
+    const [alert,setAlert]=useState(location.state || '');
 
-    const navigate=useNavigate()
+    
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -29,11 +32,10 @@ const AdminLogin = () => {
             
             setAlert({type:response.data.type,message:response.data.message})            
             const token=response.data.token
-            localStorage.setItem('adminToken',token)
+            await localStorage.setItem('adminToken',token)
             if(response.data.type=="success"){
                 navigate("/admin/dashboard");
-            }
-            
+            }           
         }
         catch (err) {
             setAlert({type:err.response.data.type,message:err.response.data.message})

@@ -58,7 +58,6 @@ const SideNavigation = () => {
       { name: 'Settings', icon: CogIcon, path: '/admin/dashboard/settings' },
       { name: 'Logout', icon: PowerIcon, path: '/admin/dashboard/logout' },
     ];
-  
     return (
       <>
         {/* Sidebar */}
