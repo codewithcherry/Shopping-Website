@@ -7,6 +7,7 @@ import Products from './pages/Products';
 import NotFound from './pages/NotFound';
 import Orders from './pages/Orders';
 import Cart from './pages/Cart';
+import Admin from './pages/Admin/Admin';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/products" element={<Products/>} />
         <Route path="/orders" element={<Orders />}/> 
         <Route path="/cart" element={<Cart/>}/> 
+        <Route path='/admin' element={<Admin />}/>
         <Route path="*" element={<NotFound />}/> 
       </Routes>
     </Router>
