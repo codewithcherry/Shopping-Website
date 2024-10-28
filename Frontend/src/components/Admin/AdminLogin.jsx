@@ -1,19 +1,50 @@
 import React, { useState } from 'react';
 import { EyeIcon, EyeSlashIcon} from '@heroicons/react/24/outline';
+import Alert from '../Alert/Alert'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const AdminLogin = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [alert,setAlert]=useState('');
 
-    const handleSubmit = (e) => {
+    const navigate=useNavigate()
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Add your authentication logic here
-        console.log("Username:", username);
-        console.log("Password:", password);
+        // console.log("Username:", username);
+        // console.log("Password:", password);
+    
+        try {    
+            const data = JSON.stringify({ username: username, password: password });
+            const config = { 
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            };
+            // Await axios.post to get the response after the request completes
+            const response = await axios.post("http://localhost:3000/admin/login", data, config);
+            
+            setAlert({type:response.data.type,message:response.data.message})            
+            const token=response.data.token
+            localStorage.setItem('adminToken',token)
+            if(response.data.type=="success"){
+                navigate("/admin/dashboard");
+            }
+            
+        }
+        catch (err) {
+            setAlert({type:err.response.data.type,message:err.response.data.message})
+        }
     };
 
+    
+
     return (
+        <>
+        {alert && <Alert type={alert.type} message={alert.message} onClose={()=>{setAlert(null)}}/>}
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="w-full max-w-md p-8 space-y-8 bg-white rounded shadow-lg">
                 <h2 className="text-2xl font-bold text-center text-gray-800">Admin Login</h2>
@@ -68,6 +99,7 @@ const AdminLogin = () => {
                 </form>
             </div>
         </div>
+        </>
     );
 };
 
