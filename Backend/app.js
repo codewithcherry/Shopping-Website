@@ -5,6 +5,7 @@ const DB=require("./database/database");
 const shopRouter=require("./routes/shopRoute");
 const authRouter=require("./routes/authRoute");
 const validateRouter=require('./routes/validateRoutes');
+const adminRouter=require("./routes/adminRoute");
 const bodyParser=require('body-parser')
 
 const app = express();
@@ -24,6 +25,7 @@ app.use(bodyParser.json())
 // Define a simple route
 app.use(validateRouter);
 app.use('/products',shopRouter);
+app.use("/admin",adminRouter)
 app.use(authRouter);
 
 //connect database
