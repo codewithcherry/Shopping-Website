@@ -10,15 +10,5 @@ cloudinary.config({
   api_secret: process.env.Cloudinary_API_SECRET,
 });
 
-// Configure storage for multer to use Cloudinary
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'productsImages', // Optional folder name in Cloudinary
-    allowed_formats: ['jpg', 'jpeg','png'],
-  },
-});
 
-const upload = multer({ storage });
-
-module.exports = { upload, cloudinary };
+module.exports = {cloudinary };
