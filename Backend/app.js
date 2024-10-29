@@ -7,6 +7,7 @@ const authRouter=require("./routes/authRoute");
 const validateRouter=require('./routes/validateRoutes');
 const adminRouter=require("./routes/adminRoute");
 const bodyParser=require('body-parser')
+const uploadRouter=require('./routes/uploadRoute');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json())
 // Define a simple route
 app.use(validateRouter);
+app.use('/upload',uploadRouter)
 app.use('/products',shopRouter);
 app.use("/admin",adminRouter)
 app.use(authRouter);
