@@ -33,5 +33,5 @@ exports.adminLogin = async (req, res, next) => {
 
 exports.getDashboard=(req,res,next)=>{
     const user=req.user;
-    console.log(user);
+    console.log("dashboard rendered");
 }
