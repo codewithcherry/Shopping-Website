@@ -6,6 +6,8 @@ import ProductImageUploader from './components/add/ProductImageUploader';
 import ProductData from './components/add/ProductData';
 import ProductStockDetails from './components/add/ProductStockDetails';
 import ProductPriceDetails from './components/add/ProductPriceDetails';
+import { useCallback } from 'react';
+
 
 const AdminAddProduct = () => {
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -30,34 +32,33 @@ const AdminAddProduct = () => {
             finalPrice: 0,
           });
       
-    const handleDataChange = (data) => {
-            setProductData(data);
-            console.log('Current Product Data:', data);
-            };
+    const handleDataChange = useCallback((data) => {
+      setProductData(data);  
+      },[])
 
-    const handleImagesChange = (images) => {
-        setProductImages(images);
-    };
+    const handleImagesChange = useCallback((images) => {
+      setProductImages(images);
+  },[]);
 
-    const handleSizeSelectionChange = (clothingType, sizes) => {
-        setSelectedClothingType(clothingType);
-        setSelectedSizes(sizes);
-    };
+    const handleSizeSelectionChange = useCallback((clothingType, sizes) => {
+      setSelectedClothingType(clothingType);
+      setSelectedSizes(sizes);
+  },[])
     
-    const handleSelectionCategory = (category, subCategory) => {
+    const handleSelectionCategory = useCallback((category, subCategory) => {
       setSelectedCategory(category);
       setSelectedSubCategory(subCategory);
-    };
+    },[]);
 
-    const handleStockChange = (data) => {
-        setStockData(data);
-        console.log('Current Stock Data:', data);
-      };
+    const handleStockChange = useCallback((data) => {
+      setStockData(data);
+      
+    },[])
 
-    const handlePriceChange = (data) => {
-        setPriceData(data);
-        console.log('Current Price Data:', data);
-      };
+    const handlePriceChange = useCallback((data) => {
+      setPriceData(data);
+      
+    },[])
   return (
     <div className='flex justify-center bg-gray-100 w-full'>
         <div className='w-[60%]'>

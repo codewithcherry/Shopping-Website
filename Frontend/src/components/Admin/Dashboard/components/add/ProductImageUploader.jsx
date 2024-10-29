@@ -1,18 +1,41 @@
-import React, { useState } from 'react';
-import {TrashIcon} from '@heroicons/react/24/outline'
+import React, { useEffect, useState } from 'react';
+import {TrashIcon,CloudArrowUpIcon} from '@heroicons/react/24/outline'
+import axios from 'axios'
 
 const ProductImageUploader = ({ onImagesChange }) => {
   const [images, setImages] = useState([]);
+  const [uploading,setuploading]=useState(false)
 
-  const handleImageUpload = (event) => {
-    const files = Array.from(event.target.files);
-    const newImages = files.slice(0, 4 - images.length); // Limit to max 4 images
-    const imageUrls = newImages.map((file) => URL.createObjectURL(file));
-    const updatedImages = [...images, ...imageUrls];
-    
-    setImages(updatedImages);
-    onImagesChange(updatedImages); // Send updated images to parent
-  };
+  const handleImageUpload = async (event) => {
+    setuploading(true);
+    const file = event.target.files[0]; // Get the first file only
+    if (file) {
+        const formData = new FormData();
+        formData.append('image', file); 
+        try {
+            const response = await axios.post('http://localhost:3000/upload/add-product-image', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            
+            const newImageUrl = response.data.imageUrl;
+
+                // Update local images state
+                setImages((prevImages) => [...prevImages, newImageUrl]);
+
+                // Send updated images to parent
+                onImagesChange([...images, newImageUrl]);
+
+                setuploading(false);
+        } catch (err) {
+            console.log(err);
+            setuploading(false); // Make sure to reset uploading in case of error
+        }
+    }
+};
+
+ 
 
   const handleRemoveImage = (index) => {
     const updatedImages = images.filter((_, i) => i !== index);
@@ -52,12 +75,12 @@ const ProductImageUploader = ({ onImagesChange }) => {
             htmlFor="image-upload"
             className="flex items-center justify-center w-20 h-20 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300 transition"
           >
-            <span className="text-2xl text-gray-500">+</span>
+            {!uploading?<span className="text-2xl text-gray-500">+</span>
+            :<CloudArrowUpIcon className='animate-ping w-6 h-6' />}
             <input
               id="image-upload"
               type="file"
               accept="image/*"
-              multiple
               onChange={handleImageUpload}
               className="hidden"
             />
