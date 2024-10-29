@@ -12,6 +12,7 @@ import {
     CogIcon,
     PowerIcon,
     Bars3Icon,
+    PlusIcon
   } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { isTokenExpired } from './admin';
@@ -38,6 +39,7 @@ const SideNavigation = () => {
     const navItems = [
       { name: 'Dashboard', icon: HomeIcon, path: '/admin/dashboard' },
       { name: 'Products', icon: TableCellsIcon, path: '/admin/dashboard/products' },
+      { name: 'Add Product', icon: PlusIcon, path: '/admin/dashboard/add-product' },
       { name: 'Inbox', icon: InboxIcon, path: '/admin/dashboard/inbox' },
       { name: 'Order Lists', icon: ClipboardIcon, path: '/admin/dashboard/orders' },
       { name: 'Product Stock', icon: ClipboardIcon, path: '/admin/dashboard/product-stock' },
@@ -88,7 +90,7 @@ const SideNavigation = () => {
         <div
           className={`${
             isOpen ? 'w-64' : 'w-20'
-          } bg-white h-svh p-5 pt-8 duration-300 relative text-black shadow-xl rounded-sm`}
+          } sticky top-0 left-0 bg-white h-svh p-5 pt-8 duration-300 relative text-black shadow-xl rounded-sm`}
         >
           {/* Toggle Button */}
           <button
