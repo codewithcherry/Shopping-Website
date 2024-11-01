@@ -2,6 +2,7 @@ const Admin = require("../models/admin");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const jwt_secret=process.env.JWT_SECRET
+const Product=require("../models/product")
 
 exports.adminLogin = async (req, res, next) => {
     const { username, password } = req.body;
@@ -28,6 +29,48 @@ exports.adminLogin = async (req, res, next) => {
 
     } catch (err) {
         return res.status(500).json({type:"error",message:"Internal server error"});
+    }
+};
+
+exports.addProduct = async (req, res, next) => {
+    try {
+        const productData = req.body; // Get the product data from the request body      
+
+        // Create a new product instance
+        const newProduct = new Product({
+            title: productData.title,
+            shortDescription: productData.shortDescription,
+            description: productData.description,
+            brand: productData.brand,
+            category: productData.category,
+            subCategory: productData.subCategory,
+            images: productData.images,
+            stockQuantity: productData.stockQuantity,
+            sku: productData.sku,
+            restockDate: productData.restockDate,
+            basePrice: productData.basePrice,
+            discount: productData.discount,
+            finalPrice: productData.finalPrice,
+            sizes: productData.sizes,
+            createdBy: req.user._id // Assuming you're using middleware to set req.user with the authenticated user
+        });
+
+        // Save the product to the database
+        await newProduct.save();
+
+        // Respond with the created product
+        res.status(201).json({
+            type:"success",
+            message: 'Product created successfully',
+            product: newProduct
+        });
+    } catch (error) {
+        
+        res.status(500).json({
+            type:"error",
+            message: 'Error creating product',
+            error: error.message
+        });
     }
 };
 
