@@ -28,6 +28,17 @@ exports.getHome=(req,res,next)=>{
     })
 }
 
+exports.getProductDetails=async(req,res,next)=>{
+    const productId=req.params.productId
+    try{
+        const product=await Product.findById(productId)
+        res.status(200).json(product)
+    }
+    catch(err){
+        res.status(500).json("internal server error")
+    }
+}
+
 exports.getCart=(req,res,next)=>{
     const user=req.user;
 
