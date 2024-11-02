@@ -19,7 +19,6 @@ const Navbar = () => {
           
           setIsLogged(true); // Assuming you have a state to track login
         } catch (error) {
-          console.error("Token validation failed:", error);
           setIsLogged(false); // Handle invalid token or server error
         }
       } else {
