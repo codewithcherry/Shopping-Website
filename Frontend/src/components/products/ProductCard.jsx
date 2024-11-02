@@ -1,14 +1,20 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+import {Link,useNavigate} from 'react-router-dom'
 
 const ProductCard = ({product}) => {
+  const navigate = useNavigate();
+
+    const openInNewTab = (id) => {
+        // Opens the URL in a new tab
+        window.open(`/product/${id}`, '_blank', 'noopener,noreferrer');
+    };
   return (
     <div>
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105">
+      <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105" onClick={()=>openInNewTab(product._id)}>
       <img
-        src="https://content.jdmagicbox.com/quickquotes/images_main/rectangle-brown-printed-packaging-box-2221215362-ia75yc0s.jpg?impolicy=queryparam&im=Resize=(360,360),aspect=fit"
+        src={product.images[0]}
         alt={product.title}
-        className="w-full h-48 object-cover"
+        className="w-full h-48 object-contain"
       />
       <div className="p-4">
         <h2 className="text-md text-center font-semibold">{product.title}</h2>
@@ -22,7 +28,7 @@ const ProductCard = ({product}) => {
         </svg>
         <span className='text-sm text-gray-600'>0 Rating</span>
         </div>
-        <p className="text-xl text-center font-bold mt-2">${product.price}</p>
+        <p className="text-xl text-center font-bold mt-2">${product.finalPrice}</p>
         <Link
           to={`/product/${product._id}`}
           className="block mt-4 bg-blue-500 text-white text-center py-2 rounded-lg transition-colors hover:bg-blue-600"
