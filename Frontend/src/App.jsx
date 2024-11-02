@@ -21,6 +21,7 @@ import AdminInvoice from './components/Admin/Dashboard/AdminInvoice';
 import AdminTeam from './components/Admin/Dashboard/AdminTeam';
 import AdminSettings from './components/Admin/Dashboard/AdminSettings';
 import AdminAddProduct from './components/Admin/Dashboard/AdminAddProduct';
+import ProductDetails from './pages/ProductDetails';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="/orders" element={<Orders />}/> 
         <Route path="/cart" element={<Cart/>}/> 
         <Route path='/admin' element={<Admin />} />
+        <Route path='/product/:productId' element={<ProductDetails />}/>
         <Route path='/admin/dashboard' element={<Dashboard />} >
               <Route path='' element={<AdminHome />} /> 
               <Route path='products' element={<AdminProducts/>} /> 
