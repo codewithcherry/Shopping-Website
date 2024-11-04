@@ -23,7 +23,8 @@ const Cart = () => {
         });
         // console.log(response.data);
         setLoading(false)
-        setCartItems(response.data.cart)
+        
+        setCartItems(response.data)
        
       } catch (err) {
           setAlert({type:'info',message:"something went wrong couldn't load your cart"})

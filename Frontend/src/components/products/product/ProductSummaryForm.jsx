@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { useState } from 'react';
 import { AuthContext } from '../../Navigation/UserAuthContext';
 import {useNavigate} from 'react-router-dom'
-
+import axios from 'axios'
 
 const ProductSummaryForm = ({sizes,item}) => {
     const [quantity, setQuantity] = useState(1);
@@ -44,7 +44,7 @@ const ProductSummaryForm = ({sizes,item}) => {
         const discount = subtotal-total; // Set discount calculation as needed
     
         // Add the product to the cart
-        cartProducts.push({ product: item, quantity: quantity, size: selectedSize });
+        cartProducts.push({ productId: item, quantity: quantity, size: selectedSize });
         
         // Save the updated cart back to localStorage
         localStorage.setItem('cart', JSON.stringify({
@@ -59,12 +59,35 @@ const ProductSummaryForm = ({sizes,item}) => {
         
     }
 
+    const addProductToServerCart=async(productId)=>{
+
+        // Retrieve the token from local storage
+    const token = localStorage.getItem('jwtToken'); // Replace 'yourTokenKey' with the actual key used for storing the token
+
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/products/add-cartItem',
+        { productId,quantity,selectedSize },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
+      );
+      console.log(response.data) // Clear any previous errors
+      navigate('/cart')
+    } catch (err) {
+      console.log(err)
+    }
+
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if(!isLogged){
             return addProductToLocalCart()
         }
-       
+        return addProductToServerCart(item._id)
     };
 
 
@@ -86,7 +109,7 @@ const ProductSummaryForm = ({sizes,item}) => {
                         </button>
                     ))}
         </div>
-            <input type="hidden" name="productId" value={""} />
+            <input type="hidden" name="productId" value={item._id} />
 
             <div className='flex items-center'>
                 <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">Quantity:</label>

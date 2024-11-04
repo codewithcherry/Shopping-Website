@@ -7,7 +7,7 @@ export const handleIncrementQuantityLocal = (productId) => {
 
     // Find and increment the quantity of the specified product
     cart.products = cart.products.map(item => {
-        if (item.product._id === productId) {
+        if (item.productId._id === productId) {
             return { ...item, quantity: item.quantity + 1 };
         }
         return item;
@@ -25,7 +25,7 @@ export const handleDecrementQuantityLocal= (productId) => {
 
     // Find and decrement the quantity of the specified product
     cart.products = cart.products.map(item => {
-        if (item.product._id === productId && item.quantity > 1) {
+        if (item.productId._id === productId && item.quantity > 1) {
             return { ...item, quantity: item.quantity - 1 };
         }
         return item;
@@ -41,8 +41,8 @@ export const updateCartTotalsLocal = (cart) => {
     let total = 0;
 
     cart.products.forEach(item => {
-        subtotal += item.quantity * item.product.basePrice;
-        total += item.quantity * item.product.finalPrice;
+        subtotal += item.quantity * item.productId.basePrice;
+        total += item.quantity * item.productId.finalPrice;
     });
 
     const deliveryFee = total > 199 ? 0 : 25;
@@ -74,15 +74,15 @@ const cart = JSON.parse(localStorage.getItem('cart'));
 if (!cart || !cart.products.length) return;
 
 // Filter out the item to be removed
-const updatedProducts = cart.products.filter(item => item.product._id !== productId);
+const updatedProducts = cart.products.filter(item => item.productId._id !== productId);
 
 // Recalculate the subtotal based on remaining items
 let subtotal = 0;
 let total = 0;
 
 updatedProducts.forEach(item => {
-    subtotal += item.quantity * item.product.basePrice;
-    total += item.quantity * item.product.finalPrice;
+    subtotal += item.quantity * item.productId.basePrice;
+    total += item.quantity * item.productId.finalPrice;
 });
 
 // Calculate the new delivery fee and discount
@@ -105,36 +105,3 @@ localStorage.setItem('cart', JSON.stringify(updatedCart));
 
 }
 
-export const addProductToLocalCart = () => {
-    const localCart = localStorage.getItem('cart');
-    
-    // Initialize the cart if it doesn't exist
-    if (!localCart) {
-        localStorage.setItem('cart', JSON.stringify({ products: [], subtotal: 0, discount: 0, deliveryFee: 0, tax: 0, total: 0 }));
-    }
-
-    const cart = JSON.parse(localStorage.getItem('cart'));
-    const cartProducts = cart.products;
-    
-    // Calculate subtotal and total
-    const subtotal = cart.subtotal + quantity * item.basePrice;
-    const total = cart.total + quantity * item.finalPrice;
-    const delivery = total > 199 ? 0 : 25;
-    
-    // Assuming discount is a fixed value or percentage, adjust accordingly
-    const discount = subtotal-total; // Set discount calculation as needed
-
-    // Add the product to the cart
-    cartProducts.push({ product: item, quantity: quantity, size: selectedSize });
-    
-    // Save the updated cart back to localStorage
-    localStorage.setItem('cart', JSON.stringify({
-        products: cartProducts,
-        subtotal: subtotal,
-        discount: discount,
-        deliveryFee: delivery,
-        tax: 0,
-        total: total
-    }));
-    
-}
