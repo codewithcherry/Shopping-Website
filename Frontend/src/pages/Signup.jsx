@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbar from '../components/navbar'
+import Navbar from '../components/Navigation/Navbar'
 import SignupForm from '../components/Authentication/Signup/SignupForm'
 
 const Signup = () => {

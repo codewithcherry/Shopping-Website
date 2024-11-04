@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useState } from 'react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'; // Correct Heroicons import
 import axios from 'axios' ;
 import Alert from '../../Alert/Alert';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../Navigation/UserAuthContext';
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false); // Toggle for password visibility
     const [alert,setAlert]=useState()
+    const {setIsLogged }=useContext(AuthContext)
 
     const navigate=useNavigate()
 
@@ -26,6 +28,7 @@ const LoginForm = () => {
           setAlert({ type: res.data.type, message: res.data.message });
           if (res.data.type === "success") {
             localStorage.setItem('jwtToken', res.data.token);
+            setIsLogged(true);
             navigate("/")     
           }
         })

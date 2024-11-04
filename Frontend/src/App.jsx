@@ -22,10 +22,12 @@ import AdminTeam from './components/Admin/Dashboard/AdminTeam';
 import AdminSettings from './components/Admin/Dashboard/AdminSettings';
 import AdminAddProduct from './components/Admin/Dashboard/AdminAddProduct';
 import ProductDetails from './pages/ProductDetails';
+import { UserAuthContext } from './components/Navigation/UserAuthContext';
 
 function App() {
   return (
     <>
+    <UserAuthContext>
       <Router>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -53,6 +55,7 @@ function App() {
         <Route path="*" element={<NotFound />}/> 
       </Routes>
     </Router>
+    </UserAuthContext>
     </>
   )
 }

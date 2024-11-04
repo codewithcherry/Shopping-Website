@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from '../components/navbar';
+import Navbar from '../components/Navigation/Navbar';
 import { useParams,useNavigate } from 'react-router-dom';
 import { useState,useEffect } from 'react';
 import ImageGallery from '../components/products/product/ImageGallery';

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Navbar from '../components/Navbar'
+import Navbar from '../components/Navigation/Navbar'
 import CartItems from '../components/Cart/CartItems'
 import CartSummary from '../components/Cart/CartSummary';
 import axios from 'axios';
