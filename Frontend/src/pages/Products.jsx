@@ -31,9 +31,9 @@ const Products = () => {
       });
   }, [page]);
   return (
-    <div>
+    <div className="bg-gray-100">
       <Navbar />
-      <div className="">
+      <div >
         <div> 
             <h1 className='text-3xl font-semibold text-center text-indigo-700 m-4 '>Products</h1>
         </div>
