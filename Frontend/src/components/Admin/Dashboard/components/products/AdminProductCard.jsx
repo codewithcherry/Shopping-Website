@@ -12,9 +12,9 @@ const AdminProductCard = ({product,onEdit,onDelete}) => {
           alt={title}
         />
         <div className="p-4">
-          <h3 className="text-md font-semibold text-gray-800">{title}</h3>
-          <p className="text-sm text-gray-500">SKU: {sku}</p>
-          <p className={`text-sm font-medium text-center ${status === 'in stock' ? 'bg-green-500 max-w-16 rounded-lg text-white p-1 my-2' : 'bg-red-500 max-w-24 rounded-lg text-white p-1 my-2'}`}>
+          <h3 className="text-sm font-semibold text-gray-800 ">{title}</h3>
+          <p className="text-xs text-gray-500">SKU: {sku}</p>
+          <p className={`text-sm font-medium text-center ${status === 'in stock' ? 'bg-green-500 max-w-16 rounded-lg text-white  my-2' : 'bg-red-500 max-w-24 rounded-lg text-white  my-2'}`}>
             {status}
           </p>
           <div className="flex justify-end space-x-4 mt-4">

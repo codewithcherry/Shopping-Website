@@ -89,7 +89,7 @@ const SideNavigation = () => {
         <div
           className={`${
             isOpen ? 'w-64' : 'w-20'
-          } sticky top-0 left-0 bg-white h-svh p-5 pt-8 duration-300 relative text-black shadow-xl rounded-sm`}
+          } sticky top-0 left-0 bg-white h-svh p-5 pt-8 duration-300  text-black shadow-xl rounded-sm`}
         >
           {/* Toggle Button */}
           <button

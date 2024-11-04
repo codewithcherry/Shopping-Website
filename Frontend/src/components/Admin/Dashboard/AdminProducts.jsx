@@ -56,7 +56,7 @@ const AdminProducts = () => {
         </div>
         <div className="p-8 w-full flex justify-center">
           {products.length > 0 ? (
-            <div className="w-[90%] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="w-[80%] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.map((product, index) => (
                 <div
                   key={product.sku}
