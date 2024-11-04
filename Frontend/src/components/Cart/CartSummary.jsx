@@ -16,9 +16,9 @@ const CartSummary = ({ subtotal, discount, deliveryFee, tax, total, loading }) =
       
       <div className="flex items-center space-x-2 mb-2">
         <button className="bg-green-100 text-green-600 py-1 px-3 rounded-full text-sm">Free</button>
-        <button className="bg-gray-100 text-gray-600 py-1 px-3 rounded-full text-sm">Express: $9.99</button>
+        <button className="bg-gray-100 text-gray-600 py-1 px-3 rounded-full text-sm">Express: $25.00</button>
       </div>
-      <p className="text-sm text-gray-500 mb-4">Delivery date: June 24, 2022</p>
+      <p className="text-sm text-gray-500 mb-4">Free delivery for cart value over 199$</p>
 
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-medium mb-1">Promocode</label>
@@ -48,23 +48,23 @@ const CartSummary = ({ subtotal, discount, deliveryFee, tax, total, loading }) =
         <div>
           <div className="flex justify-between text-gray-700 mt-4">
             <span>Subtotal</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span>${subtotal}</span>
           </div>
           <div className="flex justify-between text-gray-700">
-            <span className="flex items-center">Discount <span className="text-xs text-gray-400 ml-1">({discount}%)</span></span>
-            <span className="text-red-500">- ${(subtotal * discount / 100).toFixed(2)}</span>
+            <span className="flex items-center">Discount <span className="text-xs text-gray-400 ml-1">({}%)</span></span>
+            <span className="text-red-500">- ${(discount)}</span>
           </div>
           <div className="flex justify-between text-gray-700">
             <span className="flex items-center">Delivery <InformationCircleIcon className="h-4 w-4 ml-1 text-gray-400" /></span>
-            <span>${deliveryFee.toFixed(2)}</span>
+            <span>${total!=0?deliveryFee:0}</span>
           </div>
           <div className="flex justify-between text-gray-700">
             <span className="flex items-center">Tax <InformationCircleIcon className="h-4 w-4 ml-1 text-gray-400" /></span>
-            <span>+ ${tax.toFixed(2)}</span>
+            <span>+ ${tax}</span>
           </div>
           <div className="flex justify-between font-semibold text-lg text-gray-800 mt-4">
             <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span>${total>0?total+deliveryFee:0}</span>
           </div>
 
           <button className="w-full bg-blue-600 text-white py-3 rounded-md mt-6 hover:bg-blue-700 transition-transform transform hover:scale-105">
