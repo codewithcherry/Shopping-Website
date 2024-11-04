@@ -17,8 +17,9 @@ const ProductCard = ({product}) => {
         className="w-full h-48 object-contain"
       />
       <div className="p-4">
-        <h2 className="text-md text-center font-semibold">{product.title}</h2>
-        <div className="flex justify-center  items-center gap-2 mt-2">
+        <h2 className="text-md  font-semibold">{product.title}</h2>
+        <p className='h-8 mt-1 text-xs overflow-hidden'>{product.shortDescription.slice(0,60)}...</p>
+        <div className="flex  items-center gap-2 mt-2">
         <svg
               className="w-5 h-5 text-yellow-400"
               fill="currentColor"
@@ -28,13 +29,12 @@ const ProductCard = ({product}) => {
         </svg>
         <span className='text-sm text-gray-600'>0 Rating</span>
         </div>
-        <p className="text-xl text-center font-bold mt-2">${product.finalPrice}</p>
-        <Link
-          to={`/product/${product._id}`}
-          className="block mt-4 bg-blue-500 text-white text-center py-2 rounded-lg transition-colors hover:bg-blue-600"
-        >
-          Add to cart
-        </Link>
+       {/* Price Information */}
+      <div className="my-2 flex gap-4 items-baseline">
+        <h2 className="text-xl  font-semibold text-blue-600">${product.finalPrice.toLocaleString()}</h2>
+        <p className="text-sm  text-gray-500 line-through">${product.basePrice.toLocaleString()}</p>
+        <p className="text-xs  text-green-500 font-semibold">{product.discount}% off</p>
+      </div>
       </div>
     </div>
     </div>
