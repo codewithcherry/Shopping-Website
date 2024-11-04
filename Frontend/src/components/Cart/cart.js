@@ -130,3 +130,28 @@ export const removeProductFromServerCart = async (productId) => {
         throw error; // Throw error to handle in the component if needed
     }
 };
+
+export const updateServerCartItemQuantity = async (productId, quantity) => {
+    try {
+        const token=localStorage.getItem("jwtToken")
+        const response = await axios.put(
+            'http://localhost:3000/products/update-cartItemQuantity', // Replace with your actual API endpoint
+            {
+                productId: productId,
+                quantity: quantity
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Add authorization token in header
+                    'Content-Type': 'application/json',
+                }
+            }
+        );
+
+        // console.log('Cart updated successfully:', response.data);
+        return response.data; // Return the updated cart data
+    } catch (error) {
+        // console.error('Error updating cart item quantity:', error.response ? error.response.data : error.message);
+        throw error; // Throw error to handle it in the component if needed
+    }
+};

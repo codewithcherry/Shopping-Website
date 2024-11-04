@@ -13,6 +13,7 @@ const Cart = () => {
   const [loading,setLoading]=useState(true)
   const [cartItems ,setCartItems]= useState({})
   const [alert,setAlert]=useState();
+  const [refresh,setRefresh]=useState(0);
 
   const token = localStorage.getItem('jwtToken');
   
@@ -52,7 +53,7 @@ const Cart = () => {
         setCartItems(updatedCart || { products: [], subtotal: 0, total: 0 });
       }
       else{
-          setCartItems(cart)
+          setRefresh(prev=>prev+1)
       }
     };
 
@@ -70,7 +71,7 @@ const Cart = () => {
       };
       
       fetchData();
-    }, [cartItems]);
+    }, [cartItems,refresh]);
   
 
   return (

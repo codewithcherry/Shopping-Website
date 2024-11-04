@@ -3,7 +3,7 @@ import { HeartIcon, TrashIcon } from '@heroicons/react/24/outline'; // Correct H
 import { PlusIcon, MinusIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { ShoppingCartIcon} from '@heroicons/react/24/solid';
 import { AuthContext } from '../Navigation/UserAuthContext';
-import {removeCartItemLocal,removeProductFromServerCart,handleIncrementQuantityLocal,handleDecrementQuantityLocal} from './cart'
+import {removeCartItemLocal,removeProductFromServerCart,handleIncrementQuantityLocal,handleDecrementQuantityLocal,updateServerCartItemQuantity} from './cart'
 
 const CartItems = ({ products, loading ,refreshCart,handleError}) => {
   // State for showing the empty cart message
@@ -13,17 +13,51 @@ const CartItems = ({ products, loading ,refreshCart,handleError}) => {
 
 
 
-const incrementQuantity = (productId) => {
+const incrementQuantity = async(productId,newQuantity) => {
   if (!isLogged) {
     handleIncrementQuantityLocal(productId);
     refreshCart(); // Refresh cart after increment
   }
+  else{
+    if (newQuantity < 1) {
+      console.error("Quantity cannot be less than 1.");
+      return; // Optionally handle this case more gracefully
+  }
+
+  try {
+      const result = await updateServerCartItemQuantity(productId, newQuantity);
+      console.log('Updated Cart:', result.cart);
+      refreshCart(result.cart)
+      // Update cart state or handle success feedback as needed
+  } catch (error) {
+      // Handle error feedback here, e.g., show a notification to the user
+      console.error('Failed to update product quantity in cart:', error.message);
+      handleError(error.response.data)
+  }
+  }
 };
 
-const decrementQuantity = (productId) => {
+const decrementQuantity = async(productId,newQuantity) => {
   if (!isLogged) {
     handleDecrementQuantityLocal(productId);
     refreshCart(); // Refresh cart after decrement
+  }
+  else{
+    if (newQuantity < 1) {
+      console.error("Quantity cannot be less than 1.");
+      return; // Optionally handle this case more gracefully
+  }
+  
+  try {
+      const result = await updateServerCartItemQuantity(productId, newQuantity);
+      console.log('Updated Cart:', result.cart);
+      refreshCart(result.cart)
+      // Update cart state or handle success feedback as needed
+  } catch (error) {
+      // Handle error feedback here, e.g., show a notification to the user
+      // console.error('Failed to update product quantity in cart:', error.message);
+      handleError(error.response.data)
+  }
   }
 };
 
@@ -41,7 +75,7 @@ const handleRemoveCartItem = async(productId) => {
         } catch (error) {
             // Handle error feedback here, e.g., show a notification to the user
             console.log(error)
-            handleError(error)
+            handleError(error.response.data)
        }
   }
 };
@@ -96,14 +130,14 @@ const handleRemoveCartItem = async(productId) => {
               <div className="flex items-center">
                 <button
                   className="p-1 text-gray-700 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none"
-                  onClick={() => decrementQuantity(item.productId._id)}
+                  onClick={() => decrementQuantity(item.productId._id,item.quantity-1)}
                 >
                   <MinusIcon className="h-4 w-4" />
                 </button>
                 <span className="mx-2">{item.quantity}</span>
                 <button
                   className="p-1 text-gray-700 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none"
-                  onClick={() => incrementQuantity(item.productId._id)}
+                  onClick={() => incrementQuantity(item.productId._id,item.quantity+1)}
                 >
                   <PlusIcon className="h-4 w-4" />
                 </button>
