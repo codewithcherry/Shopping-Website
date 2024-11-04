@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useState } from 'react';
+import { AuthContext } from '../../Navigation/UserAuthContext';
+import {useNavigate} from 'react-router-dom'
 
-const ProductSummaryForm = ({sizes}) => {
+
+const ProductSummaryForm = ({sizes,item}) => {
     const [quantity, setQuantity] = useState(1);
     const [isWished, setIsWished] = useState(false);
     const [selectedSize, setSelectedSize] = useState(null);
 
-    
+    const navigate=useNavigate()
+
+    const {isLogged} =useContext(AuthContext);
 
     const handleQuantityChange = (e) => {
         setQuantity(e.target.value);
@@ -19,18 +24,56 @@ const ProductSummaryForm = ({sizes}) => {
         
     };
 
+    const addProductToLocalCart = () => {
+        const localCart = localStorage.getItem('cart');
+        
+        // Initialize the cart if it doesn't exist
+        if (!localCart) {
+            localStorage.setItem('cart', JSON.stringify({ products: [], subtotal: 0, discount: 0, deliveryFee: 0, tax: 0, total: 0 }));
+        }
+    
+        const cart = JSON.parse(localStorage.getItem('cart'));
+        const cartProducts = cart.products;
+        
+        // Calculate subtotal and total
+        const subtotal = cart.subtotal + quantity * item.basePrice;
+        const total = cart.total + quantity * item.finalPrice;
+        const delivery = total > 199 ? 0 : 25;
+        
+        // Assuming discount is a fixed value or percentage, adjust accordingly
+        const discount = subtotal-total; // Set discount calculation as needed
+    
+        // Add the product to the cart
+        cartProducts.push({ product: item, quantity: quantity, size: selectedSize });
+        
+        // Save the updated cart back to localStorage
+        localStorage.setItem('cart', JSON.stringify({
+            products: cartProducts,
+            subtotal: subtotal,
+            discount: discount,
+            deliveryFee: delivery,
+            tax: 0,
+            total: total
+        }));
+        navigate('/cart')
+        
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle the logic to add to cart
-        console.log('Product ID:');
-        console.log('Quantity:', quantity);
+        if(!isLogged){
+            return addProductToLocalCart()
+        }
+       
     };
+
 
     return (
         <form  onSubmit={handleSubmit}>
             <div className="flex flex-wrap space-x-2 my-2">
                     {sizes.map((size) => (
                         <button
+                            type='button'
                             key={size}
                             onClick={() => handleSizeClick(size)}
                             className={`py-2 px-4 border rounded-md text-sm font-medium transition duration-200 

@@ -64,7 +64,7 @@ const ProductSummary = ({product}) => {
 
       {/* product cart form */}
 
-      <ProductSummaryForm  sizes={product.sizes}/>
+      <ProductSummaryForm  sizes={product.sizes} item={product}/>
 
       {/* Additional Information */}
       <div className="mt-4">
