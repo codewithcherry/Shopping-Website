@@ -7,5 +7,6 @@ const router=express.Router()
 router.get("/",shopController.getHome);
 router.get("/product/:productId",shopController.getProductDetails)
 router.get("/cart",validateController.authenticate,shopController.getCart)
+router.post('/add-cartItem',validateController.authenticate,shopController.addCartItem);
 
 module.exports=router;

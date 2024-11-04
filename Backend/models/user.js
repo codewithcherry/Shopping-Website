@@ -23,6 +23,10 @@ const cartItemSchema = new mongoose.Schema({
     required: true,
     default: 1,
   },
+  size:{
+    type:String,
+    default:"os"
+  }
 });
 
 // Define Order Schema
@@ -62,7 +66,9 @@ const userSchema = new mongoose.Schema({
     enum: ['customer', 'admin'],
     default: 'customer',
   },
-  cart: [cartItemSchema], // Array of items in the cart
+  cart: {
+    products:[cartItemSchema]  
+  }, // Array of items in the cart
   wishlist: [
     {
       type: mongoose.Schema.Types.ObjectId,
