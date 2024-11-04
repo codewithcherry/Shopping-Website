@@ -99,3 +99,36 @@ exports.addCartItem = async (req, res, next) => {
     }
 };
 
+
+exports.deleteCartItem=async(req,res,next)=>{
+    const { productId } = req.body; // Expecting productId in the request body
+    const userId = req.user.userId;
+    
+    try {
+        // Find the user
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Check if the product exists in the cart
+        const productIndex = user.cart.products.findIndex(
+            item => item.productId.toString() === productId
+        );
+
+        if (productIndex === -1) {
+            return res.status(404).json({ type:"error", message: "Product not found in cart" });
+        }
+
+        // Remove the product from the cart
+        user.cart.products.splice(productIndex, 1);
+
+        // Save the updated cart
+        await user.save();
+        
+        res.status(200).json({ type:"success", message: "Product removed from cart", cart: user.cart });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ type:"error",message: "Internal server error" });
+    }
+}
