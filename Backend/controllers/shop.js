@@ -132,3 +132,35 @@ exports.deleteCartItem=async(req,res,next)=>{
         res.status(500).json({ type:"error",message: "Internal server error" });
     }
 }
+
+exports.updateCartItemQuantity = async (req, res, next) => {
+    const { productId, quantity } = req.body; // Expecting productId and new quantity in the request body
+    const userId = req.user.userId;
+
+    try {
+        // Find the user
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({type:"error", message: "User not found" });
+        }
+
+        // Find the product in the user's cart
+        const cartProduct = user.cart.products.find(item => item.productId.toString() === productId);
+
+        if (!cartProduct) {
+            return res.status(404).json({ error:'error',message: "Product not found in cart" });
+        }
+
+        // Update the quantity directly
+        cartProduct.quantity = quantity;
+
+        // Save the updated cart
+        await user.save();
+        // console.log(user.cart)
+
+        res.status(200).json({type:"success" , message: "Cart updated successfully", cart: user.cart });
+    } catch (error) {
+        // console.error(error);
+        res.status(500).json({type:"error", message: "Internal server error" });
+    }
+};
