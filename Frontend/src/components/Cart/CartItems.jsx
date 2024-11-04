@@ -3,34 +3,46 @@ import { HeartIcon, TrashIcon } from '@heroicons/react/24/outline'; // Correct H
 import { PlusIcon, MinusIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { ShoppingCartIcon} from '@heroicons/react/24/solid';
 import { AuthContext } from '../Navigation/UserAuthContext';
-import {removeCartItemLocal,updateCartTotalsLocal,handleIncrementQuantityLocal,handleDecrementQuantityLocal} from './cart'
+import {removeCartItemLocal,removeProductFromServerCart,handleIncrementQuantityLocal,handleDecrementQuantityLocal} from './cart'
 
-const CartItems = ({ products, loading ,refreshCart}) => {
+const CartItems = ({ products, loading ,refreshCart,handleError}) => {
   // State for showing the empty cart message
   const [items, setItems] = useState([]);
 
-  const {islogged} = useContext(AuthContext);
+  const {isLogged} = useContext(AuthContext);
 
 
 
 const incrementQuantity = (productId) => {
-  if (!islogged) {
+  if (!isLogged) {
     handleIncrementQuantityLocal(productId);
     refreshCart(); // Refresh cart after increment
   }
 };
 
 const decrementQuantity = (productId) => {
-  if (!islogged) {
+  if (!isLogged) {
     handleDecrementQuantityLocal(productId);
     refreshCart(); // Refresh cart after decrement
   }
 };
 
-const handleRemoveCartItem = (productId) => {
-  if (!islogged) {
+const handleRemoveCartItem = async(productId) => {
+  if (!isLogged) {
     removeCartItemLocal(productId);
     refreshCart(); // Refresh cart after item removal
+  }
+  else{
+    try {
+            const result = await removeProductFromServerCart(productId);
+            console.log('Updated Cart:', result.cart);
+            refreshCart(result.cart)
+            // Update cart state or handle success feedback as needed
+        } catch (error) {
+            // Handle error feedback here, e.g., show a notification to the user
+            console.log(error)
+            handleError(error)
+       }
   }
 };
 

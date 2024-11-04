@@ -1,4 +1,4 @@
-
+import axios from 'axios';
 
 export const handleIncrementQuantityLocal = (productId) => {
     const cart = JSON.parse(localStorage.getItem('cart'));
@@ -105,3 +105,28 @@ localStorage.setItem('cart', JSON.stringify(updatedCart));
 
 }
 
+
+
+export const removeProductFromServerCart = async (productId) => {
+    try {
+        const token=localStorage.getItem("jwtToken")
+        const response = await axios.delete(
+            'http://localhost:3000/products/delete-cartItem', // Replace with your actual API endpoint
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Add authorization token in header
+                    'Content-Type': 'application/json',
+                },
+                data: {
+                    productId: productId // Product ID to be removed from cart
+                }
+            }
+        );
+
+        console.log('Product removed successfully:', response.data);
+        return response.data; // You can return data to handle it in your component
+    } catch (error) {
+        console.error('Error removing product:', error.response ? error.response.data : error.message);
+        throw error; // Throw error to handle in the component if needed
+    }
+};
