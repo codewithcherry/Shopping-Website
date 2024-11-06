@@ -125,7 +125,7 @@ const handleRemoveCartItem = async(productId) => {
             </div>
             <div className="flex items-center space-x-2">
               {item.size && <div><label htmlFor="size" className='text-sm m-1'>size</label>
-               <input className="bg-gray-100 w-6 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring" type="text" value={item.size} disabled />
+               <input className="bg-gray-100 w-8 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring" type="text" value={item.size} disabled />
                </div>}
               <div className="flex items-center">
                 <button

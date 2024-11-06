@@ -1,14 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link , useNavigate} from 'react-router-dom';
 import { InformationCircleIcon, ShoppingCartIcon } from '@heroicons/react/24/solid';
+import { AuthContext } from '../Navigation/UserAuthContext';
 
-const CartSummary = ({ subtotal, discount, deliveryFee, tax, total, loading }) => {
-  const [promoCode, setPromoCode] = useState('');
+const CartSummary = ({ subtotal, discount, deliveryFee, tax, total, loading ,setAlert}) => {
+  
+  const navigate=useNavigate();
 
-  const handlePromoCodeChange = (e) => setPromoCode(e.target.value);
-  const applyPromoCode = () => {
-    // Logic for applying promo code (placeholder)
-    console.log('Promo code applied:', promoCode);
-  };
+  const {isLogged} =useContext(AuthContext);
+
+ 
+
+  const handleCheckout =()=>{
+    if(!isLogged){
+      return setAlert({type:"error",message:"Login to your account to checkout the cart"})
+    }
+    navigate("/checkout");
+
+  }
 
   return (
     <div className="p-6 bg-gray-50 rounded-lg shadow-lg max-w-2xl ">
@@ -20,25 +29,7 @@ const CartSummary = ({ subtotal, discount, deliveryFee, tax, total, loading }) =
       </div>
       <p className="text-sm text-gray-500 mb-4">Free delivery for cart value over 199$</p>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-medium mb-1">Promocode</label>
-        <div className="flex items-center">
-          <input
-            type="text"
-            value={promoCode}
-            onChange={handlePromoCodeChange}
-            className="border border-gray-300 rounded-l-md p-2 flex-grow focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            placeholder="Enter promocode"
-          />
-          <button
-            onClick={applyPromoCode}
-            className="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700 transition-colors"
-          >
-            Apply
-          </button>
-        </div>
-        <p className="text-sm text-gray-400 mt-1">20% off discount</p>
-      </div>
+      
 
       {loading ? (
         <div className="flex justify-center items-center h-24">
@@ -67,7 +58,7 @@ const CartSummary = ({ subtotal, discount, deliveryFee, tax, total, loading }) =
             <span>${total>0?total+deliveryFee:0}</span>
           </div>
 
-          <button className="w-full bg-blue-600 text-white py-3 rounded-md mt-6 hover:bg-blue-700 transition-transform transform hover:scale-105">
+          <button className="w-full bg-blue-600 text-white py-3 rounded-md mt-6 hover:bg-blue-700 transition-transform transform hover:scale-105" onClick={handleCheckout}>
             Proceed to checkout
           </button>
           <button className="w-full bg-gray-200 text-gray-700 py-3 rounded-md mt-2 hover:bg-gray-300 transition-transform transform hover:scale-105">
