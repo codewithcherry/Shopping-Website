@@ -30,7 +30,7 @@ const ProductDetails = () => {
         fetchProduct();
     }, [productId]);
     return (
-        <div className='bg-gray-100 min-h-screen flex flex-col'>
+        <div className='bg-gray-100  flex flex-col'>
             <Navbar />
             {
                 loading?" ":<div className='flex-grow flex justify-center py-10'>

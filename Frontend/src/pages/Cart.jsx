@@ -85,7 +85,8 @@ const Cart = () => {
                       deliveryFee={cartItems.deliveryFee}
                       tax={cartItems.tax}
                       total={cartItems.total}
-                      loading={loading} />}
+                      loading={loading} 
+                      setAlert={setAlert}/>}
         </div>
     </div>
   )
