@@ -1,34 +1,59 @@
-import React from 'react';
+import React, { useState,useEffect, useContext } from 'react';
 import Navbar from '../components/Navigation/Navbar';
 import AddressList from '../components/Cart/AddressList';
 import BreadCrumbs from '../components/Navigation/BreadCrumbs';
 import CheckoutPayment from '../components/Cart/CheckoutPayment';
+import { AuthContext } from '../components/Navigation/UserAuthContext';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Alert from '../components/Alert/Alert';
 
 const Checkout = () => {
-  const addresses = [
-    {
-      fullName: 'John Doe',
-      mobileNumber: '1234567890',
-      doorNumber: '123',
-      streetArea: 'Main Street',
-      landmark: 'Near Central Park',
-      city: 'New York',
-      state: 'NY',
-      postalCode: '10001',
-      phoneNumber: '0987654321'
-    },
-    {
-      fullName: 'Jane Smith',
-      mobileNumber: '0987654321',
-      doorNumber: '456',
-      streetArea: 'Broadway Ave',
-      landmark: 'Opposite Mall',
-      city: 'Los Angeles',
-      state: 'CA',
-      postalCode: '90001',
-      phoneNumber: '1234567890'
+
+  const navigate=useNavigate()
+
+  const [addresses,setAddresses]=useState([]);
+  const [loading,setLoading]=useState(true);
+  const [alert,setAlert]=useState(false);
+
+  const {isLogged} =useContext(AuthContext);
+
+  const fetchUserAddresses = async () => {
+    const token=localStorage.getItem("jwtToken")
+    try {
+      const response = await axios.get("http://localhost:3000/products/user-address", {
+        headers: { "Authorization": `Bearer ${token}` }, // Capitalize 'Bearer'
+      });
+      // console.log(response.data);
+      setLoading(false)
+      
+      setAddresses(response.data.addresses)
+     
+    } catch (err) {
+        setAlert({type:'info',message:"something went wrong couldn't load your cart"})
+        setTimeout(()=>{
+          setAlert(null)
+          setLoading(false)
+        },3000)
+      
     }
-  ];
+  };
+
+  useEffect(()=>{
+
+    if(!isLogged){
+      const data = {
+        type: "error",
+        message: "login to your account to checkout your cart"
+        };
+        // Navigate to the target route with state data
+        navigate('/login', { state: data });
+    }
+    else{
+      fetchUserAddresses();
+    }
+
+  },[isLogged,navigate])
 
   const breadcrumbs = [
     { label: 'Home', link: '/' },
@@ -46,13 +71,13 @@ const Checkout = () => {
         {/* Breadcrumbs */}
         <BreadCrumbs breadcrumbs={breadcrumbs} />
       </div>
-
+      {alert && <Alert type={alert.type} message={alert.message} onClose={()=>{setAlert(null)}} />}
       {/* Checkout Layout */}
       <div className="max-w-screen-xl mx-auto flex flex-col lg:flex-row lg:justify-between gap-8 px-6 ">
         {/* Left Section - Address List */}
         <div className="lg:w-3/5 p-6 ">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Shipping Address</h2>
-          <AddressList addresses={addresses} />
+          <AddressList addresses={addresses} loading={loading}/>
           {/* Uncomment if Shipping Address Form is needed */}
           {/* <ShippingAddressForm /> */}
         </div>

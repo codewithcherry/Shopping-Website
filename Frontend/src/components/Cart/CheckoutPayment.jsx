@@ -21,7 +21,7 @@ const CheckoutPayment = () => {
       const response = await axios.get("http://localhost:3000/products/cart", {
         headers: { "Authorization": `Bearer ${token}` }, // Capitalize 'Bearer'
       });
-      console.log(response.data);
+      // console.log(response.data);
       setLoading(false)
       
       setCartItems(response.data.products)
@@ -37,7 +37,7 @@ const CheckoutPayment = () => {
   };
 
   useEffect(()=>{
-    console.log(isLogged)
+    // console.log(isLogged)
       if(!isLogged){
          // Data to pass to the other page
          const data = {
