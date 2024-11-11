@@ -3,12 +3,14 @@ const mongoose = require('mongoose');
 
 // Define Address Schema
 const addressSchema = new mongoose.Schema({
-  street: String,
-  city: String,
-  state: String,
-  zipCode: String,
-  country: String,
-  phone: String,
+  fullName: {type:String},
+    doorNumber: {type:String},
+    streetArea: {type:String},
+    landmark: {type:String},
+    city: {type:String},
+    state: {type:String},
+    postalCode: {type:Number},
+    phoneNumber: {type:Number}
 });
 
 // Define Cart Item Schema

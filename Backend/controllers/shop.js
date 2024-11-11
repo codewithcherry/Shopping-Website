@@ -176,3 +176,18 @@ exports.getUserAddress=async(req,res,next)=>{
         res.status(500).json({type:"error",message:"internal server error 500"})
     }
 }
+
+exports.addUserAddress=async(req,res,next)=>{
+    const userId=req.user.userId
+    const address=req.body
+    try{
+        const user=await User.findById(userId)
+        const updatedAddresses=[...user.addresses,address]
+        user.addresses=updatedAddresses
+        await user.save()
+        res.status(201).json({type:"success",message:"address added successfully"})
+    }
+    catch(err){
+        res.status(500).json({type:"error",message:"Internal server error 500"})
+    }
+}
