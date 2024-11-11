@@ -12,5 +12,6 @@ router.delete('/delete-cartItem',validateController.authenticate,shopController.
 router.put('/update-cartItemQuantity',validateController.authenticate,shopController.updateCartItemQuantity);
 router.get('/user-address',validateController.authenticate,shopController.getUserAddress);
 router.post('/user-createAddress',validateController.authenticate,shopController.addUserAddress);
+router.post('/remove-userAddress',validateController.authenticate,shopController.removeUserAddress);
 
 module.exports=router;

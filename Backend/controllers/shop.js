@@ -191,3 +191,18 @@ exports.addUserAddress=async(req,res,next)=>{
         res.status(500).json({type:"error",message:"Internal server error 500"})
     }
 }
+
+exports.removeUserAddress=async(req,res,next)=>{
+    const userId=req.user.userId
+    const addressId=req.body.addressId
+    try{
+        const user=await User.findById(userId)
+        const updatedAddresses=user.addresses.filter(item=>item._id.toString()!==addressId)
+        user.addresses=updatedAddresses
+        await user.save()
+        res.status(200).json({type:"success",message:"Successfully address is deleted"})
+    }
+    catch(err){
+        res.status(500).json({type:"error",message:"Internal Server error 500"})
+    }
+}
