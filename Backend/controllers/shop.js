@@ -164,3 +164,15 @@ exports.updateCartItemQuantity = async (req, res, next) => {
         res.status(500).json({type:"error", message: "Internal server error" });
     }
 };
+
+exports.getUserAddress=async(req,res,next)=>{
+    const userId=req.user.userId  
+    try{
+        const result=await User.findById(userId)
+        const addresses=result.addresses
+        res.status(200).json({type:"success",addresses:addresses})
+    }
+    catch(err){
+        res.status(500).json({type:"error",message:"internal server error 500"})
+    }
+}
