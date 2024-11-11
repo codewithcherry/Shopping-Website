@@ -1,10 +1,10 @@
 import { PlusIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid'
 import { useState } from 'react'
+import axios from 'axios'
 
-const ShippingAddressForm = () => {
+const ShippingAddressForm = ({handleRefresh}) => {
   const [formData, setFormData] = useState({
     fullName: '',
-    mobileNumber: '',
     doorNumber: '',
     streetArea: '',
     landmark: '',
@@ -29,9 +29,40 @@ const ShippingAddressForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log('Address Data:', formData);
+    console.log(formData)
+    const token=localStorage.getItem("jwtToken")
+        try {
+          
+          const response = await axios.post(
+              'http://localhost:3000/products/user-createAddress', // Replace with your actual API endpoint
+              formData,
+              {
+                  headers: {
+                      Authorization: `Bearer ${token}`, // Add authorization token in header
+                      'Content-Type': 'application/json',
+                  },                 
+              }
+          );
+
+          console.log('address added successfully:', response.data);   
+          handleRefresh()
+          setFormData({
+            fullName: '',
+            doorNumber: '',
+            streetArea: '',
+            landmark: '',
+            city: '',
+            state: '',
+            postalCode: '',
+            phoneNumber: ''
+          })
+          setShowForm(false)
+      }
+      catch(err){
+          console.log(err)
+      }
   };
 
   const getInputStyle = (name) => {
@@ -55,7 +86,6 @@ const ShippingAddressForm = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
               { label: 'Full Name', name: 'fullName' },
-              { label: 'Mobile Number', name: 'mobileNumber' },
               { label: 'Street/House/Apt No', name: 'doorNumber' },
               { label: 'Street Area/Location', name: 'streetArea' },
               { label: 'Landmark (optional)', name: 'landmark' },

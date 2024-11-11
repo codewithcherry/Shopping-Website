@@ -3,7 +3,7 @@ import { PencilIcon, TrashIcon, CheckCircleIcon,HomeIcon } from '@heroicons/reac
 import ShippingAddressForm from './ShippingAddressForm';
 import Loading from '../Alert/Loading';
 
-const AddressList = ({ addresses ,loading}) => {
+const AddressList = ({ addresses ,loading,handleRefresh}) => {
   const [selectedAddressIndex, setSelectedAddressIndex] = useState(0);
 
   const handleSelectAddress = (index) => {
@@ -36,7 +36,7 @@ const AddressList = ({ addresses ,loading}) => {
                     <HomeIcon className="h-5 w-5 text-gray-500  mr-2 hover:scale-110 hover:cursor-pointer hover:text-indigo-600" />
                       Select Shipping Address
                 </h2>
-                {loading?<Loading />:<p>No address to select </p>}
+                {loading?<Loading />:<p></p>}
                       {addresses.map((address, index) => (
                         <div
                           key={index}
@@ -73,7 +73,7 @@ const AddressList = ({ addresses ,loading}) => {
           </div>
       }
       <div>
-        <ShippingAddressForm />
+        <ShippingAddressForm  handleRefresh={handleRefresh}/>
       </div>
     </div>
   );

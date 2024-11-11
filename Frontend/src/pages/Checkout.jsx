@@ -15,6 +15,7 @@ const Checkout = () => {
   const [addresses,setAddresses]=useState([]);
   const [loading,setLoading]=useState(true);
   const [alert,setAlert]=useState(false);
+  const [refresh,setRefresh]=useState(0)
 
   const {isLogged} =useContext(AuthContext);
 
@@ -39,6 +40,10 @@ const Checkout = () => {
     }
   };
 
+  const handleRefresh=()=>{
+    setRefresh(prev=>prev+1)
+  }
+
   useEffect(()=>{
 
     if(!isLogged){
@@ -53,7 +58,7 @@ const Checkout = () => {
       fetchUserAddresses();
     }
 
-  },[isLogged,navigate])
+  },[isLogged,navigate,refresh])
 
   const breadcrumbs = [
     { label: 'Home', link: '/' },
@@ -77,7 +82,7 @@ const Checkout = () => {
         {/* Left Section - Address List */}
         <div className="lg:w-3/5 p-6 ">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Shipping Address</h2>
-          <AddressList addresses={addresses} loading={loading}/>
+          <AddressList addresses={addresses} loading={loading} handleRefresh={handleRefresh}/>
           {/* Uncomment if Shipping Address Form is needed */}
           {/* <ShippingAddressForm /> */}
         </div>
