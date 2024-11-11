@@ -3,14 +3,16 @@ import { useState } from 'react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'; // Correct Heroicons import
 import axios from 'axios' ;
 import Alert from '../../Alert/Alert';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
 import { AuthContext } from '../../Navigation/UserAuthContext';
 
 const LoginForm = () => {
+
+    const location = useLocation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false); // Toggle for password visibility
-    const [alert,setAlert]=useState()
+    const [alert,setAlert]=useState(location.state || '')
     const {setIsLogged }=useContext(AuthContext)
 
     const navigate=useNavigate()
