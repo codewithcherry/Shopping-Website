@@ -1,8 +1,9 @@
 import React from 'react'
 import { useState } from 'react';
 import Loading from '../Alert/Loading'
+import { useNavigate } from 'react-router-dom';
 
-const CheckoutCartSummary = ({cartItems,loading}) => {
+const CheckoutCartSummary = ({cartItems,loading,selectedAddress}) => {
   // Calculate the subtotal, delivery fee, and total
   const subtotal = cartItems.reduce((acc, item) => acc + item.productId.finalPrice * item.quantity, 0);
   const deliveryFee = subtotal<199?25:0; // Example static delivery fee
@@ -10,11 +11,13 @@ const CheckoutCartSummary = ({cartItems,loading}) => {
 
   const [promoCode, setPromoCode] = useState('');
 
-  const handlePromoCodeChange = (e) => setPromoCode(e.target.value);
-  const applyPromoCode = () => {
-    // Logic for applying promo code (placeholder)
-    console.log('Promo code applied:', promoCode);
-  };
+  const navigate=useNavigate()
+
+ const handlePay=()=>{
+    const data=selectedAddress
+    navigate('/payment',{state:data})
+ }
+ 
 
   return (
     <div className="max-w-lg bg-white shadow-lg rounded-lg p-6 mt-6">
@@ -45,7 +48,7 @@ const CheckoutCartSummary = ({cartItems,loading}) => {
       </div>
       {/* promo application */}
 
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <label className="block text-gray-700 text-sm font-medium mb-1">Promocode</label>
         <div className="flex items-center">
           <input
@@ -63,7 +66,7 @@ const CheckoutCartSummary = ({cartItems,loading}) => {
           </button>
         </div>
         
-      </div>
+      </div> */}
 
       {/* Pricing Information */}
       <div className=" p-4">
@@ -82,13 +85,11 @@ const CheckoutCartSummary = ({cartItems,loading}) => {
         <div className="flex justify-between text-lg font-semibold">
           <span>Total</span>
           <span className="text-gray-900">${total.toFixed(2)}</span>
-        </div>
-        
-      </div>
-        <button className='bg-indigo-400 text-center mx-auto text-white font-semibold p-2 mt-4 rounded-lg hover:bg-indigo-600'>
+        </div>    
+      </div>   
+      <button className='bg-indigo-400 text-center  text-white font-semibold p-2 mt-4 rounded-lg hover:bg-indigo-600' onClick={handlePay}>
             Proceed to pay
-        </button>
-
+      </button> 
         </div>
         }
     </div>

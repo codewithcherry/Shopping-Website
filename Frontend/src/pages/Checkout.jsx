@@ -16,6 +16,8 @@ const Checkout = () => {
   const [loading,setLoading]=useState(true);
   const [alert,setAlert]=useState(false);
   const [refresh,setRefresh]=useState(0)
+  const [selectedAddress,setSelectedAddress]=useState({});
+  
 
   const {isLogged} =useContext(AuthContext);
 
@@ -80,18 +82,21 @@ const Checkout = () => {
       {/* Checkout Layout */}
       <div className="max-w-screen-xl mx-auto flex flex-col lg:flex-row lg:justify-between gap-8 px-6 ">
         {/* Left Section - Address List */}
-        <div className="lg:w-3/5 p-6 ">
+        <div className="lg:w-3/5 ">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Shipping Address</h2>
-          <AddressList addresses={addresses} loading={loading} handleRefresh={handleRefresh} setAlert={setAlert}/>
+          <AddressList addresses={addresses} loading={loading} handleRefresh={handleRefresh} setAlert={setAlert} setSelectedAddress={setSelectedAddress}/>
           {/* Uncomment if Shipping Address Form is needed */}
           {/* <ShippingAddressForm /> */}
         </div>
 
         {/* Right Section - Payment */}
-        <div className="lg:w-2/5 p-6 ">
+        <div className="lg:w-2/5 ">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Payment Information</h2>
-          <CheckoutPayment setAlert={{setAlert}}/>
+          <CheckoutPayment setAlert={{setAlert}} selectedAddress={selectedAddress}/>
+          
         </div>
+
+        
       </div>
     </div>
   );

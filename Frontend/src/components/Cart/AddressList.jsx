@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PencilIcon, TrashIcon, CheckCircleIcon,HomeIcon } from '@heroicons/react/24/solid';
 import ShippingAddressForm from './ShippingAddressForm';
 import Loading from '../Alert/Loading';
 import { removeUserAddress } from './checkout';
 
-const AddressList = ({ addresses ,loading,handleRefresh,setAlert}) => {
-  const [selectedAddressIndex, setSelectedAddressIndex] = useState(0);
+const AddressList = ({ addresses ,loading,handleRefresh,setAlert,setSelectedAddress}) => {
+  const [selectedAddressIndex, setSelectedAddressIndex] = useState();
   
 
   const handleSelectAddress = (index) => {
     setSelectedAddressIndex(index);
+    
   };
 
   const handleEditAddress = (index) => {
@@ -29,6 +30,10 @@ const AddressList = ({ addresses ,loading,handleRefresh,setAlert}) => {
         setAlert({type:err.response.data.type,message:err.response.data.message})
       }
   };
+
+  useEffect(()=>{
+    setSelectedAddress(addresses[selectedAddressIndex])
+  },[selectedAddressIndex])
 
   return (
     <div className=" w-full lg:max-w-3xl md:max-w-xl sm:max-w-lg h-auto bg-white shadow-xl p-6 rounded-lg mt-6">

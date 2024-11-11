@@ -2,15 +2,14 @@ import React, { useContext, useEffect, useState } from 'react'
 import CheckoutCartSummary from './CheckoutCartSummary'
 import {AuthContext} from '../Navigation/UserAuthContext'
 import {useNavigate} from 'react-router-dom'
-import Alert from '../Alert/Alert'
 import axios from 'axios'
 
-const CheckoutPayment = () => {
+const CheckoutPayment = ({setAlert,selectedAddress}) => {
 
   const [loading,setLoading]=useState(true);
   const [cartItems,setCartItems]=useState([])
   const {isLogged}=useContext(AuthContext);
-  const [alert,setAlert] =useState()
+
 
   const navigate=useNavigate()
 
@@ -57,7 +56,7 @@ const CheckoutPayment = () => {
   return (
     <div>
      
-      <CheckoutCartSummary cartItems={cartItems} loading={loading} />
+      <CheckoutCartSummary cartItems={cartItems} loading={loading} selectedAddress={selectedAddress}/>
     </div>
   )
 }
