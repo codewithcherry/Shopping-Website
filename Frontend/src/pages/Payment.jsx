@@ -64,7 +64,7 @@ const Payment = () => {
     <div className='bg-gray-100 p-6'>
         <Breadcrumbs breadcrumbs={breadcrumbs}/>
     </div>
-    <div className="flex flex-col md:flex-row md:space-x-6 px-4 md:px-8 lg:px-16 py-6 bg-gray-100 min-h-screen">
+    <div className="flex flex-col md:flex-row md:space-x-6 px-4 md:px-8 lg:px-16 py-4 bg-gray-100 min-h-screen">
       {/* Payment Form */}
       <div className="md:w-2/3 mb-6 md:mb-0">
         <PaymentSummary cartItems={cartItems} address={address} />

@@ -10,8 +10,8 @@ const PaymentSummary = ({ cartItems, address }) => {
     <div className="bg-white shadow-md rounded-lg p-6">
       {/* Cart Items */}
       <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-4">Cart Items</h2>
-       <div className='grid grid-cols-3 gap-3'>
+        <h2 className="text-xl font-semibold mb-4">Products to order</h2>
+       <div className='grid grid-cols-2 gap-3'>
        {cartItems.map((item, index) => (
           <div key={index} className="flex items-center justify-between mb-4 pb-4 border-b">
             <img
