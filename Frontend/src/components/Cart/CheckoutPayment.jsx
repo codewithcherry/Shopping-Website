@@ -56,7 +56,7 @@ const CheckoutPayment = () => {
 
   return (
     <div>
-     {alert &&  <Alert type={alert.type} message={alert.message} onClose={()=>{setAlert(null)}}/>}
+     
       <CheckoutCartSummary cartItems={cartItems} loading={loading} />
     </div>
   )

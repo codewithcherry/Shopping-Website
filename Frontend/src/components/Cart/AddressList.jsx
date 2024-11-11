@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { PencilIcon, TrashIcon, CheckCircleIcon,HomeIcon } from '@heroicons/react/24/solid';
 import ShippingAddressForm from './ShippingAddressForm';
 import Loading from '../Alert/Loading';
+import { removeUserAddress } from './checkout';
 
-const AddressList = ({ addresses ,loading,handleRefresh}) => {
+const AddressList = ({ addresses ,loading,handleRefresh,setAlert}) => {
   const [selectedAddressIndex, setSelectedAddressIndex] = useState(0);
+  
 
   const handleSelectAddress = (index) => {
     setSelectedAddressIndex(index);
@@ -15,9 +17,17 @@ const AddressList = ({ addresses ,loading,handleRefresh}) => {
     // Implement the logic for editing address
   };
 
-  const handleDeleteAddress = (index) => {
-    console.log('Delete address at index:', index);
-    // Implement the logic for deleting address
+  const handleDeleteAddress = async(id) => {
+    // console.log('Delete address at index:', id);
+    try{
+        const response=await removeUserAddress(id)
+        setAlert(response)
+        handleRefresh()
+      }
+      catch(err){
+        console.log(err)
+        setAlert({type:err.response.data.type,message:err.response.data.message})
+      }
   };
 
   return (
@@ -58,12 +68,12 @@ const AddressList = ({ addresses ,loading,handleRefresh}) => {
                                   <p className="text-gray-600">Phone: {address.phoneNumber}</p>
                             </div>
                             <div className="flex space-x-2">
-                                  <PencilIcon
+                                  {/* <PencilIcon
                                     onClick={(e) => { e.stopPropagation(); handleEditAddress(index); }}
                                     className="h-5 w-5 text-gray-400 hover:text-gray-600 cursor-pointer"
-                                  />
+                                  /> */}
                                   <TrashIcon
-                                    onClick={(e) => { e.stopPropagation(); handleDeleteAddress(index); }}
+                                    onClick={(e) => { e.stopPropagation(); handleDeleteAddress(address._id); }}
                                     className="h-5 w-5 text-red-400 hover:text-red-600 cursor-pointer"
                                   />
                             </div>
@@ -73,7 +83,7 @@ const AddressList = ({ addresses ,loading,handleRefresh}) => {
           </div>
       }
       <div>
-        <ShippingAddressForm  handleRefresh={handleRefresh}/>
+        <ShippingAddressForm  handleRefresh={handleRefresh} setAlert={setAlert}/>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import { PlusIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid'
 import { useState } from 'react'
 import axios from 'axios'
 
-const ShippingAddressForm = ({handleRefresh}) => {
+const ShippingAddressForm = ({handleRefresh,setAlert}) => {
   const [formData, setFormData] = useState({
     fullName: '',
     doorNumber: '',
@@ -46,8 +46,9 @@ const ShippingAddressForm = ({handleRefresh}) => {
               }
           );
 
-          console.log('address added successfully:', response.data);   
+          // console.log('address added successfully:', response.data);   
           handleRefresh()
+          setAlert({type:"success",message:"successfully added the address"});
           setFormData({
             fullName: '',
             doorNumber: '',

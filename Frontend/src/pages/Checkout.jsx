@@ -76,13 +76,13 @@ const Checkout = () => {
         {/* Breadcrumbs */}
         <BreadCrumbs breadcrumbs={breadcrumbs} />
       </div>
-      {alert && <Alert type={alert.type} message={alert.message} onClose={()=>{setAlert(null)}} />}
+      {alert && <div className='absolute top-0 w-full'> <Alert type={alert.type} message={alert.message} onClose={()=>{setAlert(null)}} /></div>}
       {/* Checkout Layout */}
       <div className="max-w-screen-xl mx-auto flex flex-col lg:flex-row lg:justify-between gap-8 px-6 ">
         {/* Left Section - Address List */}
         <div className="lg:w-3/5 p-6 ">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Shipping Address</h2>
-          <AddressList addresses={addresses} loading={loading} handleRefresh={handleRefresh}/>
+          <AddressList addresses={addresses} loading={loading} handleRefresh={handleRefresh} setAlert={setAlert}/>
           {/* Uncomment if Shipping Address Form is needed */}
           {/* <ShippingAddressForm /> */}
         </div>
@@ -90,7 +90,7 @@ const Checkout = () => {
         {/* Right Section - Payment */}
         <div className="lg:w-2/5 p-6 ">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Payment Information</h2>
-          <CheckoutPayment />
+          <CheckoutPayment setAlert={{setAlert}}/>
         </div>
       </div>
     </div>
