@@ -24,6 +24,7 @@ import AdminAddProduct from './components/Admin/Dashboard/AdminAddProduct';
 import ProductDetails from './pages/ProductDetails';
 import { UserAuthContext } from './components/Navigation/UserAuthContext';
 import Checkout from './pages/Checkout';
+import Payment from './pages/Payment';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         <Route path="/orders" element={<Orders />}/> 
         <Route path="/cart" element={<Cart/>}/> 
         <Route path='/checkout' element={<Checkout />} />
+        <Route path='/payment' element={<Payment />} />        
         <Route path='/admin' element={<Admin />} />
         <Route path='/product/:productId' element={<ProductDetails />}/>
         <Route path='/admin/dashboard' element={<Dashboard />} >
