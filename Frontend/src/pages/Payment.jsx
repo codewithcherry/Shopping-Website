@@ -20,6 +20,8 @@ const Payment = () => {
     const [alert,setAlert]=useState()
     const [loading,setLoading]=useState(true)
     const {isLogged} =useContext(AuthContext)
+    const [orderData,setOrderData]=useState({})
+    const [modalLoading,setModalLoading]=useState(true)
 
     const breadcrumbs = [
         { label: 'Home', link: '/' },
@@ -34,29 +36,7 @@ const Payment = () => {
       const handleModalClose = () => setIsModalOpen(false);
       const handleModalOpen = () => setIsModalOpen(true);
 
-      const sampleOrderData = {
-        orderStatus: 'successful',
-        transactionType: 'prepaid',
-        paymentMode: 'Credit Card',
-        transactionDetails: { UTR: '1234567890', transactionId: 'TX123456789' },
-        orderId: 'ORD987654321',
-        shippingDetails: { trackingId: '', status: 'Yet to Dispatch' },
-        shippingAddress: {
-          fullName: "Jhon Doe",
-          doorNumber: "404 Mega LAnds",
-          streetArea: "wilson street block-3",
-          landmark: "near coffee house",
-          city: "Texas",
-          state: "Florida",
-          postalCode: 783672,
-          phoneNumber: 9837635882,
-        },
-        orderValue: 299.99,
-        items: [
-          { image: 'https://via.placeholder.com/50', title: 'Product 1', quantity: 1 },
-          { image: 'https://via.placeholder.com/50', title: 'Product 2', quantity: 2 },
-        ]
-      };
+      
   
 
       const fetchCartfromServer = async () => {
@@ -79,6 +59,11 @@ const Payment = () => {
           
         }
       };
+
+      const handleOrderData =(data)=>{
+        setOrderData(data)
+        setModalLoading(false)
+      }
 
       useEffect(()=>{
         if(!isLogged){
@@ -104,12 +89,13 @@ const Payment = () => {
       </div>
       {/* Payment Summary */}
       <div className="md:w-1/3">
-        <PaymentForm cartItems={cartItems} address={address} modalOpen={handleModalOpen} />
+        <PaymentForm cartItems={cartItems} address={address} modalOpen={handleModalOpen} handleOrderData={handleOrderData}/>
       </div>
     </div>
     <PaymentStatusModal isOpen={isModalOpen} 
+        modalLoading={modalLoading}
         onClose={handleModalClose} 
-        {...sampleOrderData} />
+        orderData={orderData} />
     </>
   );
 };

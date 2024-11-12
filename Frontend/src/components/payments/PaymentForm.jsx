@@ -8,8 +8,9 @@ import {
   ShieldCheckIcon,
   LockClosedIcon,
 } from '@heroicons/react/24/outline';
+import axios from 'axios'
 
-const PaymentForm = ({cartItems,address,modalOpen,modalClose,sampleOrderData}) => {
+const PaymentForm = ({cartItems,address,modalOpen,handleOrderData}) => {
   const [selectedOption, setSelectedOption] = useState('');
   const [formData, setFormData] = useState({
     cardNumber: '',
@@ -48,9 +49,42 @@ const PaymentForm = ({cartItems,address,modalOpen,modalClose,sampleOrderData}) =
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log('Payment Details:', formData,cartItems,address);
+    const data={
+      shippingAddress:address,
+      paymentType:selectedOption=="COD"?"COD":"Prepaid",
+      paymentMode:selectedOption,
+      paymentDetails:formData,
+      products:cartItems.map(item => ({
+        productId: item.productId._id,
+        title:item.productId.title,
+        quantity: item.quantity,
+        size: item.size
+      })),
+      amount:total
+    }
+    // console.log(data)
+    const token=localStorage.getItem("jwtToken")
+        try {
+          
+          const response = await axios.post(
+              'http://localhost:3000/orders/place-order', // Replace with your actual API endpoint
+              data,
+              {
+                  headers: {
+                      Authorization: `Bearer ${token}`, // Add authorization token in header
+                      'Content-Type': 'application/json',
+                  },                 
+              }
+          );  
+          await handleOrderData(response.data.order) 
+          console.log('order placed successfully:', response.data);
+          
+      }
+      catch(err){
+          console.log(err)
+      }
     modalOpen()
   };
 
@@ -61,8 +95,8 @@ const PaymentForm = ({cartItems,address,modalOpen,modalClose,sampleOrderData}) =
       <div className="space-y-2">
         {/* Payment Options */}
         {[
-          { label: 'Debit/Credit Card', icon: <CreditCardIcon className="h-4 w-4" /> },
-          { label: 'NetBanking', icon: <BuildingLibraryIcon className="h-4 w-4" /> },
+          { label: 'Credit/Debit', icon: <CreditCardIcon className="h-4 w-4" /> },
+          { label: 'Internet Banking', icon: <BuildingLibraryIcon className="h-4 w-4" /> },
           { label: 'UPI', icon: <QrCodeIcon className="h-4 w-4" /> },
           { label: 'Wallet', icon: <WalletIcon className="h-4 w-4" /> },
           { label: 'COD', icon: <BanknotesIcon className="h-4 w-4" /> },
@@ -81,7 +115,7 @@ const PaymentForm = ({cartItems,address,modalOpen,modalClose,sampleOrderData}) =
             {selectedOption === label && (
               <div className="mt-2 p-2 border border-gray-200 rounded-md animate-fadeIn">
                 {/* Conditional Form Rendering Based on Selected Option */}
-                {label === 'Debit/Credit Card' && (
+                {label === 'Credit/Debit' && (
                   <div className="space-y-4">
                     <input
                       type="text"
@@ -132,7 +166,7 @@ const PaymentForm = ({cartItems,address,modalOpen,modalClose,sampleOrderData}) =
                     </label>
                   </div>
                 )}
-                {label === 'NetBanking' && (
+                {label === 'Internet Banking' && (
                   <div>
                     <h3 className=" text-sm font-medium text-gray-700">Select Bank</h3>
                     <div className="space-y-2 mt-2">
