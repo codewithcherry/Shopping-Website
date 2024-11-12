@@ -16,7 +16,7 @@ const Checkout = () => {
   const [loading,setLoading]=useState(true);
   const [alert,setAlert]=useState(false);
   const [refresh,setRefresh]=useState(0)
-  const [selectedAddress,setSelectedAddress]=useState({});
+  const [selectedAddress,setSelectedAddress]=useState();
   
 
   const {isLogged} =useContext(AuthContext);

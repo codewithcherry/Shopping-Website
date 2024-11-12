@@ -87,7 +87,7 @@ const CheckoutCartSummary = ({cartItems,loading,selectedAddress}) => {
           <span className="text-gray-900">${total.toFixed(2)}</span>
         </div>    
       </div>   
-      <button className='bg-indigo-400 text-center  text-white font-semibold p-2 mt-4 rounded-lg hover:bg-indigo-600' onClick={handlePay}>
+      <button className={selectedAddress?`bg-indigo-400 text-center  text-white font-semibold p-2 mt-4 rounded-lg hover:bg-indigo-600`:`bg-gray-400 text-center  text-white font-semibold p-2 mt-4 rounded-lg hover:cursor-not-allowed`} onClick={handlePay} disabled={!selectedAddress}>
             Proceed to pay
       </button> 
         </div>
