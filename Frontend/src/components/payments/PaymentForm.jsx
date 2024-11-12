@@ -9,7 +9,7 @@ import {
   LockClosedIcon,
 } from '@heroicons/react/24/outline';
 
-const PaymentForm = () => {
+const PaymentForm = ({cartItems,address,modalOpen,modalClose,sampleOrderData}) => {
   const [selectedOption, setSelectedOption] = useState('');
   const [formData, setFormData] = useState({
     cardNumber: '',
@@ -21,6 +21,10 @@ const PaymentForm = () => {
     upiId: '',
     walletPhone: '',
   });
+  // Calculate the subtotal, delivery fee, and total
+  const subtotal = cartItems.reduce((acc, item) => acc + item.productId.finalPrice * item.quantity, 0);
+  const deliveryFee = subtotal < 199 ? 25 : 0; // Example static delivery fee
+  const total = subtotal + deliveryFee;
 
   // Handle selection of payment option
   const handleOptionChange = (option) => {
@@ -46,8 +50,8 @@ const PaymentForm = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Payment Details:', formData);
-    alert('Order placed successfully!');
+    console.log('Payment Details:', formData,cartItems,address);
+    modalOpen()
   };
 
   return (
@@ -86,6 +90,7 @@ const PaymentForm = () => {
                       value={formData.cardNumber}
                       onChange={handleInputChange}
                       className="w-full p-2 border rounded-md focus:outline-none focus:border-blue-500"
+                      required
                     />
                     <input
                       type="text"
@@ -103,6 +108,7 @@ const PaymentForm = () => {
                         value={formData.expiryDate}
                         onChange={handleInputChange}
                         className="w-full p-2 border rounded-md focus:outline-none focus:border-blue-500"
+                        required
                       />
                       <input
                         type="password"
@@ -111,6 +117,7 @@ const PaymentForm = () => {
                         value={formData.cvv}
                         onChange={handleInputChange}
                         className="w-full p-2 border rounded-md focus:outline-none focus:border-blue-500"
+                        required
                       />
                     </div>
                     <label className="flex items-center space-x-2">
@@ -153,6 +160,7 @@ const PaymentForm = () => {
                     value={formData.upiId}
                     onChange={handleInputChange}
                     className="w-full p-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    required
                   />
                 )}
                 {label === 'Wallet' && (
