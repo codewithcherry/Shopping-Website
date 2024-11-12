@@ -35,7 +35,7 @@ const orderSchema = new mongoose.Schema({
   },
   paymentMode: {
     type: String,
-    enum: ['Credit/Debit', 'Internet Banking', 'UPI', 'Wallet'],
+    enum: ['Credit/Debit', 'Internet Banking', 'UPI', 'Wallet','COD'],
     required: true,
   },
   paymentDetails: {
@@ -103,6 +103,7 @@ const orderSchema = new mongoose.Schema({
       ref: 'Product',
       required: true,
     },
+    title:String,
     quantity: Number,
     size: String,
   }],
