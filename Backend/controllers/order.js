@@ -55,3 +55,24 @@ exports.placeOrder = async (req, res, next) => {
     res.status(500).json({ type:"error", message: 'Failed to create order.' });
   }
 };
+
+
+exports.getUserOrders = async (req, res, next) => {
+  const userId = req.user.userId;
+  try {
+    // Fetch orders, populate products, and sort by `_id` in descending order
+    const orders = await Order.find({ user: userId })
+      .populate({ path: "products.productId", model: "Product" })
+      .sort({ _id: -1 }); // Sort by _id in descending order to get the latest orders first
+
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({ type: "error", message: "No orders found" });
+    }
+
+    res.status(200).json(orders);
+  } catch (err) {
+    // console.error("Error fetching orders:", err);  // Debugging output
+    res.status(500).json({ type: "error", message: "Internal server error" });
+  }
+};
+
