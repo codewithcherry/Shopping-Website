@@ -1,6 +1,8 @@
 const Order = require('../models/order'); // Adjust the path to your Order model file
 const User =require('../models/user');
-const mongoose = require('mongoose');
+const {GenerateInvoice}=require("./invoice")
+
+
 
 // Middleware to create a new order
 exports.placeOrder = async (req, res, next) => {
@@ -75,4 +77,16 @@ exports.getUserOrders = async (req, res, next) => {
     res.status(500).json({ type: "error", message: "Internal server error" });
   }
 };
+
+exports.generateInvoice=async(req,res,next)=>{
+  const {orderId}=req.body;
+  try{
+    const order=await Order.findById(orderId).populate({ path: "products.productId", model: "Product" })
+    GenerateInvoice(order,res)
+
+  }
+  catch(err){
+    res.status(500).json({type:'error',message:"couldn't generate invoice try later"})
+  }
+}
 
