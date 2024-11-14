@@ -1,12 +1,55 @@
 import React, { useState } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import OrderProductCard from './OrderProductCard';
+import axios from 'axios';
+
 
 const OrderCard = ({ order }) => {
   const [isTransactionOpen, setTransactionOpen] = useState(false);
   const [isPaymentOpen, setPaymentOpen] = useState(false);
   const [isShippingOpen, setShippingOpen] = useState(false);
   const [isProductsOpen, setProductsOpen] = useState(false);
+
+  const downloadInvoice = async (orderId) => {
+    const token = localStorage.getItem("jwtToken");
+    
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/orders/generate-invoice',
+        { orderId },
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          },
+          responseType: 'blob'  // This is important to receive the PDF as binary data
+        }
+      );
+      
+      // Check if response contains data
+      if (!response.data || response.data.size === 0) {
+        throw new Error('Failed to generate invoice: Empty response data');
+      }
+  
+      // Create a URL for the blob
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      
+      // Create a link element to trigger download
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `invoice_${orderId}.pdf`; // Custom filename
+      document.body.appendChild(link);
+      link.click();
+  
+      // Clean up the URL and remove link element
+      URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    } catch (err) {
+      // Show user-friendly error messages
+      console.error('Error downloading invoice:', err);
+      alert(`Failed to download invoice. Error: ${err.message || err}`);
+    }
+  };
 
   return (
     <div className="max-w-full sm:max-w-md md:max-w-2xl lg:max-w-7xl p-4 md:p-6 bg-white border border-gray-200 rounded-lg shadow-lg space-y-4 md:space-y-6">
@@ -16,7 +59,7 @@ const OrderCard = ({ order }) => {
         <h2 className="text-lg md:text-xl font-semibold text-gray-800">Order ID: {order._id}</h2>
         <p  className='text-sm py-2'>Order Date: {new Date(order.orderDate).toLocaleDateString()}</p>
         </div>
-        <button className="p-2 bg-indigo-600 text-white text-sm font-medium rounded-2xl hover:bg-indigo-700 transition-colors">
+        <button className="p-2 bg-indigo-600 text-white text-sm font-medium rounded-2xl hover:bg-indigo-700 transition-colors" onClick={()=>downloadInvoice(order._id)}>
           Download Invoice
         </button>
       </div>
