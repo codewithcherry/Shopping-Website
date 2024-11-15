@@ -22,7 +22,7 @@ const Orders = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
+      // console.log(response.data);
       setLoading(false);
       setOrders(response.data);
     } catch (err) {
