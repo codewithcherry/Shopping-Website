@@ -1,26 +1,26 @@
-import React, { useContext, useEffect, useState } from "react";
-import { NavLink ,useNavigate} from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/Logo.png";
 import { AuthContext } from "./UserAuthContext";
+import { UserIcon, ShoppingCartIcon } from "@heroicons/react/24/solid";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const navigate=useNavigate()
-  const {isLogged,setIsLogged,logout} =useContext(AuthContext);
-  
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const navigate = useNavigate();
+  const { isLogged, logout } = useContext(AuthContext);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
-  const handleLogout=()=>{
-    logout()
-    navigate("/")
-  }
 
-  
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
-    <nav className="bg-indigo-300 shadow-lg">
+    <nav className="bg-indigo-300 shadow-lg z-50 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
@@ -31,7 +31,7 @@ const Navbar = () => {
           </div>
 
           {/* Navigation Links */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex space-x-8 items-center">
             <NavLink
               to="/"
               className={({ isActive }) =>
@@ -52,58 +52,89 @@ const Navbar = () => {
             >
               Products
             </NavLink>
-            {
-              isLogged && <NavLink
-              to="/orders"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
-                  : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-              }
-            >
-              orders
-            </NavLink>
-            }
             <NavLink
               to="/cart"
               className={({ isActive }) =>
                 isActive
-                  ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
-                  : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+                  ? "flex gap-1 items-center text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
+                  : "flex gap-1 items-center text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
               }
             >
-              Cart
+              <ShoppingCartIcon className="w-6 h-6 text-white hover:text-indigo-700" /> Cart
             </NavLink>
-            {!isLogged && <NavLink
-              to="/login"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
-                  : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-              }
-            >
-              Login
-            </NavLink>}
-            {
-              !isLogged && <NavLink
-              to="/signup"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
-                  : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-              }
-            >
-              Signup
-            </NavLink>           
-            }
-            {isLogged && <button className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2" onClick={handleLogout}>logout</button>}
+            {/* Account Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsAccountOpen((prev) => !prev)}
+                className="flex gap-1 items-center text-white hover:text-indigo-700 transition duration-300 p-2 focus:outline-none"
+              >
+                <UserIcon className="w-5 h-5" />
+                <p className="text-md font-medium">Account</p>
+              </button>
+              {isAccountOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-indigo-300 rounded-lg shadow-lg flex flex-col z-50">
+                  {!isLogged && (
+                    <NavLink
+                      to="/login"
+                      className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+                      onClick={() => setIsAccountOpen(false)}
+                    >
+                      Login
+                    </NavLink>
+                  )}
+                  {!isLogged && (
+                    <NavLink
+                      to="/signup"
+                      className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+                      onClick={() => setIsAccountOpen(false)}
+                    >
+                      Signup
+                    </NavLink>
+                  )}
+                  {isLogged && (
+                    <NavLink
+                      to="/profile"
+                      className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+                      onClick={() => setIsAccountOpen(false)}
+                    >
+                      Profile
+                    </NavLink>
+                  )}
+                  <NavLink
+                    to="/orders"
+                    className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+                    onClick={() => setIsAccountOpen(false)}
+                  >
+                    Orders
+                  </NavLink>
+                  <NavLink
+                    to="/wishlist"
+                    className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+                    onClick={() => setIsAccountOpen(false)}
+                  >
+                    Wishlist
+                  </NavLink>
+                  {isLogged && (
+                    <button
+                      className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+                      onClick={() => {
+                        handleLogout();
+                        setIsAccountOpen(false);
+                      }}
+                    >
+                      Logout
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
             <button
               className="text-white hover:text-indigo-300 focus:outline-none"
-              onClick={toggleMobileMenu} // Toggle mobile menu on button click
+              onClick={toggleMobileMenu}
             >
               <svg
                 className="h-6 w-6"
@@ -125,17 +156,16 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu */}
-      {isMobileMenuOpen && ( // Only render the mobile menu when it's open
+      {isMobileMenuOpen && (
         <div className="md:hidden flex flex-col px-4 pb-4 space-y-2">
           <NavLink
-            exact
             to="/"
             className={({ isActive }) =>
               isActive
                 ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
                 : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
             }
-            onClick={toggleMobileMenu} // Close menu on link click
+            onClick={toggleMobileMenu}
           >
             Home
           </NavLink>
@@ -146,55 +176,73 @@ const Navbar = () => {
                 ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
                 : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
             }
-            onClick={toggleMobileMenu} // Close menu on link click
+            onClick={toggleMobileMenu}
           >
             Products
           </NavLink>
-          {
-              isLogged && <NavLink
-              to="/orders"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
-                  : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-              }
-            >
-              orders
-            </NavLink>
+          <NavLink
+            to="/cart"
+            className={({ isActive }) =>
+              isActive
+                ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
+              : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
             }
+            onClick={toggleMobileMenu}
+          >
+            Cart
+          </NavLink>
+          {!isLogged && (
             <NavLink
-              to="/cart"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
-                  : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-              }
-            >
-              Cart
-            </NavLink>
-            {!isLogged && <NavLink
               to="/login"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
-                  : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-              }
+              className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+              onClick={toggleMobileMenu}
             >
               Login
-            </NavLink>}
-            {
-              !isLogged && <NavLink
+            </NavLink>
+          )}
+          {!isLogged && (
+            <NavLink
               to="/signup"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
-                  : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-              }
+              className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+              onClick={toggleMobileMenu}
             >
               Signup
-            </NavLink>           
-            }
-            {isLogged && <button className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2" onClick={handleLogout}>logout</button>}
+            </NavLink>
+          )}
+          {isLogged && (
+            <NavLink
+              to="/profile"
+              className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+              onClick={toggleMobileMenu}
+            >
+              Profile
+            </NavLink>
+          )}
+          <NavLink
+            to="/orders"
+            className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+            onClick={toggleMobileMenu}
+          >
+            Orders
+          </NavLink>
+          <NavLink
+            to="/wishlist"
+            className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+            onClick={toggleMobileMenu}
+          >
+            Wishlist
+          </NavLink>
+          {isLogged && (
+            <button
+              className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+              onClick={() => {
+                handleLogout();
+                toggleMobileMenu();
+              }}
+            >
+              Logout
+            </button>
+          )}
         </div>
       )}
     </nav>
