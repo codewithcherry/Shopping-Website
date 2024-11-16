@@ -114,15 +114,15 @@ const categories = [
   const Categories = () => {
     const [activeCategory, setActiveCategory] = useState(categories[0]);
     const [startIndex, setStartIndex] = useState(0);
-    const [categoryIndex, setCategoryIndex] = useState(0);  // Track current category index
+    const [categoryIndex, setCategoryIndex] = useState(0);
   
-    const categoriesToShow = 4; // Number of categories to show at a time
+    const categoriesToShow = 6; // Number of categories to show at a time
+    const subcategoriesToShow = 5; // Number of subcategories to show at a time
   
-    // Handle category tab click (this should not trigger sliding)
-    const handleCategoryClick = (category, index) => {
-      setActiveCategory(category);
-      setCategoryIndex(index); // Set the clicked category index
-      setStartIndex(0); // Reset subcategory carousel index
+    // Handle category tab click (does not affect category sliding anymore)
+    const handleCategoryClick = (category) => {
+      setActiveCategory(category); // Only update active category without affecting sliding
+      setStartIndex(0); // Reset subcategory carousel index when a new category is selected
     };
   
     const handleNextCategory = () => {
@@ -137,128 +137,147 @@ const categories = [
       }
     };
   
-    const handleNext = () => {
-      if (startIndex + 1 < activeCategory.subCategory.length) {
+    const handleNextSubcategory = () => {
+      if (startIndex + subcategoriesToShow < activeCategory.subCategory.length) {
         setStartIndex(startIndex + 1);
       }
     };
   
-    const handlePrev = () => {
-      if (startIndex - 1 >= 0) {
+    const handlePrevSubcategory = () => {
+      if (startIndex > 0) {
         setStartIndex(startIndex - 1);
       }
     };
   
-    const visibleSubCategories = activeCategory.subCategory.slice(startIndex, startIndex + 1);
+    const visibleSubCategories = activeCategory.subCategory.slice(
+      startIndex,
+      startIndex + subcategoriesToShow
+    );
   
-    // Calculate if the previous/next buttons should be disabled based on current index
-    const isPrevDisabled = startIndex === 0;
-    const isNextDisabled = startIndex + 1 >= activeCategory.subCategory.length;
+    const isPrevSubcategoryDisabled = startIndex === 0;
+    const isNextSubcategoryDisabled =
+      startIndex + subcategoriesToShow >= activeCategory.subCategory.length;
   
     const isPrevCategoryDisabled = categoryIndex === 0;
-    const isNextCategoryDisabled = categoryIndex >= categories.length - categoriesToShow;
+    const isNextCategoryDisabled =
+      categoryIndex >= categories.length - categoriesToShow;
   
     return (
-    <div className="flex justify-center items-center bg-gray-100">
-      <div className=" w-[80%] py-6 space-y-4">
-        {/* Title */}
-        <h2 className="text-3xl font-semibold text-indigo-600">Categories</h2>
+      <div className="flex justify-center items-center bg-gray-100">
+        <div className="w-[80%] py-6 space-y-4">
+          {/* Title */}
+          <h2 className="text-3xl font-semibold text-indigo-600">Categories</h2>
   
-        {/* Category Navigation Arrows */}
-        <div className="flex justify-between items-center mb-4">
-          <button
-            onClick={handlePrevCategory}
-            disabled={isPrevCategoryDisabled}
-            className={`text-gray-500 ${isPrevCategoryDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:text-blue-500'}`}
-          >
-            <ChevronLeftIcon className="h-6 w-6" />
-          </button>
-          <div className="overflow-hidden">
-            <div className="flex">
-              {categories.map((category, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleCategoryClick(category, index)} // Only change category without sliding
-                  className={`flex-shrink-0 px-4 py-2 cursor-pointer font-medium transition-all ${
-                    activeCategory === category
-                      ? 'text-blue-600 font-semibold underline underline-offset-4' // Style for active category
-                      : 'text-gray-600'
-                  }`}
-                >
-                  {category.category}
-                </div>
-              ))}
-            </div>
-          </div>
-          <button
-            onClick={handleNextCategory}
-            disabled={isNextCategoryDisabled}
-            className={`text-gray-500 ${isNextCategoryDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:text-blue-500'}`}
-          >
-            <ChevronRightIcon className="h-6 w-6" />
-          </button>
-        </div>
-  
-        {/* Subcategory Carousel */}
-        <div className="relative">
+          {/* Category Navigation Arrows */}
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-semibold text-indigo-500">Sub-Category</h3>
-            {activeCategory.subCategory.length > 1 && (
-              <div className="flex space-x-2">
-                <button
-                  onClick={handlePrev}
-                  disabled={isPrevDisabled}
-                  className={`text-gray-500 ${isPrevDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:text-blue-500'}`}
-                >
-                  <ChevronLeftIcon className="h-6 w-6" />
-                </button>
-                <button
-                  onClick={handleNext}
-                  disabled={isNextDisabled}
-                  className={`text-gray-500 ${isNextDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:text-blue-500'}`}
-                >
-                  <ChevronRightIcon className="h-6 w-6" />
-                </button>
+            <button
+              onClick={handlePrevCategory}
+              disabled={isPrevCategoryDisabled}
+              className={`text-gray-500 ${
+                isPrevCategoryDisabled ? "opacity-50 cursor-not-allowed" : "hover:text-blue-500"
+              }`}
+            >
+              <ChevronLeftIcon className="h-6 w-6" />
+            </button>
+            <div className="overflow-hidden">
+              <div
+                className="flex transition-transform duration-300"
+                style={{
+                  transform: `translateX(-${categoryIndex * (100 / categoriesToShow)}%)`,
+                }}
+              >
+                {categories.map((category, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleCategoryClick(category)} // Only update the active category
+                    className={`flex-shrink-0 px-4 py-2 cursor-pointer font-medium transition-all ${
+                      activeCategory === category
+                        ? "text-blue-600 font-semibold underline underline-offset-4"
+                        : "text-gray-600"
+                    }`}
+                  >
+                    {category.category}
+                  </div>
+                ))}
               </div>
-            )}
+            </div>
+            <button
+              onClick={handleNextCategory}
+              disabled={isNextCategoryDisabled}
+              className={`text-gray-500 ${
+                isNextCategoryDisabled ? "opacity-50 cursor-not-allowed" : "hover:text-blue-500"
+              }`}
+            >
+              <ChevronRightIcon className="h-6 w-6" />
+            </button>
           </div>
   
-          {/* Carousel Container */}
-          <div className="overflow-hidden mx-4">
-            <div
-              className="flex transition-transform duration-300"
-              style={{
-                transform: `translateX(-${startIndex * 20}%)`, // Moves by one card (20% width)
-              }}
-            >
-              {activeCategory.subCategory.map((sub, index) => (
-                                    <div key={index} className="w-1/5 flex-shrink-0 px-2">
-                                        <div
-                                        className="bg-white rounded-lg shadow-lg mx-auto transform transition hover:-translate-y-1 hover:shadow-2xl relative"
-                                        style={{
-                                            width: '100%',
-                                            height: '0',
-                                            paddingBottom: '120%', // Makes the card slightly taller than wide
-                                            backgroundImage: `url(${sub.imageUrl})`, // Set image as background
-                                            backgroundSize: 'cover',
-                                            backgroundPosition: 'center',
-                                        }}
-                                        >
-                                        <div className="absolute bottom-0 w-full  p-4 text-center rounded-b-lg">
-                                            <h3 className="text-md font-semibold text-white ">{sub.name}</h3>
-                                            <Link to={sub.path} className="text-indigo-800 font-medium hover:underline">
-                                            View More
-                                            </Link>
-                                        </div>
-                                        </div>
-                                    </div>
-                        ))}
-
+          {/* Subcategory Carousel */}
+          <div className="relative">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-semibold text-indigo-500">Sub-Category</h3>
+              {activeCategory.subCategory.length > subcategoriesToShow && (
+                <div className="flex space-x-2">
+                  <button
+                    onClick={handlePrevSubcategory}
+                    disabled={isPrevSubcategoryDisabled}
+                    className={`text-gray-500 ${
+                      isPrevSubcategoryDisabled ? "opacity-50 cursor-not-allowed" : "hover:text-blue-500"
+                    }`}
+                  >
+                    <ChevronLeftIcon className="h-6 w-6" />
+                  </button>
+                  <button
+                    onClick={handleNextSubcategory}
+                    disabled={isNextSubcategoryDisabled}
+                    className={`text-gray-500 ${
+                      isNextSubcategoryDisabled ? "opacity-50 cursor-not-allowed" : "hover:text-blue-500"
+                    }`}
+                  >
+                    <ChevronRightIcon className="h-6 w-6" />
+                  </button>
+                </div>
+              )}
+            </div>
+  
+            {/* Carousel Container */}
+            <div className="overflow-hidden mx-4 p-2">
+              <div
+                className="flex transition-transform duration-300"
+                style={{
+                  transform: `translateX(-${startIndex * (100 / subcategoriesToShow)}%)`,
+                }}
+              >
+                {visibleSubCategories.map((sub, index) => (
+                  <div key={index} className="w-1/5 flex-shrink-0 px-2">
+                    <div
+                      className="bg-white rounded-lg mx-auto transform transition hover:-translate-y-1 hover:shadow-lg relative"
+                      style={{
+                        width: "100%",
+                        height: "0",
+                        paddingBottom: "120%",
+                        backgroundImage: `url(${sub.imageUrl})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    >
+                      <div className="absolute bottom-0 w-full p-4 text-center rounded-b-lg">
+                        <h3 className="text-md font-semibold text-white">{sub.name}</h3>
+                        <Link
+                          to={sub.path}
+                          className="text-indigo-800 font-medium hover:underline"
+                        >
+                          View More
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     );
   };
   
