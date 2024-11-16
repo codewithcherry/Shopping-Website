@@ -1,8 +1,15 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/Logo.png";
 import { AuthContext } from "./UserAuthContext";
-import { UserIcon, ShoppingCartIcon } from "@heroicons/react/24/solid";
+import {
+  UserIcon,
+  ShoppingCartIcon,
+  BookmarkIcon,
+  ClipboardDocumentListIcon,
+  ArrowRightOnRectangleIcon,
+  ArrowLeftOnRectangleIcon,
+} from "@heroicons/react/24/solid";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -10,28 +17,42 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { isLogged, logout } = useContext(AuthContext);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
   const handleLogout = () => {
     logout();
     navigate("/");
+    setIsAccountOpen(false);
+  };
+
+  const closeDropdownOnClickOutside = (event) => {
+    if (!event.target.closest(".account-dropdown")) {
+      setIsAccountOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", closeDropdownOnClickOutside);
+    return () => {
+      document.removeEventListener("click", closeDropdownOnClickOutside);
+    };
+  }, []);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   return (
     <nav className="bg-indigo-300 shadow-lg z-50 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 flex items-center">
             <NavLink to="/" className="text-2xl font-bold text-white">
               <img src={Logo} alt="Logo" className="h-10" />
             </NavLink>
           </div>
 
           {/* Navigation Links */}
-          <div className="hidden md:flex space-x-8 items-center">
+          <div className="hidden md:flex items-center space-x-8">
             <NavLink
               to="/"
               className={({ isActive }) =>
@@ -60,70 +81,75 @@ const Navbar = () => {
                   : "flex gap-1 items-center text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
               }
             >
-              <ShoppingCartIcon className="w-6 h-6 text-white hover:text-indigo-700" /> Cart
+              <ShoppingCartIcon className="w-6 h-6 text-white " />
+              Cart
             </NavLink>
+
             {/* Account Dropdown */}
-            <div className="relative">
+            <div className="relative account-dropdown">
               <button
-                onClick={() => setIsAccountOpen((prev) => !prev)}
-                className="flex gap-1 items-center text-white hover:text-indigo-700 transition duration-300 p-2 focus:outline-none"
+                className="flex items-center gap-2 text-white font-medium hover:text-indigo-700 transition duration-300"
+                onClick={() => setIsAccountOpen(!isAccountOpen)}
               >
-                <UserIcon className="w-5 h-5" />
-                <p className="text-md font-medium">Account</p>
+                <UserIcon className="w-5 h-5 text-white" />
+                Account
               </button>
               {isAccountOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-indigo-300 rounded-lg shadow-lg flex flex-col z-50">
+                <div className="absolute top-10 -right-24 mt-2 w-48 bg-indigo-300 rounded-lg shadow-lg z-50">
                   {!isLogged && (
                     <NavLink
                       to="/login"
-                      className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+                      className="flex items-center gap-2 p-2 text-white hover:bg-indigo-400 rounded transition duration-300"
                       onClick={() => setIsAccountOpen(false)}
                     >
+                      <ArrowRightOnRectangleIcon className="w-5 h-5" />
                       Login
                     </NavLink>
                   )}
                   {!isLogged && (
                     <NavLink
                       to="/signup"
-                      className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+                      className="flex items-center gap-2 p-2 text-white hover:bg-indigo-400 rounded transition duration-300"
                       onClick={() => setIsAccountOpen(false)}
                     >
+                      <ArrowRightOnRectangleIcon className="w-5 h-5" />
                       Signup
                     </NavLink>
                   )}
                   {isLogged && (
-                    <NavLink
-                      to="/profile"
-                      className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-                      onClick={() => setIsAccountOpen(false)}
-                    >
-                      Profile
-                    </NavLink>
-                  )}
-                  <NavLink
-                    to="/orders"
-                    className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-                    onClick={() => setIsAccountOpen(false)}
-                  >
-                    Orders
-                  </NavLink>
-                  <NavLink
-                    to="/wishlist"
-                    className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-                    onClick={() => setIsAccountOpen(false)}
-                  >
-                    Wishlist
-                  </NavLink>
-                  {isLogged && (
-                    <button
-                      className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-                      onClick={() => {
-                        handleLogout();
-                        setIsAccountOpen(false);
-                      }}
-                    >
-                      Logout
-                    </button>
+                    <>
+                      <NavLink
+                        to="/profile"
+                        className="flex items-center gap-2 p-2 text-white hover:bg-indigo-400 rounded transition duration-300"
+                        onClick={() => setIsAccountOpen(false)}
+                      >
+                        <UserIcon className="w-5 h-5" />
+                        Profile
+                      </NavLink>
+                      <NavLink
+                        to="/wishlist"
+                        className="flex items-center gap-2 p-2 text-white hover:bg-indigo-400 rounded transition duration-300"
+                        onClick={() => setIsAccountOpen(false)}
+                      >
+                        <BookmarkIcon className="w-5 h-5" />
+                        Wishlist
+                      </NavLink>
+                      <NavLink
+                        to="/orders"
+                        className="flex items-center gap-2 p-2 text-white hover:bg-indigo-400 rounded transition duration-300"
+                        onClick={() => setIsAccountOpen(false)}
+                      >
+                        <ClipboardDocumentListIcon className="w-5 h-5" />
+                        Orders
+                      </NavLink>
+                      <button
+                        className="flex items-center gap-2 p-2 text-white hover:bg-indigo-400 rounded transition duration-300 w-full text-left"
+                        onClick={handleLogout}
+                      >
+                        <ArrowLeftOnRectangleIcon className="w-5 h-5" />
+                        Logout
+                      </button>
+                    </>
                   )}
                 </div>
               )}
@@ -158,35 +184,24 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden flex flex-col px-4 pb-4 space-y-2">
+          {/* Mobile navigation links */}
           <NavLink
             to="/"
-            className={({ isActive }) =>
-              isActive
-                ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
-                : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-            }
+            className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
             onClick={toggleMobileMenu}
           >
             Home
           </NavLink>
           <NavLink
             to="/products"
-            className={({ isActive }) =>
-              isActive
-                ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
-                : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-            }
+            className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
             onClick={toggleMobileMenu}
           >
             Products
           </NavLink>
           <NavLink
             to="/cart"
-            className={({ isActive }) =>
-              isActive
-                ? "text-indigo-700 font-medium border-b-2 border-indigo-700 p-2"
-              : "text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-            }
+            className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
             onClick={toggleMobileMenu}
           >
             Cart
@@ -210,38 +225,38 @@ const Navbar = () => {
             </NavLink>
           )}
           {isLogged && (
-            <NavLink
-              to="/profile"
-              className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-              onClick={toggleMobileMenu}
-            >
-              Profile
-            </NavLink>
-          )}
-          <NavLink
-            to="/orders"
-            className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-            onClick={toggleMobileMenu}
-          >
-            Orders
-          </NavLink>
-          <NavLink
-            to="/wishlist"
-            className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-            onClick={toggleMobileMenu}
-          >
-            Wishlist
-          </NavLink>
-          {isLogged && (
-            <button
-              className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
-              onClick={() => {
-                handleLogout();
-                toggleMobileMenu();
-              }}
-            >
-              Logout
-            </button>
+            <>
+              <NavLink
+                to="/profile"
+                className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+                onClick={toggleMobileMenu}
+              >
+                Profile
+              </NavLink>
+              <NavLink
+                to="/wishlist"
+                className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+                onClick={toggleMobileMenu}
+              >
+                Wishlist
+              </NavLink>
+              <NavLink
+                to="/orders"
+                className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+                onClick={toggleMobileMenu}
+              >
+                Orders
+              </NavLink>
+              <button
+                className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
+                onClick={() => {
+                  toggleMobileMenu();
+                  handleLogout();
+                }}
+              >
+                Logout
+              </button>
+            </>
           )}
         </div>
       )}
