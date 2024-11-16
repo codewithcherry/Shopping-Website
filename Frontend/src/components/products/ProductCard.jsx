@@ -4,8 +4,25 @@ import {Link,useNavigate} from 'react-router-dom'
 const ProductCard = ({product}) => {
   const navigate = useNavigate();
 
+  const addToRecentViewedLocal = (id) => {
+    // Retrieve the recently viewed items from localStorage
+    const recentItems = JSON.parse(localStorage.getItem('recentItems')) || [];
+    
+    // If there are more than 10 items, remove the oldest item (first item)
+    if (recentItems.length >= 10) {
+      recentItems.shift();
+    }
+    
+    // Add the new product ID to the recentItems array
+    recentItems.push(id);
+    
+    // Store the updated array back in localStorage as a string
+    localStorage.setItem('recentItems', JSON.stringify(recentItems));
+  }
+
     const openInNewTab = (id) => {
         // Opens the URL in a new tab
+        addToRecentViewedLocal(id)
         window.open(`/product/${id}`, '_blank', 'noopener,noreferrer');
     };
   return (
