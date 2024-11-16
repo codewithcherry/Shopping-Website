@@ -5,6 +5,7 @@ import { useState,useEffect } from 'react';
 import ImageGallery from '../components/products/product/ImageGallery';
 import ProductSummary from '../components/products/product/ProductSummary';
 import axios from 'axios';
+import RecentlyViewedProducts from '../components/products/product/RecentlyViewedProducts';
 
 const ProductDetails = () => {
     const { productId } = useParams(); // Extract the ID from the URL
@@ -40,6 +41,7 @@ const ProductDetails = () => {
                 </div>
             </div>
             }
+            <RecentlyViewedProducts />
             
         </div>
     );
