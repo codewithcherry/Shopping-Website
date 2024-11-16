@@ -13,5 +13,6 @@ router.put('/update-cartItemQuantity',validateController.authenticate,shopContro
 router.get('/user-address',validateController.authenticate,shopController.getUserAddress);
 router.post('/user-createAddress',validateController.authenticate,shopController.addUserAddress);
 router.post('/remove-userAddress',validateController.authenticate,shopController.removeUserAddress);
+router.post('/get-recent-products',shopController.getRecentProducts);
 
 module.exports=router;

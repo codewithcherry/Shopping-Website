@@ -206,3 +206,18 @@ exports.removeUserAddress=async(req,res,next)=>{
         res.status(500).json({type:"error",message:"Internal Server error 500"})
     }
 }
+
+exports.getRecentProducts=async(req,res,next)=>{
+    const productIds=req.body.products;
+    // console.log(productIds)
+    try {
+        // Use $in to find products where the _id is in the productIds array
+        const products = await Product.find({
+          _id: { $in: productIds }
+        });
+        
+        res.status(200).json(products);
+      } catch (error) {
+        res.status(500).json({type:"error",message:"Internal server error",error:error})
+      }
+}
