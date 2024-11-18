@@ -4,6 +4,8 @@ import ImageCarousel from '../components/home/ImageCarousel'
 import DealCarousel from '../components/home/DealCarousel'
 import Categories from '../components/home/Categories'
 import Footer from '../components/Footer/Footer'
+import FlashSale from '../components/products/product/FlashSale'
+
 
 const Home = () => {
   return (
@@ -11,8 +13,8 @@ const Home = () => {
       <Navbar />
       <DealCarousel />
       <Categories />
-      <Footer />
-         
+      <FlashSale />  
+      <Footer /> 
     </div>
   )
 }
