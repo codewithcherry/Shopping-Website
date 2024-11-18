@@ -7,6 +7,7 @@ import ProductSummary from '../components/products/product/ProductSummary';
 import axios from 'axios';
 import RecentlyViewedProducts from '../components/products/product/RecentlyViewedProducts';
 import Footer from '../components/Footer/Footer';
+import Breadcrumbs from '../components/Navigation/BreadCrumbs';
 
 const ProductDetails = () => {
     const { productId } = useParams(); // Extract the ID from the URL
@@ -15,6 +16,24 @@ const ProductDetails = () => {
     const [error, setError] = useState(null);
 
     const navigate =useNavigate()
+
+    const breadcrumbs = [
+        { label: 'Home', link: '/' },
+        { label: 'Products', link: '/products' },
+        { 
+          label: product?.category || '', 
+          link: `/products/${product?.category || ''}` 
+        },
+        { 
+          label: product?.subCategory || '', 
+          link: `/products/${product?.subCategory || ''}` 
+        },
+        { 
+            label: product?.title || '', 
+            link: `/products/${product?.title || ''}` 
+          }
+      ];
+      
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -34,6 +53,9 @@ const ProductDetails = () => {
     return (
         <div className='bg-gray-100  flex flex-col'>
             <Navbar />
+            <div className='mt-6 mx-6'>
+                <Breadcrumbs breadcrumbs={breadcrumbs}/>
+            </div>
             {
                 loading?" ":<div className='flex-grow flex justify-center py-10'>
                 <div className='container mx-auto flex flex-col lg:flex-row justify-center gap-8'>       
