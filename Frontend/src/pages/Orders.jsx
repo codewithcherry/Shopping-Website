@@ -5,6 +5,7 @@ import { AuthContext } from '../components/Navigation/UserAuthContext';
 import Loading from '../components/Alert/Loading';
 import OrderCard from '../components/orders/OrderCard';
 import { useNavigate } from 'react-router-dom';
+import Breadcrumbs from '../components/Navigation/BreadCrumbs';
 import Footer from '../components/Footer/Footer';
 
 const Orders = () => {
@@ -14,6 +15,12 @@ const Orders = () => {
   const { isLogged } = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const breadcrumbs = [
+    { label: 'Home', link: '/' },
+    { label: 'Account', link: '/account' },
+    { label: 'Orders', link: '/orders' },
+  ];
 
   const fetchUserOrders = async () => {
     const token = localStorage.getItem('jwtToken');
@@ -46,6 +53,9 @@ const Orders = () => {
   return (
     <div className="bg-gray-100 min-h-screen w-full">
       <Navbar />
+      <div className='mt-6 mx-6'>
+          <Breadcrumbs breadcrumbs={breadcrumbs}/>
+      </div>
       {loading ? (
         <div className="flex justify-center items-center h-screen">
           <Loading />
