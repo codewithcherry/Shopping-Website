@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import ProductCard from '../components/products/ProductCard';
 import axios from 'axios';
 import ProductPagination from '../components/pagination/ProductPagination';
+import Footer from '../components/Footer/Footer';
 
 const Products = () => {
   
@@ -47,6 +48,7 @@ const Products = () => {
         </div>
       </div>
       <ProductPagination paginationData={pagination} onPageChange={handlePagination} />
+      <Footer />
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { AuthContext } from '../components/Navigation/UserAuthContext';
 import Loading from '../components/Alert/Loading';
 import OrderCard from '../components/orders/OrderCard';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../components/Footer/Footer';
 
 const Orders = () => {
 
@@ -64,6 +65,7 @@ const Orders = () => {
           )}
         </div>
       )}
+      <Footer />
     </div>
   );
 };

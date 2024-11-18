@@ -3,6 +3,7 @@ import Navbar from '../components/Navigation/Navbar'
 import ImageCarousel from '../components/home/ImageCarousel'
 import DealCarousel from '../components/home/DealCarousel'
 import Categories from '../components/home/Categories'
+import Footer from '../components/Footer/Footer'
 
 const Home = () => {
   return (
@@ -10,6 +11,7 @@ const Home = () => {
       <Navbar />
       <DealCarousel />
       <Categories />
+      <Footer />
          
     </div>
   )

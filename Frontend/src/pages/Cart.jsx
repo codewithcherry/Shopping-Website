@@ -5,6 +5,7 @@ import CartSummary from '../components/Cart/CartSummary';
 import axios from 'axios';
 import Alert from '../components/Alert/Alert'
 import { AuthContext } from '../components/Navigation/UserAuthContext';
+import Footer from '../components/Footer/Footer';
 
 const Cart = () => {
 
@@ -88,6 +89,7 @@ const Cart = () => {
                       loading={loading} 
                       setAlert={setAlert}/>}
         </div>
+        <Footer />
     </div>
   )
 }

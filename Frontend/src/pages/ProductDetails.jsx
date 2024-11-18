@@ -6,6 +6,7 @@ import ImageGallery from '../components/products/product/ImageGallery';
 import ProductSummary from '../components/products/product/ProductSummary';
 import axios from 'axios';
 import RecentlyViewedProducts from '../components/products/product/RecentlyViewedProducts';
+import Footer from '../components/Footer/Footer';
 
 const ProductDetails = () => {
     const { productId } = useParams(); // Extract the ID from the URL
@@ -42,7 +43,7 @@ const ProductDetails = () => {
             </div>
             }
             <RecentlyViewedProducts />
-            
+            <Footer />
         </div>
     );
 };

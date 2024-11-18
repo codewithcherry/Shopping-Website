@@ -7,6 +7,7 @@ import { AuthContext } from '../components/Navigation/UserAuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Alert from '../components/Alert/Alert';
+import Footer from '../components/Footer/Footer';
 
 const Checkout = () => {
 
@@ -95,9 +96,8 @@ const Checkout = () => {
           <CheckoutPayment setAlert={{setAlert}} selectedAddress={selectedAddress}/>
           
         </div>
-
-        
       </div>
+      <Footer />
     </div>
   );
 };
