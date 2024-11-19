@@ -25,6 +25,7 @@ import ProductDetails from './pages/ProductDetails';
 import { UserAuthContext } from './components/Navigation/UserAuthContext';
 import Checkout from './pages/Checkout';
 import Payment from './pages/Payment';
+import Wishlist from './pages/Wishlist';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/products" element={<Products/>} />
         <Route path="/orders" element={<Orders />}/> 
+        <Route path="/wishlist" element={<Wishlist />}/> 
         <Route path="/cart" element={<Cart/>}/> 
         <Route path='/checkout' element={<Checkout />} />
         <Route path='/payment' element={<Payment />} />        
