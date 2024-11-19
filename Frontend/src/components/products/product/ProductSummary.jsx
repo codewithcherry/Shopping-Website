@@ -1,23 +1,54 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import ReviewSummary from './ReviewSummary';
 import ProductSummaryForm from './ProductSummaryForm';
 import {ShareIcon} from "@heroicons/react/24/outline"
 import {HeartIcon} from '@heroicons/react/24/solid'
+import axios from 'axios';
+import { AuthContext } from '../../Navigation/UserAuthContext';
 
-const ProductSummary = ({product}) => {
+const ProductSummary = ({product,setAlert}) => {
     const [isWished,setIsWished]=useState(false)
     const [isExpanded, setIsExpanded] = useState(false);
+
+    const {isLogged}=useContext(AuthContext);
 
     const toggleExpand = () => {
         setIsExpanded(!isExpanded);
     };
 
     const lines = product.description.split('\n'); // Split the description into lines
+
+    const addProductToWishlist =async(productId)=>{
+      console.log(productId)
+      try{
+        const token=localStorage.getItem('jwtToken');
+        const response=await axios.post('http://localhost:3000/user/add-to-wishlist',{productId},
+          {
+            headers:{
+              "Authorization":`Bearer ${token}`,
+              "Content-Type":"Application/json"
+            }
+          }
+        )
+        console.log(response.data)
+        setAlert({type:"success",message:"Added to wishlist successfully"});
+      }
+      catch(err){
+        console.log(err)
+        setAlert({type:"error",message:"failed to add to wishlist"});
+      }
+    }
   
-  const handleWishlistClick = () => {
+  const handleWishlistClick = (productId) => {
     setIsWished(!isWished);
     // Handle the logic to add to wishlist (e.g., API call)
     console.log(isWished ? 'Removed from Wishlist' : 'Added to Wishlist');
+    if(!isLogged){
+      console.log('Login to your account to add to wishlist')
+    }
+    else{
+        addProductToWishlist(productId);
+    }
     };
 
   return (
@@ -42,7 +73,7 @@ const ProductSummary = ({product}) => {
       {/* wishlist and share link */}
       <div className='absolute flex gap-4 top-4 right-4'>
         <HeartIcon       
-                    onClick={handleWishlistClick}
+                    onClick={()=>handleWishlistClick(product._id)}
                     className={` ${isWished ? 'w-6 h-6 text-red-500' : 'w-6 h-6 text-gray-500 hover:cursor-pointer hover:scale-125'} `}>
         </HeartIcon>
         <ShareIcon className='w-6 h-6' />

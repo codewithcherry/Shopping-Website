@@ -8,12 +8,14 @@ import axios from 'axios';
 import RecentlyViewedProducts from '../components/products/product/RecentlyViewedProducts';
 import Footer from '../components/Footer/Footer';
 import Breadcrumbs from '../components/Navigation/BreadCrumbs';
+import Alert from '../components/Alert/Alert';
 
 const ProductDetails = () => {
     const { productId } = useParams(); // Extract the ID from the URL
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [alert,setAlert]=useState()
 
     const navigate =useNavigate()
 
@@ -53,6 +55,7 @@ const ProductDetails = () => {
     return (
         <div className='bg-gray-100  flex flex-col'>
             <Navbar />
+            {alert && <Alert type={alert.type} message={alert.message} onClose={()=>setAlert(null)} />}
             <div className='mt-6 mx-6'>
                 <Breadcrumbs breadcrumbs={breadcrumbs}/>
             </div>
@@ -60,7 +63,7 @@ const ProductDetails = () => {
                 loading?" ":<div className='flex-grow flex justify-center py-10'>
                 <div className='container mx-auto flex flex-col lg:flex-row justify-center gap-8'>       
                         <ImageGallery images={product.images}/>              
-                        <ProductSummary product={product}/>          
+                        <ProductSummary product={product}setAlert={setAlert}/>          
                 </div>
             </div>
             }
