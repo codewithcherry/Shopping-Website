@@ -1,7 +1,14 @@
-import React from 'react';
-import { CheckCircleIcon, ExclamationCircleIcon,ExclamationTriangleIcon,InformationCircleIcon} from '@heroicons/react/24/outline';
+import React, { useState, useEffect } from "react";
+import {
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/outline";
 
-const Alert = ({ type , message, onClose }) => {
+const Alert = ({ type, message, onClose, duration = 3000 }) => {
+  const [alert, setAlert] = useState(true);
+
   // Icon and styling based on alert type
   const alertTypes = {
     success: {
@@ -30,24 +37,48 @@ const Alert = ({ type , message, onClose }) => {
     },
   };
 
-  // Get the selected style
   const { icon, bgColor, borderColor, textColor } = alertTypes[type];
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAlert(false);
+      onClose && onClose();
+    }, duration);
+
+    return () => clearTimeout(timer); // Cleanup timer
+  }, [duration, onClose]);
+
+  const handleClose = () => {
+    setAlert(false);
+    setTimeout(() => onClose && onClose(), 300); // Match animation duration
+  };
+
   return (
-    <div className='flex justify-center'>
-    <div className={`flex items-start w-1/2 absolute  p-4  text-sm ${bgColor} ${borderColor} ${textColor} border-l-4 rounded-lg`} role="alert">
-      <div className="flex-shrink-0">{icon}</div>
-      <div className="ml-3">
-        <span className="font-medium">{type.charAt(0).toUpperCase() + type.slice(1)}</span>
-        <p>{message}</p>
-      </div>
-      {onClose && (
-        <button onClick={onClose} className="ml-auto text-gray-500 hover:text-gray-700">
+    alert && (
+      <div
+        className={`fixed top-20 right-10 flex items-start z-20 p-4 text-sm ${bgColor} ${borderColor} ${textColor} border-l-4 rounded-lg shadow-lg 
+        transform transition-opacity duration-300 ease-in-out ${
+          alert ? "opacity-100" : "opacity-0"
+        } animate-grow`}
+        style={{
+          maxWidth: "400px", // Ensure it doesn't exceed max width
+          width: "80%", // Lock width after animation
+        }}
+        role="alert"
+      >
+        <div className="flex-shrink-0 overflow-hidden">{icon}</div>
+        <div className="ml-3">
+          <span className="font-medium">{type.charAt(0).toUpperCase() + type.slice(1)}</span>
+          <p className="">{message}</p>
+        </div>
+        <button
+          onClick={handleClose}
+          className="ml-auto text-gray-500 hover:text-gray-700"
+        >
           &times;
         </button>
-      )}
-    </div>
-    </div>
+      </div>
+    )
   );
 };
 

@@ -35,7 +35,7 @@ const LoginForm = () => {
           }
         })
         .catch(err => {
-          // console.log(err.response.data)
+          console.log(err.response.data)
           setAlert({
             type: err.response.data.type,
             message: err.response.data.message,
@@ -49,7 +49,7 @@ const LoginForm = () => {
   
     return (
       <>
-      {alert&& <Alert type={alert.type} message={alert.message} onclose={()=>{setAlert(null)}}/>}
+      {alert&& <Alert type={alert.type} message={alert.message} onClose={()=>{setAlert(null)}}/>}
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-8">
           <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">
