@@ -7,5 +7,6 @@ router.post("/login",adminController.adminLogin);
 router.get("/dashboard",validateController.adminAuthenticate,adminController.getDashboard);
 router.get("/products",validateController.adminAuthenticate,adminController.getProducts);
 router.post("/add-product",validateController.adminAuthenticate,adminController.addProduct);
+router.get('/order-list',validateController.adminAuthenticate,adminController.getOrderlist);
 
 module.exports=router;
