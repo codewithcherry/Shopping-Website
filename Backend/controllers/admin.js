@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const jwt_secret=process.env.JWT_SECRET
 const Product=require("../models/product")
+const Order=require('../models/order');
 
 exports.adminLogin = async (req, res, next) => {
     const { username, password } = req.body;
@@ -104,4 +105,33 @@ exports.getProducts=(req,res,next)=>{
     .catch(err=>{
         res.status(500).json({type:"error",message:"Internal Server Error"})
     })
+}
+
+exports.getOrderlist=async(req,res,next)=>{
+    const pageno=req.query.pageno;
+    const limit=10;
+    Order.countDocuments().then(totalOrders=>{
+        const pagination={
+            total:totalOrders,
+            totalPages:Math.ceil(totalOrders/limit),
+            currentpage:pageno,
+            nextPage:pageno<(Math.ceil(totalOrders/limit))?true:false,
+            prevPage:pageno>1?true:false
+           }
+           return Order.find()
+           .sort({ _id: -1 })
+           .skip((pageno-1)*limit)
+           .limit(limit)
+           .then(orders=>{
+               res.status(200).json({
+                   success: true,
+                   orders: orders,
+                   pagination:pagination
+                   });
+           })
+    })
+    .catch(err=>{
+        res.status(500).json({type:"error",message:"Internal Server Error"});
+    })
+    
 }
