@@ -9,6 +9,7 @@ import RecentlyViewedProducts from '../components/products/product/RecentlyViewe
 import Footer from '../components/Footer/Footer';
 import Breadcrumbs from '../components/Navigation/BreadCrumbs';
 import Alert from '../components/Alert/Alert';
+import CustomerReview from '../components/products/product/CustomerReview';
 
 const ProductDetails = () => {
     const { productId } = useParams(); // Extract the ID from the URL
@@ -68,6 +69,7 @@ const ProductDetails = () => {
             </div>
             }
             <RecentlyViewedProducts />
+            <CustomerReview />
             <Footer />
         </div>
     );
