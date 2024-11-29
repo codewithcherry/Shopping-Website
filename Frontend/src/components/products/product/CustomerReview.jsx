@@ -4,9 +4,12 @@ import CustomerReviewForm from './CustomerReviewForm';
 import ReviewCard from './ReviewCard';
 import axios from 'axios';
 
-const CustomerReview = ({productId}) => {
+const CustomerReview = ({productId,setAlert}) => {
 
   const [reviews,setReviews]=useState([])
+  const [page,setPage]=useState(1);
+  const [refresh,setRefresh]=useState(0);
+  const [hasNext,setHasNext]=useState(true);
   const ratingsData = [
     { rating: 5, count: 34 },
     { rating: 4, count: 20 },
@@ -15,13 +18,17 @@ const CustomerReview = ({productId}) => {
     { rating: 1, count: 2 },
   ];
 
+  const handlePage=()=>{
+    setPage(prev=>prev+1)
+  }
   
 
   const fetchReviewsFromServer=async(productId)=>{
     try{
-      const response=await axios.get(`http://localhost:3000/products/get-reviews/productId=${productId}`)
-      console.log(response.data)
-      setReviews(response.data)
+      const response=await axios.get(`http://localhost:3000/products/get-reviews/productId=${productId}?page=${page}&limit=5`)
+      // console.log(response.data)
+      setReviews(response.data.reviews)
+      setHasNext(response.data.hasNextPage)
     }
     catch(err){
       console.log(err)
@@ -30,7 +37,7 @@ const CustomerReview = ({productId}) => {
 
   useEffect(()=>{
     fetchReviewsFromServer(productId)
-  },[])
+  },[refresh,page])
 
   return (
     <div className="w-full mx-auto p-6 bg-gray-100">
@@ -43,7 +50,7 @@ const CustomerReview = ({productId}) => {
         {/* Form and Reviews */}
         <section className="flex-[2] md:w-2/3  p-6 space-y-6">
           {/* Review Form */}
-          <CustomerReviewForm productId={productId}/>
+          <CustomerReviewForm productId={productId} setRefresh={setRefresh} setAlert={setAlert}/>
 
           {/* Reviews */}
           <div className="space-y-4">
@@ -51,13 +58,15 @@ const CustomerReview = ({productId}) => {
               
                 <ReviewCard review={review} key={index} />
               
-            ))}
+            ))}      
+            <div className='flex justify-center '>
+              {hasNext && <button className='w-32 text-lg font-semibold text-blue-600 mx-auto p-4 underline underline-offset-4' onClick={handlePage}>
+                  load more
+              </button>}
+           </div>     
           </div>
-          <div className='flex justify-center '>
-            <button className='w-32 text-lg font-semibold text-blue-600 mx-auto p-4 underline underline-offset-4'>
-                load more
-            </button>
-          </div>
+          
+          
         </section>
       </div>
     </div>

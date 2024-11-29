@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { CameraIcon, PlusIcon, StarIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
+import { AuthContext } from "../../Navigation/UserAuthContext";
 
-const CustomerReviewForm = ({productId}) => {
+const CustomerReviewForm = ({productId,setRefresh,setAlert}) => {
   const [isFormVisible, setIsFormVisible] = useState(false); // Toggle visibility
   const [rating, setRating] = useState(0); // Rating state
   const [reviewText, setReviewText] = useState(""); // Review text state
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
+
+  const {isLogged} =useContext(AuthContext);
 
   const handleImageUpload = async (event) => {
     setUploading(true);
@@ -64,15 +67,18 @@ const CustomerReviewForm = ({productId}) => {
           }
         }
       )
-      console.log(response.data);
+      // console.log(response.data);
+      setAlert(response.data)
       // Reset form
+      setRefresh(prev=>prev+1)
       setRating(0);
       setReviewText("");
       setImages([]);
       setIsFormVisible(false); // Collapse the form after submission
     }
     catch(err){
-      console.log(err)
+      const error=err.response.data;
+      setAlert({type:error.type,message:error.message})
     }
     
   };
@@ -84,7 +90,12 @@ const CustomerReviewForm = ({productId}) => {
         <h2 className="text-lg font-semibold text-gray-800">Product Reviews</h2>
         <button
           onClick={() => {
-            setIsFormVisible(!isFormVisible);
+            if(isLogged){
+              setIsFormVisible(!isFormVisible);
+            }
+            else{
+              setAlert({type:'info',message:"Login to write the review"})
+            }
             if (isFormVisible) {
               // Reset form state when closing the form
               setRating(0);

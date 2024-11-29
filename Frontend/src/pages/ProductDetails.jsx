@@ -69,7 +69,7 @@ const ProductDetails = () => {
             </div>
             }
             <RecentlyViewedProducts />
-            <CustomerReview productId={productId}/>
+            <CustomerReview productId={productId} setAlert={setAlert}/>
             <Footer />
         </div>
     );
