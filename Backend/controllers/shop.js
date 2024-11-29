@@ -221,3 +221,36 @@ exports.getRecentProducts=async(req,res,next)=>{
         res.status(500).json({type:"error",message:"Internal server error",error:error})
       }
 }
+
+exports.postProductReview=async(req,res,next)=>{
+    const {productId,rating,reviewText,images}=req.body
+    const userId=req.user.userId;
+    // console.log(req.user);
+    // console.log(productId,rating,reviewText,images,userId);
+    try{
+        const product=await Product.findById(productId);
+        const review={user:userId,rating:rating,reviewText:reviewText,images:images,date:new Date()}
+        product.reviews.push(review)
+        await product.save()
+        console.log("Successfull")
+        res.status(201).json({type:"success",message:"review posted successfully"});
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).json({type:"error",message:"Internal server error",error:err})
+    }
+}
+
+exports.getReviews=async(req,res,next)=>{
+    const productId=req.params.productId;
+    // console.log(productId)
+    try{
+        const product=await Product.findById(productId);
+        // console.log(product.reviews)
+        res.status(200).json(product.reviews);
+    }
+    catch(err){
+        // console.log(err)
+        res.status(500).json({type:"error",message:"Internal server error",error:err})
+    }
+}
