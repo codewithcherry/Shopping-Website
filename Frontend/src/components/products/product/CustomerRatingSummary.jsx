@@ -44,7 +44,7 @@ const CustomerRatingSummary = ({ ratings }) => {
                   style={{ width: `${percentage}%` }}
                 ></div>
               </div>
-              <span className="text-sm text-gray-600">{percentage}%</span>
+              <span className="text-sm text-gray-600">{percentage }%</span>
             </div>
           );
         })}

@@ -10,13 +10,14 @@ const CustomerReview = ({productId,setAlert}) => {
   const [page,setPage]=useState(1);
   const [refresh,setRefresh]=useState(0);
   const [hasNext,setHasNext]=useState(true);
-  const ratingsData = [
-    { rating: 5, count: 34 },
-    { rating: 4, count: 20 },
-    { rating: 3, count: 10 },
-    { rating: 2, count: 4 },
-    { rating: 1, count: 2 },
-  ];
+  const [ratingsData,setRatingsData]=useState([])
+  // const ratingsData = [
+  //   { rating: 5, count: 34 },
+  //   { rating: 4, count: 20 },
+  //   { rating: 3, count: 10 },
+  //   { rating: 2, count: 4 },
+  //   { rating: 1, count: 2 },
+  // ];
 
   const handlePage=()=>{
     setPage(prev=>prev+1)
@@ -29,6 +30,7 @@ const CustomerReview = ({productId,setAlert}) => {
       // console.log(response.data)
       setReviews(response.data.reviews)
       setHasNext(response.data.hasNextPage)
+      setRatingsData(response.data.ratingsData)
     }
     catch(err){
       console.log(err)
