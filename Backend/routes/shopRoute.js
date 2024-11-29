@@ -14,5 +14,7 @@ router.get('/user-address',validateController.authenticate,shopController.getUse
 router.post('/user-createAddress',validateController.authenticate,shopController.addUserAddress);
 router.post('/remove-userAddress',validateController.authenticate,shopController.removeUserAddress);
 router.post('/get-recent-products',shopController.getRecentProducts);
+router.post('/post-review',validateController.authenticate,shopController.postProductReview);
+router.get('/get-reviews/productId=:productId',shopController.getReviews);
 
 module.exports=router;
