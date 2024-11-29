@@ -17,6 +17,24 @@ const productSchema = new mongoose.Schema({
   discount: { type: Number, default: 0 },
   finalPrice: { type: Number, required: true }, // Assuming frontend-calculated final price is passed
   sizes: [{ type: String }], // Array of strings for sizes, if applicable
+  ratingsData: {
+    type: [
+      {
+        rating: { type: Number, required: true }, // Rating value
+        count: { type: Number, default: 0 },    // Count of users giving this rating
+      },
+    ],
+    default: function () {
+      return [
+        { rating: 5, count: 0 },
+        { rating: 4, count: 0 },
+        { rating: 3, count: 0 },
+        { rating: 2, count: 0 },
+        { rating: 1, count: 0 },
+      ];
+    },
+  },
+  ratings: { type: Number, default: 0 }, // Average rating
   reviews:[
     {
       user:{type:mongoose.Schema.Types.ObjectId, ref: "User"},
@@ -83,6 +101,34 @@ productSchema.methods.getUpdateDetails = function () {
     updatedBy: this.updatedBy
   };
 };
+
+// Function to calculate the average rating
+function calculateAverageRating(ratingsData) {
+  const totalRatings = ratingsData.reduce((acc, { rating, count }) => acc + rating * count, 0);
+  const totalCount = ratingsData.reduce((acc, { count }) => acc + count, 0);
+  return totalCount === 0 ? 0 : (totalRatings / totalCount).toFixed(2);
+}
+
+// Method to add a review
+productSchema.methods.addReview = async function (review) {
+  // Add the review to the reviews array
+  this.reviews.push(review);
+
+  // Find or create the rating entry in ratingsData
+  const ratingEntry = this.ratingsData.find((item) => item.rating === review.rating);
+  if (ratingEntry) {
+    ratingEntry.count += 1; // Increment the count for the existing rating
+  } else {
+    this.ratingsData.push({ rating: review.rating, count: 1 }); // Add new rating entry
+  }
+
+  // Recalculate the average rating
+  this.ratings = calculateAverageRating(this.ratingsData);
+
+  // Save the updated product document
+  await this.save();
+};
+
 
 // Compile the Product model from the schema
 const Product = mongoose.model('Product', productSchema);

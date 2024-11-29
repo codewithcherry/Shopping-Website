@@ -227,11 +227,15 @@ exports.postProductReview=async(req,res,next)=>{
     const userId=req.user.userId;
     // console.log(req.user);
     // console.log(productId,rating,reviewText,images,userId);
+    const review={user:userId,rating:rating,reviewText:reviewText,images:images,date:new Date()}
     try{
-        const product=await Product.findById(productId);
-        const review={user:userId,rating:rating,reviewText:reviewText,images:images,date:new Date()}
-        product.reviews.push(review)
-        await product.save()
+        const product = await Product.findById(productId);
+        if (!product) {
+        console.log("Product not found!");
+        return;
+        }
+
+        await product.addReview(review);
         // console.log("Successfull")
         res.status(201).json({type:"success",message:"review posted successfully"});
     }
@@ -267,6 +271,7 @@ exports.getReviews = async (req, res, next) => {
             page: parseInt(page),
             limit: parseInt(limit),
             totalReviews,
+            ratingsData:product.ratingsData,
             reviews: paginatedReviews,
             hasNextPage: endIndex < totalReviews, // Check if there's more data
             hasPrevPage: startIndex > 0, // Check if there's previous data
