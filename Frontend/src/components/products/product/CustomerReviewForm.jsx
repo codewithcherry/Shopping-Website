@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { CameraIcon, PlusIcon, StarIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
 
-const CustomerReviewForm = () => {
+const CustomerReviewForm = ({productId}) => {
   const [isFormVisible, setIsFormVisible] = useState(false); // Toggle visibility
   const [rating, setRating] = useState(0); // Rating state
   const [reviewText, setReviewText] = useState(""); // Review text state
@@ -46,15 +46,35 @@ const CustomerReviewForm = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log({ rating, reviewText, images });
-    alert("Review submitted successfully!");
-    // Reset form
-    setRating(0);
-    setReviewText("");
-    setImages([]);
-    setIsFormVisible(false); // Collapse the form after submission
+    // console.log({ rating, reviewText, images });
+    try{
+      const token=localStorage.getItem('jwtToken');
+      const response=await axios.post("http://localhost:3000/products/post-review",
+        {
+          rating:rating,
+          reviewText:reviewText,
+          images:images,
+          productId:productId
+        },
+        {
+          headers:{
+            "Authorization":`Bearer ${token}`
+          }
+        }
+      )
+      console.log(response.data);
+      // Reset form
+      setRating(0);
+      setReviewText("");
+      setImages([]);
+      setIsFormVisible(false); // Collapse the form after submission
+    }
+    catch(err){
+      console.log(err)
+    }
+    
   };
 
   return (
