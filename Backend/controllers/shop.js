@@ -232,7 +232,7 @@ exports.postProductReview=async(req,res,next)=>{
         const review={user:userId,rating:rating,reviewText:reviewText,images:images,date:new Date()}
         product.reviews.push(review)
         await product.save()
-        console.log("Successfull")
+        // console.log("Successfull")
         res.status(201).json({type:"success",message:"review posted successfully"});
     }
     catch(err){
@@ -241,16 +241,41 @@ exports.postProductReview=async(req,res,next)=>{
     }
 }
 
-exports.getReviews=async(req,res,next)=>{
-    const productId=req.params.productId;
-    // console.log(productId)
-    try{
-        const product=await Product.findById(productId);
-        // console.log(product.reviews)
-        res.status(200).json(product.reviews);
+exports.getReviews = async (req, res, next) => {
+    const productId = req.params.productId;
+    const { page = 1, limit = 5 } = req.query; // Defaults: page = 1, limit = 5
+
+    try {
+        const product = await Product.findById(productId);
+
+        if (!product) {
+            return res.status(404).json({ type: "error", message: "Product not found" });
+        }
+
+        // Get total number of reviews
+        const totalReviews = product.reviews.length;
+
+        // Pagination logic
+        const startIndex = (page - 1) * limit; // Starting index
+        const endIndex = page * limit; // Ending index
+        const paginatedReviews = product.reviews.slice(startIndex, endIndex);
+
+        // Response with paginated data
+        res.status(200).json({
+            type: "success",
+            message:"successfully posted the review",
+            page: parseInt(page),
+            limit: parseInt(limit),
+            totalReviews,
+            reviews: paginatedReviews,
+            hasNextPage: endIndex < totalReviews, // Check if there's more data
+            hasPrevPage: startIndex > 0, // Check if there's previous data
+        });
+    } catch (err) {
+        res.status(500).json({
+            type: "error",
+            message: "Internal server error",
+            error: err,
+        });
     }
-    catch(err){
-        // console.log(err)
-        res.status(500).json({type:"error",message:"Internal server error",error:err})
-    }
-}
+};
