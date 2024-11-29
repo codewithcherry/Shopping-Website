@@ -32,15 +32,15 @@ const ReviewCard = ({ review }) => {
       {/* User Info */}
       <div className="flex items-center space-x-4">
         <img
-          src={review.profileImage}
+          src={`https://www.shutterstock.com/image-photo/positive-handsome-young-latin-entrepreneur-260nw-2500823337.jpg`}
           alt={review.username}
           className="h-12 w-12 rounded-full object-cover"
         />
         <div>
           <h3 className="text-gray-800 font-semibold text-lg">
-            {review.username}
+            {"Jhone doe"}
           </h3>
-          <p className="text-sm text-gray-500">{review.date}</p>
+          <p className="text-sm text-gray-500">{new Date(review.date).toLocaleString()}</p>
         </div>
       </div>
 
@@ -48,7 +48,7 @@ const ReviewCard = ({ review }) => {
       <div className="flex items-center mt-2">{renderStars(review.rating)}</div>
 
       {/* Review Description */}
-      <p className="text-gray-700 mt-4">{review.description}</p>
+      <p className="text-gray-700 mt-4">{review.reviewText}</p>
 
       {/* Review Images */}
       {review.images?.length > 0 && (

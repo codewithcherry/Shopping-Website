@@ -69,7 +69,7 @@ const ProductDetails = () => {
             </div>
             }
             <RecentlyViewedProducts />
-            <CustomerReview />
+            <CustomerReview productId={productId}/>
             <Footer />
         </div>
     );

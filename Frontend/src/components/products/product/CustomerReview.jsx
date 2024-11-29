@@ -1,9 +1,12 @@
-import React from 'react';
+import React ,{useEffect, useState}from 'react';
 import CustomerRatingSummary from './CustomerRatingSummary';
 import CustomerReviewForm from './CustomerReviewForm';
 import ReviewCard from './ReviewCard';
+import axios from 'axios';
 
-const CustomerReview = () => {
+const CustomerReview = ({productId}) => {
+
+  const [reviews,setReviews]=useState([])
   const ratingsData = [
     { rating: 5, count: 34 },
     { rating: 4, count: 20 },
@@ -12,34 +15,22 @@ const CustomerReview = () => {
     { rating: 1, count: 2 },
   ];
 
-  const reviews = [
-    {
-      profileImage: 'https://example.com/user.jpg', // User's profile image URL
-      username: 'John Doe', // User's name
-      date: 'November 27, 2024', // Date of the review
-      rating: 4, 
-      description: 'This product is amazing! Highly recommend it.', // Review text
-      images: [
-        'https://example.com/image1.jpg',
-        'https://example.com/image2.jpg',
-      ], // Array of image URLs
-      likes: 12, // Initial like count
-      dislikes: 3, // Initial dislike count
-    },
-    {
-        profileImage: 'https://example.com/user.jpg', // User's profile image URL
-        username: 'John Doe', // User's name
-        date: 'November 27, 2024', // Date of the review
-        rating: 3, 
-        description: 'This product is amazing! Highly recommend it.', // Review text
-        images: [
-          'https://example.com/image1.jpg',
-          'https://example.com/image2.jpg',
-        ], // Array of image URLs
-        likes: 12, // Initial like count
-        dislikes: 3, // Initial dislike count
-      },
-  ];
+  
+
+  const fetchReviewsFromServer=async(productId)=>{
+    try{
+      const response=await axios.get(`http://localhost:3000/products/get-reviews/productId=${productId}`)
+      console.log(response.data)
+      setReviews(response.data)
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
+
+  useEffect(()=>{
+    fetchReviewsFromServer(productId)
+  },[])
 
   return (
     <div className="w-full mx-auto p-6 bg-gray-100">
@@ -52,7 +43,7 @@ const CustomerReview = () => {
         {/* Form and Reviews */}
         <section className="flex-[2] md:w-2/3  p-6 space-y-6">
           {/* Review Form */}
-          <CustomerReviewForm />
+          <CustomerReviewForm productId={productId}/>
 
           {/* Reviews */}
           <div className="space-y-4">
@@ -62,7 +53,7 @@ const CustomerReview = () => {
               
             ))}
           </div>
-          <div className='flex justify-center'>
+          <div className='flex justify-center '>
             <button className='w-32 text-lg font-semibold text-blue-600 mx-auto p-4 underline underline-offset-4'>
                 load more
             </button>
