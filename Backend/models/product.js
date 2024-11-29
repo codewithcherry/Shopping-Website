@@ -17,6 +17,27 @@ const productSchema = new mongoose.Schema({
   discount: { type: Number, default: 0 },
   finalPrice: { type: Number, required: true }, // Assuming frontend-calculated final price is passed
   sizes: [{ type: String }], // Array of strings for sizes, if applicable
+  reviews:[
+    {
+      user:{type:mongoose.Schema.Types.ObjectId, ref: "User"},
+      rating:{
+        type:Number
+      },
+      reviewText:{type:String},
+      images:[],
+      likes:{
+        type:Number,
+        default:0
+      },
+      dislikes:{
+        type:Number,
+        default:0
+      },
+      date:{
+        type: Date
+      }
+    }
+  ],
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' }, // Reference to the User model
   updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' }  // Reference to the User model
 }, { 
