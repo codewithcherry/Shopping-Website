@@ -1,11 +1,10 @@
 import React from 'react';
 
-const ReviewSummary = () => {
+const ReviewSummary = ({ratingsData,ratings}) => {
   // Review data
-  const reviews = {
-    averageRating: 4.2,  // Average rating out of 5
-    totalReviews: 120,   // Total number of reviews
-  };
+ 
+
+  const totalRatings = ratingsData.reduce((sum, { count }) => sum + count, 0)||0;
 
   return (
     <div className="flex items-center space-x-2 max-w-sm mb-2">
@@ -21,8 +20,8 @@ const ReviewSummary = () => {
 
       {/* Rating and Review Count */}
       
-        <p className="text-md font-semibold text-gray-800">{reviews.averageRating.toFixed(1)} rating |</p>
-        <p className="text-sm text-blue-500">{reviews.totalReviews} reviews</p>
+        <p className="text-md font-semibold text-gray-800">{ratings} rating |</p>
+        <p className="text-sm text-blue-500">{totalRatings} reviews</p>
       
     </div>
   );

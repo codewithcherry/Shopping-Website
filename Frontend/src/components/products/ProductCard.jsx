@@ -44,7 +44,7 @@ const ProductCard = ({product}) => {
             >
               <path d="M12 .587l3.668 7.568 8.342 1.185-6.058 5.838 1.434 8.249L12 18.897l-7.386 3.888 1.434-8.249-6.058-5.838 8.342-1.185z" />
         </svg>
-        <span className='text-sm text-gray-600'>0 Rating</span>
+        <span className='text-sm text-gray-600'>{product.ratings || 0} Rating</span>
         </div>
        {/* Price Information */}
       <div className="my-2 flex gap-4 items-baseline">

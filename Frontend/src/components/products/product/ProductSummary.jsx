@@ -58,7 +58,7 @@ const ProductSummary = ({product,setAlert}) => {
       <p className="text-gray-500 text-sm md:text-base mb-2">Brand: {product.brand}</p>
 
         <div>
-            <ReviewSummary />
+            <ReviewSummary  ratingsData={product.ratingsData} ratings={product.ratings}/>
         </div>
       {/* Short Description */}
       <p className="text-gray-700 text-sm md:text-base mb-4">{product.shortDescription}</p>
