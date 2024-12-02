@@ -26,6 +26,7 @@ import { UserAuthContext } from './components/Navigation/UserAuthContext';
 import Checkout from './pages/Checkout';
 import Payment from './pages/Payment';
 import Wishlist from './pages/Wishlist';
+import Shop from './pages/Shop';
 
 function App() {
   return (
@@ -43,6 +44,8 @@ function App() {
         <Route path='/checkout' element={<Checkout />} />
         <Route path='/payment' element={<Payment />} />        
         <Route path='/admin' element={<Admin />} />
+        <Route path='/shop/:category/' element={<Shop />}/>
+        <Route path='/shop/:category/:subCategory' element={<Shop />}/>
         <Route path='/product/:productId' element={<ProductDetails />}/>
         <Route path='/admin/dashboard' element={<Dashboard />} >
               <Route path='' element={<AdminHome />} /> 
