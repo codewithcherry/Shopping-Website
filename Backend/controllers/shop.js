@@ -1,32 +1,46 @@
 const Product=require("../models/product");
 const User=require("../models/user");
 
-// exports.getHome=(req,res,next)=>{
-//     const page=req.query.page;
-//     const limit=8;
-//     Product.countDocuments().then(totaldoc=>{
-//        const pagination={
-//         total:totaldoc,
-//         totalPages:Math.ceil(totaldoc/limit),
-//         currentpage:page,
-//         nextPage:page<(Math.ceil(totaldoc/limit))?true:false,
-//         prevPage:page>1?true:false
-//        }
-//        return    Product.find()
-//                         .skip((page-1)*limit)
-//                         .limit(limit)
-//                         .then(products=>{
-//                             res.status(200).json({
-//                                 success: true,
-//                                 products: products,
-//                                 pagination:pagination
-//                                 });
-//                         })
-//     })
-//     .catch(err=>{
-//         console.log(err);
-//     })
-// }
+exports.getShopProducts = (req, res, next) => {
+    const page = req.query.page || 1; // Default to page 1 if not provided
+    const { category, subCategory } = req.params; // Get category and subcategory from URL params
+    const limit = 8;
+  
+    // Build the filter object
+    const filter = {};
+    if (category) filter.category = category;
+    if (subCategory) filter.subCategory = subCategory;
+  
+    // Get the total number of documents matching the filter
+    Product.countDocuments({filter})
+      .then((totaldoc) => {
+        const pagination = {
+          total: totaldoc,
+          totalPages: Math.ceil(totaldoc / limit),
+          currentPage: parseInt(page),
+          nextPage: page < Math.ceil(totaldoc / limit),
+          prevPage: page > 1,
+        };
+  
+        // Query the products with the given filter
+        return Product.find(filter)
+          .skip((page - 1) * limit)
+          .limit(limit)
+          .then((products) => {
+            // console.log(products)
+            res.status(200).json({
+              success: true,
+              products: products,
+              pagination: pagination,
+            });
+          });
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Server error' });
+      });
+  };
+  
 
 exports.getHome = (req, res, next) => {
     const page = req.query.page || 1;
