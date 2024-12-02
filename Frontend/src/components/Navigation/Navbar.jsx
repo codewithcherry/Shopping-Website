@@ -7,6 +7,7 @@ import {
   ShoppingCartIcon,
   BookmarkIcon,
   ClipboardDocumentListIcon,
+  MagnifyingGlassIcon,
   ArrowRightOnRectangleIcon,
   ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/solid";
@@ -14,6 +15,7 @@ import {
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [inputSearchValue,setInputSearchValue]=useState('');
   const navigate = useNavigate();
   const { isLogged, logout } = useContext(AuthContext);
 
@@ -28,6 +30,14 @@ const Navbar = () => {
       setIsAccountOpen(false);
     }
   };
+
+  const handleSearch = (e) => {
+    e.preventDefault(); // Prevents form submission
+    console.log("Search clicked:", inputSearchValue);
+
+    const query = encodeURIComponent(inputSearchValue); // Ensures proper encoding
+    navigate(`/products?query=${query}`);
+};
 
   useEffect(() => {
     document.addEventListener("click", closeDropdownOnClickOutside);
@@ -49,6 +59,28 @@ const Navbar = () => {
             <NavLink to="/" className="text-2xl font-bold text-white">
               <img src={Logo} alt="Logo" className="h-10" />
             </NavLink>
+          </div>
+
+          {/* search bar */}
+          <div className="flex justify-center items-center w-full ">
+            <form
+              onSubmit={handleSearch}
+              className="flex  items-center rounded-lg px-4 py-2 w-full max-w-md "
+            >
+              <input
+                type="text"
+                placeholder="Search..."
+                value={inputSearchValue}
+                onChange={(e)=>setInputSearchValue(e.target.value)}
+                className="p-2 rounded-l-lg w-full outline-none focus:outline-2 focus:outline-indigo-600 focus:outline-offset-0 placeholder:text-gray-500"
+              />
+              <button
+                type="submit"
+                className="bg-indigo-600 px-3 py-2 rounded-r-lg text-white hover:bg-indigo-700 transition"
+              >
+                <MagnifyingGlassIcon className="w-6 h-6" />
+              </button>
+            </form>
           </div>
 
           {/* Navigation Links */}
