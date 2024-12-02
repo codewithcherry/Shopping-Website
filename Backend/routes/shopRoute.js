@@ -5,6 +5,8 @@ const validateController=require('../controllers/validate');
 const router=express.Router()
 
 router.get("/",shopController.getHome);
+router.get("/shop/:category",shopController.getShopProducts);
+router.get("/shop/:category/:subCategory",shopController.getShopProducts);
 router.get("/product/:productId",shopController.getProductDetails)
 router.get("/cart",validateController.authenticate,shopController.getCart)
 router.post('/add-cartItem',validateController.authenticate,shopController.addCartItem);
