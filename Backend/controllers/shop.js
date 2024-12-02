@@ -1,32 +1,87 @@
 const Product=require("../models/product");
 const User=require("../models/user");
 
-exports.getHome=(req,res,next)=>{
-    const page=req.query.page;
-    const limit=8;
-    Product.countDocuments().then(totaldoc=>{
-       const pagination={
-        total:totaldoc,
-        totalPages:Math.ceil(totaldoc/limit),
-        currentpage:page,
-        nextPage:page<(Math.ceil(totaldoc/limit))?true:false,
-        prevPage:page>1?true:false
-       }
-       return    Product.find()
-                        .skip((page-1)*limit)
-                        .limit(limit)
-                        .then(products=>{
-                            res.status(200).json({
-                                success: true,
-                                products: products,
-                                pagination:pagination
-                                });
-                        })
+// exports.getHome=(req,res,next)=>{
+//     const page=req.query.page;
+//     const limit=8;
+//     Product.countDocuments().then(totaldoc=>{
+//        const pagination={
+//         total:totaldoc,
+//         totalPages:Math.ceil(totaldoc/limit),
+//         currentpage:page,
+//         nextPage:page<(Math.ceil(totaldoc/limit))?true:false,
+//         prevPage:page>1?true:false
+//        }
+//        return    Product.find()
+//                         .skip((page-1)*limit)
+//                         .limit(limit)
+//                         .then(products=>{
+//                             res.status(200).json({
+//                                 success: true,
+//                                 products: products,
+//                                 pagination:pagination
+//                                 });
+//                         })
+//     })
+//     .catch(err=>{
+//         console.log(err);
+//     })
+// }
+
+exports.getHome = (req, res, next) => {
+    const page = req.query.page || 1;
+    const query = req.query.query || '';
+    const limit = 8;
+
+    const terms = query.split(' ').map(term => new RegExp(term, 'i'));
+
+    Product.find({
+        $or: [
+            { title: { $in: terms } },
+            { shortDescription: { $in: terms } },
+            { category: { $in: terms } },
+            { subCategory: { $in: terms } },
+            { brand: { $in: terms } }
+        ]
     })
-    .catch(err=>{
+    .then(filteredProducts => {
+        const totaldoc = filteredProducts.length;
+        const pagination = {
+            total: totaldoc,
+            totalPages: Math.ceil(totaldoc / limit),
+            currentpage: page,
+            nextPage: page < Math.ceil(totaldoc / limit),
+            prevPage: page > 1
+        };
+
+        return Product.find({
+            $or: [
+                { title: { $in: terms } },
+                { shortDescription: { $in: terms } },
+                { category: { $in: terms } },
+                { subCategory: { $in: terms } },
+                { brand: { $in: terms } }
+            ]
+        })
+        .sort({finalPrice: 1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .then(products => {
+            res.status(200).json({
+                success: true,
+                products: products,
+                pagination: pagination
+            });
+        });
+    })
+    .catch(err => {
         console.log(err);
-    })
-}
+        res.status(500).json({ success: false, message: 'Server error' });
+    });
+};
+
+
+
 
 exports.getProductDetails=async(req,res,next)=>{
     const productId=req.params.productId
