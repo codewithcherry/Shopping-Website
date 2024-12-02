@@ -25,15 +25,15 @@ const ProductDetails = () => {
         { label: 'Products', link: '/products' },
         { 
           label: product?.category || '', 
-          link: `/products/${product?.category || ''}` 
+          link: `/shop/${product?.category || ''}` 
         },
         { 
           label: product?.subCategory || '', 
-          link: `/products/${product?.subCategory || ''}` 
+          link: `/shop/${product?.category|| ''}/${product?.subCategory|| ''}` 
         },
         { 
             label: product?.title || '', 
-            link: `/products/${product?.title || ''}` 
+            link: `/shop/${product?.title || ''}` 
           }
       ];
       
