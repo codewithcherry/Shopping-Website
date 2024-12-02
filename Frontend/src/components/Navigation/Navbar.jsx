@@ -95,7 +95,7 @@ const Navbar = () => {
             >
               Home
             </NavLink>
-            <NavLink
+            {/* <NavLink
               to="/products"
               className={({ isActive }) =>
                 isActive
@@ -104,7 +104,7 @@ const Navbar = () => {
               }
             >
               Products
-            </NavLink>
+            </NavLink> */}
             <NavLink
               to="/cart"
               className={({ isActive }) =>
@@ -224,13 +224,13 @@ const Navbar = () => {
           >
             Home
           </NavLink>
-          <NavLink
+          {/* <NavLink
             to="/products"
             className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
             onClick={toggleMobileMenu}
           >
             Products
-          </NavLink>
+          </NavLink> */}
           <NavLink
             to="/cart"
             className="text-white font-medium hover:text-indigo-700 transition duration-300 p-2"
