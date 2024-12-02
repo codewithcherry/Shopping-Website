@@ -3,111 +3,112 @@ import { Link } from 'react-router-dom';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 const categories = [
-    {
-      category: "Electronics",
-      subCategory: [
-        { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731686422/LaptopAndPC_z2guf8.png", name: "Computers & Laptops", path: "/electronics/computers-laptops" },
-        { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731685716/mobilePhonesAndTablets_l82e3l.png", name: "Mobile Phones & Tablets", path: "/electronics/mobile-phones" },
-        { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731686644/GamingConsoleCT_zpj7f6.png", name: "Gaming & Consoles", path: "/electronics/gaming-consoles" },
-        { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731687045/AudioAndVideo_lp1cxw.png", name: "Audio & Video", path: "/electronics/audio-video" },
-        { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731687189/SmartHomeAssistant_mmczla.png", name: "Smart Home Devices", path: "/electronics/smart-home" },
-        { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731687476/DroneAndCamera_izudri.png", name: "Cameras & Drones", path: "/electronics/cameras-drones" },
-        { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731687601/Wearable_jocnk4.png", name: "Wearable Technology", path: "/electronics/wearable-tech" },
-      ],
-    },
-    {
-      category: "Fashion & Apparel",
-      subCategory: [
-        { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731688069/WomenClothing_epo4a1.png", name: "Women's Clothing", path: "/fashion/womens-clothing" },
-        { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731688234/MenClothing_mzqcbe.png", name: "Men's Clothing", path: "/fashion/mens-clothing" },
-        { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731688347/KidsClothing_ilhuoh.png", name: "Kids' Clothing", path: "/fashion/kids-clothing" },
-        { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731688520/footwear_wv09q3.png", name: "Footwear", path: "/fashion/footwear" },
-        { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731688949/Accessories_j7btvu.png", name: "Accessories (bags, hats, jewelry, etc.)", path: "/fashion/accessories" },
-        { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731689060/Lingeriewomen_qwrdvx.png", name: "Lingerie", path: "/fashion/lingerie" },
-        { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731689222/SportsWear_mwdoov.png", name: "Sportswear", path: "/fashion/sportswear" },
-      ],
-    },
-    {
-      category: "Home & Kitchen",
-      subCategory: [
-        { imageUrl: "https://example.com/furniture.png", name: "Furniture", path: "/home-kitchen/furniture" },
-        { imageUrl: "https://example.com/home-decor.png", name: "Home Decor", path: "/home-kitchen/home-decor" },
-        { imageUrl: "https://example.com/kitchen-appliances.png", name: "Kitchen Appliances", path: "/home-kitchen/kitchen-appliances" },
-        { imageUrl: "https://example.com/bedding.png", name: "Bedding & Bath", path: "/home-kitchen/bedding-bath" },
-        { imageUrl: "https://example.com/tools.png", name: "Home Improvement Tools", path: "/home-kitchen/tools" },
-        { imageUrl: "https://example.com/garden-outdoor.png", name: "Garden & Outdoor", path: "/home-kitchen/garden-outdoor" },
-      ],
-    },
-    {
-      category: "Beauty & Personal Care",
-      subCategory: [
-        { imageUrl: "https://example.com/skincare.png", name: "Skincare", path: "/beauty/skincare" },
-        { imageUrl: "https://example.com/haircare.png", name: "Haircare", path: "/beauty/haircare" },
-        { imageUrl: "https://example.com/makeup.png", name: "Makeup", path: "/beauty/makeup" },
-        { imageUrl: "https://example.com/fragrances.png", name: "Fragrances", path: "/beauty/fragrances" },
-        { imageUrl: "https://example.com/hygiene.png", name: "Personal Hygiene", path: "/beauty/hygiene" },
-        { imageUrl: "https://example.com/health-wellness.png", name: "Health & Wellness", path: "/beauty/health-wellness" },
-      ],
-    },
-    {
-      category: "Books, Media & Music",
-      subCategory: [
-        { imageUrl: "https://example.com/books.png", name: "Books", path: "/books-media/books" },
-        { imageUrl: "https://example.com/movies.png", name: "Movies & TV Shows", path: "/books-media/movies-tv" },
-        { imageUrl: "https://example.com/music.png", name: "Music", path: "/books-media/music" },
-        { imageUrl: "https://example.com/games-toys.png", name: "Games & Toys", path: "/books-media/games-toys" },
-        { imageUrl: "https://example.com/stationery.png", name: "Stationery & Office Supplies", path: "/books-media/stationery" },
-      ],
-    },
-    {
-      category: "Grocery & Gourmet",
-      subCategory: [
-        { imageUrl: "https://example.com/fresh-produce.png", name: "Fresh Produce", path: "/grocery/fresh-produce" },
-        { imageUrl: "https://example.com/frozen-foods.png", name: "Frozen Foods", path: "/grocery/frozen-foods" },
-        { imageUrl: "https://example.com/canned-foods.png", name: "Canned & Packaged Foods", path: "/grocery/canned-foods" },
-        { imageUrl: "https://example.com/beverages.png", name: "Beverages", path: "/grocery/beverages" },
-        { imageUrl: "https://example.com/snacks.png", name: "Snacks & Sweets", path: "/grocery/snacks-sweets" },
-        { imageUrl: "https://example.com/international-foods.png", name: "International Foods", path: "/grocery/international-foods" },
-      ],
-    },
-    {
-      category: "Sports & Fitness",
-      subCategory: [
-        { imageUrl: "https://example.com/sports-equipment.png", name: "Sports Equipment", path: "/sports-fitness/sports-equipment" },
-        { imageUrl: "https://example.com/fitness-equipment.png", name: "Fitness Equipment", path: "/sports-fitness/fitness-equipment" },
-        { imageUrl: "https://example.com/sports-apparel.png", name: "Sports Apparel", path: "/sports-fitness/sports-apparel" },
-        { imageUrl: "https://example.com/outdoor-gear.png", name: "Outdoor Gear", path: "/sports-fitness/outdoor-gear" },
-      ],
-    },
-    {
-      category: "Automotive",
-      subCategory: [
-        { imageUrl: "https://example.com/car-accessories.png", name: "Car Accessories", path: "/automotive/car-accessories" },
-        { imageUrl: "https://example.com/bike-accessories.png", name: "Bike Accessories", path: "/automotive/bike-accessories" },
-        { imageUrl: "https://example.com/car-parts.png", name: "Car Parts", path: "/automotive/car-parts" },
-        { imageUrl: "https://example.com/bike-parts.png", name: "Bike Parts", path: "/automotive/bike-parts" },
-      ],
-    },
-    {
-      category: "Travel & Tourism",
-      subCategory: [
-        { imageUrl: "https://example.com/flight-tickets.png", name: "Flight Tickets", path: "/travel/flight-tickets" },
-        { imageUrl: "https://example.com/hotel-bookings.png", name: "Hotel Bookings", path: "/travel/hotel-bookings" },
-        { imageUrl: "https://example.com/holiday-packages.png", name: "Holiday Packages", path: "/travel/holiday-packages" },
-        { imageUrl: "https://example.com/travel-insurance.png", name: "Travel Insurance", path: "/travel/travel-insurance" },
-        { imageUrl: "https://example.com/visa-services.png", name: "Visa & Passport Services", path: "/travel/visa-services" },
-      ],
-    },
-    {
-      category: "Health & Medical",
-      subCategory: [
-        { imageUrl: "https://example.com/medical-devices.png", name: "Medical Devices", path: "/health-medical/medical-devices" },
-        { imageUrl: "https://example.com/health-supplements.png", name: "Health Supplements", path: "/health-medical/health-supplements" },
-        { imageUrl: "https://example.com/ayurvedic-products.png", name: "Ayurvedic Products", path: "/health-medical/ayurvedic-products" },
-        { imageUrl: "https://example.com/home-healthcare.png", name: "Home Healthcare", path: "/health-medical/home-healthcare" },
-      ],
-    },
-  ];
+  {
+    category: "Electronics",
+    subCategory: [
+      { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731686422/LaptopAndPC_z2guf8.png", name: "Computers & Laptops", path: "/Electronics/Computers & Laptops" },
+      { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731685716/mobilePhonesAndTablets_l82e3l.png", name: "Mobile Phones & Tablets", path: "/Electronics/Mobile Phones & Tablets" },
+      { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731686644/GamingConsoleCT_zpj7f6.png", name: "Gaming & Consoles", path: "/Electronics/Gaming & Consoles" },
+      { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731687045/AudioAndVideo_lp1cxw.png", name: "Audio & Video", path: "/Electronics/Audio & Video" },
+      { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731687189/SmartHomeAssistant_mmczla.png", name: "Smart Home Devices", path: "/Electronics/Smart Home Devices" },
+      { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731687476/DroneAndCamera_izudri.png", name: "Cameras & Drones", path: "/Electronics/Cameras & Drones" },
+      { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731687601/Wearable_jocnk4.png", name: "Wearable Technology", path: "/Electronics/Wearable Technology" },
+    ],
+  },
+  {
+    category: "Fashion & Apparel",
+    subCategory: [
+      { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731688069/WomenClothing_epo4a1.png", name: "Women's Clothing", path: "/Fashion & Apparel/Women's Clothing" },
+      { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731688234/MenClothing_mzqcbe.png", name: "Men's Clothing", path: "/Fashion & Apparel/Men's Clothing" },
+      { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731688347/KidsClothing_ilhuoh.png", name: "Kids' Clothing", path: "/Fashion & Apparel/Kids' Clothing" },
+      { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731688520/footwear_wv09q3.png", name: "Footwear", path: "/Fashion & Apparel/Footwear" },
+      { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731688949/Accessories_j7btvu.png", name: "Accessories (bags, hats, jewelry, etc.)", path: "/Fashion & Apparel/Accessories (bags, hats, jewelry, etc.)" },
+      { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731689060/Lingeriewomen_qwrdvx.png", name: "Lingerie", path: "/Fashion & Apparel/Lingerie" },
+      { imageUrl: "https://res.cloudinary.com/demlcxzrb/image/upload/v1731689222/SportsWear_mwdoov.png", name: "Sportswear", path: "/Fashion & Apparel/Sportswear" },
+    ],
+  },
+  {
+    category: "Home & Kitchen",
+    subCategory: [
+      { imageUrl: "https://example.com/furniture.png", name: "Furniture", path: "/Home & Kitchen/Furniture" },
+      { imageUrl: "https://example.com/home-decor.png", name: "Home Decor", path: "/Home & Kitchen/Home Decor" },
+      { imageUrl: "https://example.com/kitchen-appliances.png", name: "Kitchen Appliances", path: "/Home & Kitchen/Kitchen Appliances" },
+      { imageUrl: "https://example.com/bedding.png", name: "Bedding & Bath", path: "/Home & Kitchen/Bedding & Bath" },
+      { imageUrl: "https://example.com/tools.png", name: "Home Improvement Tools", path: "/Home & Kitchen/Home Improvement Tools" },
+      { imageUrl: "https://example.com/garden-outdoor.png", name: "Garden & Outdoor", path: "/Home & Kitchen/Garden & Outdoor" },
+    ],
+  },
+  {
+    category: "Beauty & Personal Care",
+    subCategory: [
+      { imageUrl: "https://example.com/skincare.png", name: "Skincare", path: "/Beauty & Personal Care/Skincare" },
+      { imageUrl: "https://example.com/haircare.png", name: "Haircare", path: "/Beauty & Personal Care/Haircare" },
+      { imageUrl: "https://example.com/makeup.png", name: "Makeup", path: "/Beauty & Personal Care/Makeup" },
+      { imageUrl: "https://example.com/fragrances.png", name: "Fragrances", path: "/Beauty & Personal Care/Fragrances" },
+      { imageUrl: "https://example.com/hygiene.png", name: "Personal Hygiene", path: "/Beauty & Personal Care/Personal Hygiene" },
+      { imageUrl: "https://example.com/health-wellness.png", name: "Health & Wellness", path: "/Beauty & Personal Care/Health & Wellness" },
+    ],
+  },
+  {
+    category: "Books, Media & Music",
+    subCategory: [
+      { imageUrl: "https://example.com/books.png", name: "Books", path: "/Books, Media & Music/Books" },
+      { imageUrl: "https://example.com/movies.png", name: "Movies & TV Shows", path: "/Books, Media & Music/Movies & TV Shows" },
+      { imageUrl: "https://example.com/music.png", name: "Music", path: "/Books, Media & Music/Music" },
+      { imageUrl: "https://example.com/games-toys.png", name: "Games & Toys", path: "/Books, Media & Music/Games & Toys" },
+      { imageUrl: "https://example.com/stationery.png", name: "Stationery & Office Supplies", path: "/Books, Media & Music/Stationery & Office Supplies" },
+    ],
+  },
+  {
+    category: "Grocery & Gourmet",
+    subCategory: [
+      { imageUrl: "https://example.com/fresh-produce.png", name: "Fresh Produce", path: "/Grocery & Gourmet/Fresh Produce" },
+      { imageUrl: "https://example.com/frozen-foods.png", name: "Frozen Foods", path: "/Grocery & Gourmet/Frozen Foods" },
+      { imageUrl: "https://example.com/canned-foods.png", name: "Canned & Packaged Foods", path: "/Grocery & Gourmet/Canned & Packaged Foods" },
+      { imageUrl: "https://example.com/beverages.png", name: "Beverages", path: "/Grocery & Gourmet/Beverages" },
+      { imageUrl: "https://example.com/snacks.png", name: "Snacks & Sweets", path: "/Grocery & Gourmet/Snacks & Sweets" },
+      { imageUrl: "https://example.com/international-foods.png", name: "International Foods", path: "/Grocery & Gourmet/International Foods" },
+    ],
+  },
+  {
+    category: "Sports & Fitness",
+    subCategory: [
+      { imageUrl: "https://example.com/sports-equipment.png", name: "Sports Equipment", path: "/Sports & Fitness/Sports Equipment" },
+      { imageUrl: "https://example.com/fitness-equipment.png", name: "Fitness Equipment", path: "/Sports & Fitness/Fitness Equipment" },
+      { imageUrl: "https://example.com/sports-apparel.png", name: "Sports Apparel", path: "/Sports & Fitness/Sports Apparel" },
+      { imageUrl: "https://example.com/outdoor-gear.png", name: "Outdoor Gear", path: "/Sports & Fitness/Outdoor Gear" },
+    ],
+  },
+  {
+    category: "Automotive",
+    subCategory: [
+      { imageUrl: "https://example.com/car-accessories.png", name: "Car Accessories", path: "/Automotive/Car Accessories" },
+      { imageUrl: "https://example.com/bike-accessories.png", name: "Bike Accessories", path: "/Automotive/Bike Accessories" },
+      { imageUrl: "https://example.com/car-parts.png", name: "Car Parts", path: "/Automotive/Car Parts" },
+      { imageUrl: "https://example.com/bike-parts.png", name: "Bike Parts", path: "/Automotive/Bike Parts" },
+    ],
+  },
+  {
+    category: "Travel & Tourism",
+    subCategory: [
+      { imageUrl: "https://example.com/flight-tickets.png", name: "Flight Tickets", path: "/Travel & Tourism/Flight Tickets" },
+      { imageUrl: "https://example.com/hotel-bookings.png", name: "Hotel Bookings", path: "/Travel & Tourism/Hotel Bookings" },
+      { imageUrl: "https://example.com/holiday-packages.png", name: "Holiday Packages", path: "/Travel & Tourism/Holiday Packages" },
+      { imageUrl: "https://example.com/travel-insurance.png", name: "Travel Insurance", path: "/Travel & Tourism/Travel Insurance" },
+      { imageUrl: "https://example.com/visa-services.png", name: "Visa & Passport Services", path: "/Travel & Tourism/Visa & Passport Services" },
+    ],
+  },
+  {
+    category: "Health & Medical",
+    subCategory: [
+      { imageUrl: "https://example.com/medical-devices.png", name: "Medical Devices", path: "/Health & Medical/Medical Devices" },
+      { imageUrl: "https://example.com/health-supplements.png", name: "Health Supplements", path: "/Health & Medical/Health Supplements" },
+      { imageUrl: "https://example.com/ayurvedic-products.png", name: "Ayurvedic Products", path: "/Health & Medical/Ayurvedic Products" },
+      { imageUrl: "https://example.com/home-healthcare.png", name: "Home Healthcare", path: "/Health & Medical/Home Healthcare" },
+    ],
+  },
+];
+
   
   
 
@@ -264,7 +265,7 @@ const categories = [
                       <div className="absolute bottom-0 w-full p-4 text-center rounded-b-lg">
                         <h3 className="text-md font-semibold text-white">{sub.name}</h3>
                         <Link
-                          to={sub.path}
+                          to={"/shop"+sub.path}
                           className="text-indigo-800 font-medium hover:underline"
                         >
                           View More
