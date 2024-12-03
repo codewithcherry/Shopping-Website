@@ -32,13 +32,13 @@ const ReviewCard = ({ review }) => {
       {/* User Info */}
       <div className="flex items-center space-x-4">
         <img
-          src={`https://www.shutterstock.com/image-photo/positive-handsome-young-latin-entrepreneur-260nw-2500823337.jpg`}
-          alt={review.username}
+          src={review.user.imageUrl}
+          alt={review.user.username}
           className="h-12 w-12 rounded-full object-cover"
         />
         <div>
           <h3 className="text-gray-800 font-semibold text-lg">
-            {"Jhone doe"}
+            {review.user.username}
           </h3>
           <p className="text-sm text-gray-500">{new Date(review.date).toLocaleString()}</p>
         </div>
