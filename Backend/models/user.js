@@ -52,6 +52,23 @@ const userSchema = new mongoose.Schema({
     type: String,
     required:false
   },
+  firstname: {
+    type: String,
+    required:false
+  },
+  lastname: {
+    type: String,
+    required:false
+  },
+  phone: {
+    type: Number,
+    required:false
+  },
+  imageUrl:{
+    type:String,
+    required:false,
+    default: "https://res.cloudinary.com/demlcxzrb/image/upload/v1733217270/default-profile_hvlm0x.jpg"
+  },
   useremail: {
     type: String,
     required: true,
