@@ -319,7 +319,7 @@ exports.getReviews = async (req, res, next) => {
     const { page = 1, limit = 5 } = req.query; // Defaults: page = 1, limit = 5
 
     try {
-        const product = await Product.findById(productId);
+        const product = await Product.findById(productId).populate('reviews.user','username imageUrl');
 
         if (!product) {
             return res.status(404).json({ type: "error", message: "Product not found" });
