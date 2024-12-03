@@ -5,7 +5,9 @@ const userController=require("../controllers/user");
 const router=express.Router()
 
 router.get('/get-wishlist',validateController.authenticate,userController.getUserWishlist);
+router.get('/get-user-info',validateController.authenticate,userController.getUserInfo);
 router.post('/add-to-wishlist',validateController.authenticate,userController.addToWishlist);
+router.post('/update-user-info',validateController.authenticate,userController.updateUserInfo);
 router.delete('/remove-product-wishlist',validateController.authenticate,userController.removeProductFromWishlist);
 
 module.exports=router;
