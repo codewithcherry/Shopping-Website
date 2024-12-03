@@ -69,3 +69,46 @@ exports.removeProductFromWishlist = async (req, res) => {
         res.status(500).json({ type: 'error', message: 'Internal Server Error' });
     }
 };
+
+exports.updateUserInfo=async(req,res,next)=>{
+    const userId=req.user.userId;
+    const {imageUrl,firstname,lastname,useremail,phone}=req.body;
+    try {
+        const user=await User.findById(userId);
+        if(!user){
+            res.status(404).json({type:'error',message:"User not found"});
+        }
+        user.imageUrl=imageUrl
+        user.firstname=firstname
+        user.lastname=lastname
+        user.username=`${firstname} ${lastname}`
+        user.useremail=useremail
+        user.phone=phone
+        await user.save()
+
+        res.status(201).json({type:'success',message:'User info updated successfully'})
+    } catch (err) {
+        res.status(500).json({ type: 'error', message: 'Internal Server Error' });
+    }
+}
+
+exports.getUserInfo=async(req,res,next)=>{
+    const userId=req.user.userId;
+    // console.log(userId)
+    try {
+        const user=await User.findById(userId);
+        if(!user){
+            res.status(404).json({type:'error',message:"User not found"});
+        }
+        const data={
+            firstname:user.firstname,
+            lastname:user.lastname,
+            useremail:user.useremail,
+            imageUrl:user.imageUrl,
+            phone:user.phone
+        }
+        res.status(200).json(data);
+    } catch (error) {
+        res.status(500).json({ type: 'error', message: 'Internal Server Error' });
+    }
+}
