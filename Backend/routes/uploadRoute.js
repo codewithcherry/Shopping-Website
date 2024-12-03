@@ -25,5 +25,6 @@ const fileFilter = (req, file, cb) => {
 
 router.post("/add-product-image", upload.single('image'),uploadController.uploadProductImage);
 router.post("/add-review-image", upload.single('image'),uploadController.uploadReviewImage);
+router.post("/add-user-image",upload.single('image'),uploadController.uploadUserImage);
 
 module.exports=router
