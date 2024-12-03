@@ -1,21 +1,89 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Navbar from "../components/Navigation/Navbar";
 import Footer from "../components/Footer/Footer";
 import { PencilIcon } from "@heroicons/react/24/solid";
+import axios from "axios";
+import Alert from "../components/Alert/Alert";
+import { AuthContext } from "../components/Navigation/UserAuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Account = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [user, setUser] = useState({
-    profileImage:
-      "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com",
-    phone: "123-456-7890",
-  });
+  const [user, setUser] = useState({});
   const [editedUser, setEditedUser] = useState(user);
+  const [alert,setAlert]=useState();
+  const [userImage, setUserImage] = useState('');
+  const [uploading,setuploading]=useState(false)
 
-  const handleEditToggle = () => setIsEditing(!isEditing);
+  const {isLogged}=useContext(AuthContext);
+
+  const token=localStorage.getItem('jwtToken');
+
+  const navigate=useNavigate()
+
+  const handleImageChange = async (event) => {
+    setuploading(true);
+    const file = event.target.files[0]; // Get the first file only
+    if (file) {
+        const formData = new FormData();
+        formData.append('image', file); 
+        try {
+            const response = await axios.post('http://localhost:3000/upload/add-user-image', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            
+            const newImageUrl = response.data.imageUrl;
+
+                // Update local images state
+                setUserImage(newImageUrl);
+                setEditedUser({ ...editedUser, imageUrl: newImageUrl });
+                setuploading(false);
+        } catch (err) {
+            // console.log(err);
+            setuploading(false); // Make sure to reset uploading in case of error
+            setAlert(err.response.data)
+        }
+    }
+};
+
+const updateUserInfo=async()=>{
+    try {
+        
+        const response=await axios.post('http://localhost:3000/user/update-user-info',editedUser,
+            {
+                headers:{
+                    'Authorization':`Bearer ${token}`
+                }
+            }
+        )
+        // console.log(response.data)
+        setAlert(response.data)
+    } catch (error) {
+        // console.log(error)
+        setAlert(error.response.data)
+    }
+}
+
+const getUserInfo=async()=>{
+    try{
+        const response=await axios.get('http://localhost:3000/user/get-user-info',{
+            headers:{
+                'Authorization':`Bearer ${token}`
+            }
+        })
+        // console.log(response.data)
+        setUser(response.data);
+        setEditedUser(response.data)
+    }
+    catch(err){
+        // console.log(err)
+        setAlert(err.response.data)
+    }
+}
+
+const handleEditToggle = () => setIsEditing(!isEditing);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,6 +93,8 @@ const Account = () => {
   const handleSave = () => {
     setUser(editedUser);
     setIsEditing(false);
+    console.log(editedUser);
+    updateUserInfo()
   };
 
   const handleDiscard = () => {
@@ -32,32 +102,32 @@ const Account = () => {
     setIsEditing(false);
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setEditedUser({ ...editedUser, profileImage: reader.result });
-      };
-      reader.readAsDataURL(file);
+  useEffect(()=>{
+    if(!isLogged){
+        const data={type:"info",message:"login to see your profile"}
+        return navigate('/login',{state:data})
     }
-  };
+    getUserInfo()
+  },[])
 
   return (
     <div className="bg-gray-100">
       <Navbar />
+      {
+        alert && <Alert type={alert.type} message={alert.message} onClose={()=>setAlert(null)} />
+      }
       <div className="max-w-4xl mx-auto p-6">
         <div className="bg-white shadow-xl rounded-2xl p-8">
           <div className="flex flex-col md:flex-row items-center gap-6">
             {/* Profile Image */}
             <div className="relative group">
               <img
-                src={isEditing ? editedUser.profileImage : user.profileImage}
+                src={isEditing ? editedUser.imageUrl : user.imageUrl}
                 alt="Profile"
                 className="w-32 h-32 rounded-full border-4 border-gray-200 object-cover shadow-md group-hover:shadow-lg transition"
               />
               {isEditing && (
-                <label className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full text-white opacity-0 group-hover:opacity-100 cursor-pointer transition">
+                <label className={` ${uploading?"animate-ping":""} absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full text-white opacity-0 group-hover:opacity-100 cursor-pointer transition`}>
                   <input
                     type="file"
                     accept="image/*"
@@ -72,9 +142,9 @@ const Account = () => {
             {/* User Information */}
             <div className="flex-1 text-center md:text-left relative group">
               <h2 className="text-2xl font-bold text-gray-800">
-                {user.firstName} {user.lastName}
+                {user.firstname} {user.lastname}
               </h2>
-              <p className="text-gray-500">{user.email}</p>
+              <p className="text-gray-500">{user.useremail}</p>
               <p className="text-gray-500">{user.phone}</p>
 
               {/* Edit Icon with Tooltip */}
@@ -94,7 +164,7 @@ const Account = () => {
           {isEditing && (
             <div className="mt-8 space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {["firstName", "lastName", "email", "phone"].map((field) => (
+                {["firstname", "lastname", "useremail", "phone"].map((field) => (
                   <div key={field}>
                     <label
                       htmlFor={field}

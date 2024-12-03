@@ -66,7 +66,7 @@ const Shop = () => {
         <Navbar />
         <div>
           <div>
-          <div className='mt-6 mx-6'>
+            <div className='mt-6 mx-6'>
                 <Breadcrumbs breadcrumbs={breadcrumbs}/>
             </div>
           </div>
