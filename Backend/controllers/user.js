@@ -105,10 +105,29 @@ exports.getUserInfo=async(req,res,next)=>{
             lastname:user.lastname,
             useremail:user.useremail,
             imageUrl:user.imageUrl,
-            phone:user.phone
+            phone:user.phone,
+            address:user.addresses
         }
         res.status(200).json(data);
     } catch (error) {
         res.status(500).json({ type: 'error', message: 'Internal Server Error' });
+    }
+}
+
+exports.editUserAddress=async(req,res,next)=>{
+    const userId=req.user.userId;
+    const index=req.query.index;
+    const updatedAddrress=req.body;
+    try {
+        const user=await User.findById(userId);
+        const userAddress=user.addresses;
+        userAddress[index]=updatedAddrress
+        user.addresses=userAddress;
+        await user.save();
+        res.status(201).json({type:'success',message:'User info updated successfully'})
+
+    } catch (error) {
+        res.status(500).json({ type: 'error', message: 'Internal Server Error' });
+    
     }
 }
