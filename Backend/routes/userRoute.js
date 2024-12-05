@@ -8,6 +8,8 @@ router.get('/get-wishlist',validateController.authenticate,userController.getUse
 router.get('/get-user-info',validateController.authenticate,userController.getUserInfo);
 router.post('/add-to-wishlist',validateController.authenticate,userController.addToWishlist);
 router.post('/update-user-info',validateController.authenticate,userController.updateUserInfo);
+router.post('/user-edit-address',validateController.authenticate,userController.editUserAddress);
 router.delete('/remove-product-wishlist',validateController.authenticate,userController.removeProductFromWishlist);
+
 
 module.exports=router;
