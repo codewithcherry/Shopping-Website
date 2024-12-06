@@ -48,15 +48,16 @@ exports.loginToAccount = async (req, res, next) => {
     }
     const isMatch = await bcrypt.compare(password, user.password); // Compare with the user's hashed password
     if (isMatch) {
+      const payload={ userId: user._id, useremail: user.useremail,role:user.role,username:user.username,imageUrl:user.imageUrl}
       // Generate a JWT with the user info
     const token = jwt.sign(
-      { userId: user._id, useremail: user.useremail,role:user.role,username:user.username,imageUrl:user.imageUrl}, // Payload (user info)
+      payload, // Payload (user info)
       jwt_secret, // Secret key
       { expiresIn: '1h' } // Token expiry time
     );
 
     // Send the token to the front end
-      return res.status(200).json({type:"success", message: "Login successful",token:token });
+      return res.status(200).json({type:"success", message: "Login successful",token:token ,user:payload});
     } else {
       return res.status(401).json({ type:"error",message: "Password does not match" });
     }
