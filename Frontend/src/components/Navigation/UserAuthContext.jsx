@@ -5,6 +5,7 @@ export const AuthContext = createContext();
 
 export const UserAuthContext = ({ children }) => {
     const [isLogged, setIsLogged] = useState(false);
+    const [user,setUser]=useState({});
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -12,9 +13,11 @@ export const UserAuthContext = ({ children }) => {
             const token = localStorage.getItem("jwtToken");
             if (token) {
                 try {
-                    await axios.get("http://localhost:3000/validate", {
+                    const response=await axios.get("http://localhost:3000/validate", {
                         headers: { Authorization: `Bearer ${token}` },
                     });
+                    // console.log(response.data);
+                    setUser(response.data);
                     setIsLogged(true);
                 } catch {
                     setIsLogged(false);
@@ -27,13 +30,14 @@ export const UserAuthContext = ({ children }) => {
 
     const logout = () => {
         localStorage.removeItem("jwtToken");
+        setUser({})
         setIsLogged(false);
     };
 
     if (loading) return null; // Render nothing until loading completes
 
     return (
-        <AuthContext.Provider value={{ isLogged, setIsLogged, logout }}>
+        <AuthContext.Provider value={{ isLogged, user, setIsLogged,setUser, logout }}>
             {children}
         </AuthContext.Provider>
     );

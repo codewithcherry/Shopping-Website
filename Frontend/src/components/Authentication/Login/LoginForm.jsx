@@ -13,7 +13,7 @@ const LoginForm = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false); // Toggle for password visibility
     const [alert,setAlert]=useState(location.state || '')
-    const {setIsLogged }=useContext(AuthContext)
+    const {setIsLogged,setUser }=useContext(AuthContext);
 
     const navigate=useNavigate()
 
@@ -27,6 +27,8 @@ const LoginForm = () => {
       }
       axios.post("http://localhost:3000/login", data, config)
         .then(res => {
+          // console.log(res.data)
+          setUser(res.data.user);
           setAlert({ type: res.data.type, message: res.data.message });
           if (res.data.type === "success") {
             localStorage.setItem('jwtToken', res.data.token);

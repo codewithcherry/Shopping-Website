@@ -13,11 +13,13 @@ import {
 } from "@heroicons/react/24/solid";
 
 const Navbar = () => {
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [inputSearchValue,setInputSearchValue]=useState('');
   const navigate = useNavigate();
-  const { isLogged, logout } = useContext(AuthContext);
+ 
+  const { user,isLogged, logout } = useContext(AuthContext); 
 
   const handleLogout = () => {
     logout();
@@ -44,7 +46,7 @@ const Navbar = () => {
     return () => {
       document.removeEventListener("click", closeDropdownOnClickOutside);
     };
-  }, []);
+  }, [user]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -120,11 +122,11 @@ const Navbar = () => {
             {/* Account Dropdown */}
             <div className="relative account-dropdown">
               <button
-                className="flex items-center gap-2 text-white font-medium hover:text-indigo-700 transition duration-300"
+                className="flex items-center gap-2 text-white font-medium hover:text-indigo-700 transition duration-300 whitespace-nowrap"
                 onClick={() => setIsAccountOpen(!isAccountOpen)}
               >
-                <UserIcon className="w-5 h-5 text-white" />
-                Account
+                {!user.imageUrl?<UserIcon className="w-5 h-5 text-white" />: <img src={user.imageUrl} alt="" className="w-7 h-7 rounded-full" />}  
+                {user.username || "Account"}
               </button>
               {isAccountOpen && (
                 <div className="absolute top-10 -right-24 mt-2 w-48 bg-indigo-300 rounded-lg shadow-lg z-50">
