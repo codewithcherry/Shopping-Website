@@ -18,7 +18,7 @@ const Orders = () => {
 
   const breadcrumbs = [
     { label: 'Home', link: '/' },
-    { label: 'Account', link: '/account' },
+    { label: 'Account', link: '/profile' },
     { label: 'Orders', link: '/orders' },
   ];
 
