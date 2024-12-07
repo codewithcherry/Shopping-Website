@@ -35,6 +35,7 @@ const Orders = () => {
       setOrders(response.data);
     } catch (err) {
       console.log(err);
+      setLoading(false);
     }
   };
 

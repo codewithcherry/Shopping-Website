@@ -125,7 +125,7 @@ const Navbar = () => {
                 className="flex items-center gap-2 text-white font-medium hover:text-indigo-700 transition duration-300 whitespace-nowrap"
                 onClick={() => setIsAccountOpen(!isAccountOpen)}
               >
-                {!user.imageUrl?<UserIcon className="w-5 h-5 text-white" />: <img src={user.imageUrl} alt="" className="w-7 h-7 rounded-full" />}  
+                {!user.imageUrl?<UserIcon className="w-5 h-5 text-white" />: <img src={user.imageUrl} alt="" className="w-8 h-8 rounded-full  bg-white" />}  
                 {user.username || "Account"}
               </button>
               {isAccountOpen && (
