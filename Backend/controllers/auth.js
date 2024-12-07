@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const jwt_secret=process.env.JWT_SECRET;
 const jwt=require('jsonwebtoken')
 
+const {sendWelcomeEmail}=require('../service/Emailer')
+
 exports.registerAccount = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -28,6 +30,7 @@ exports.registerAccount = async (req, res, next) => {
     // Save the new user
     const result = await newUser.save();
     if (result) {
+      sendWelcomeEmail(newUser.useremail,'Customer','http://localhost:5173');
       return res.json({ type: "success", message: "Account created successfully" });
     }
   } catch (err) {
