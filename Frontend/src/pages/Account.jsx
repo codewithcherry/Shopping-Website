@@ -9,6 +9,7 @@ import { AuthContext } from "../components/Navigation/UserAuthContext";
 import { useNavigate } from "react-router-dom";
 import AddressForm from "../components/account/AddressForm";
 import { removeUserAddress } from "../components/Cart/checkout";
+import ChangePassword from "../components/account/ChangePassword";
 
 const Account = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -137,7 +138,7 @@ const Account = () => {
       <Navbar />
       {alert && <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
       <div className="max-w-4xl mx-auto p-6">
-        <div className="relative bg-white shadow-xl rounded-lg p-8">
+        <div className="relative bg-white shadow-lg rounded-lg p-8">
           <div className="flex flex-col md:flex-row items-center gap-6">
             {/* Profile Image */}
             <div className="relative group">
@@ -226,6 +227,8 @@ const Account = () => {
             </div>
           )}
         </div>
+
+        <ChangePassword setAlert={setAlert}/>
 
         {/* Address Section */}
         <div className="mt-8">
