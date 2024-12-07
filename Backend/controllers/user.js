@@ -1,5 +1,6 @@
 const User=require("../models/user");
-
+const jwt_secret=process.env.JWT_SECRET;
+const jwt=require('jsonwebtoken')
 
 exports.getUserWishlist = async (req, res, next) => {
     const userId = req.user.userId;
@@ -86,7 +87,15 @@ exports.updateUserInfo=async(req,res,next)=>{
         user.phone=phone
         await user.save()
 
-        res.status(201).json({type:'success',message:'User info updated successfully'})
+        const payload={ userId: user._id, useremail: useremail,role:user.role,username:`${firstname} ${lastname}`,imageUrl:imageUrl}
+        // Generate a JWT with the user info
+        const token = jwt.sign(
+            payload, // Payload (user info)
+            jwt_secret, // Secret key
+            { expiresIn: '1h' } // Token expiry time
+        );
+
+        res.status(201).json({type:'success',message:'User info updated successfully',token:token})
     } catch (err) {
         res.status(500).json({ type: 'error', message: 'Internal Server Error' });
     }
