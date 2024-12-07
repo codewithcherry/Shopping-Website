@@ -23,7 +23,7 @@ const Account = () => {
   const [editIndex, setEditIndex] = useState();
   const [refresh, setRefresh] = useState(1);
 
-  const { isLogged,user:navbarUser,setUser: setNavbarUser } = useContext(AuthContext);
+  const { isLogged} = useContext(AuthContext);
   
 
   const token = localStorage.getItem("jwtToken");
@@ -78,7 +78,8 @@ const Account = () => {
         }
       );
       setUser(editedUser);
-      
+      // console.log(response.data)
+      localStorage.setItem('jwtToken',response.data.token);
       setIsEditing(false);
       setAlert({ type: "success", message: "Profile updated successfully!" });
     } catch (error) {
@@ -96,9 +97,8 @@ const Account = () => {
       const response = await axios.get("http://localhost:3000/user/get-user-info", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log(response.data)
+      // console.log(response.data)
       setUser(response.data);
-      setNavbarUser({...navbarUser,imageUrl:response.data.imageUrl,username:`${response.data.firstname} ${response.data.lastname}`});
       setUserAddress(response.data.address);
       setEditedUser(response.data);
     } catch (err) {
