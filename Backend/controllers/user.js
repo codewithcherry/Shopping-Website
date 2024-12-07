@@ -2,6 +2,8 @@ const User=require("../models/user");
 const jwt_secret=process.env.JWT_SECRET;
 const jwt=require('jsonwebtoken')
 
+const bcrypt=require('bcrypt');
+
 exports.getUserWishlist = async (req, res, next) => {
     const userId = req.user.userId;
 
@@ -140,3 +142,41 @@ exports.editUserAddress=async(req,res,next)=>{
     
     }
 }
+
+exports.changePassword = async (req, res, next) => {
+    try {
+      const userId = req.user.userId; // Assumes authentication middleware sets req.user
+      const { oldPassword, newPassword } = req.body;
+  
+      // Check if oldPassword and newPassword are provided
+      if (!oldPassword || !newPassword) {
+        return res.status(400).json({type:"error", message: 'Both old and new passwords are required.' });
+      }
+  
+      // Find the user by userId
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({type:"error", message: 'User not found.' });
+      }
+  
+      // Compare the old password with the stored hashed password
+      const isMatch = await bcrypt.compare(oldPassword, user.password);
+      if (!isMatch) {
+        return res.status(401).json({type:"error", message: 'Old password is incorrect.' });
+      }
+  
+      // Hash the new password
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+  
+      // Update the user's password in the database
+      user.password = hashedPassword;
+      await user.save();
+  
+      // Send success response
+      res.status(200).json({type:"success", message: 'Password changed successfully.' });
+    } catch (error) {
+        res.status(500).json({ type: 'error', message: 'Internal Server Error' });
+     
+    }
+  };
