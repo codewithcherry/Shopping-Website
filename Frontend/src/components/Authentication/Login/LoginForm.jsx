@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'; // Correct Heroicons import
 import axios from 'axios' ;
 import Alert from '../../Alert/Alert';
-import { useNavigate,useLocation } from 'react-router-dom';
+import { useNavigate,useLocation, Link } from 'react-router-dom';
 import { AuthContext } from '../../Navigation/UserAuthContext';
 
 const LoginForm = () => {
@@ -116,9 +116,9 @@ const LoginForm = () => {
                 </label>
               </div>
               <div className="text-sm">
-                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                <Link to={'/forgot-password'} className="font-medium text-indigo-600 hover:text-indigo-500">
                   Forgot your password?
-                </a>
+                </Link>
               </div>
             </div>
   
