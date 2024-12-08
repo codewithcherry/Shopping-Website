@@ -29,6 +29,7 @@ import Wishlist from './pages/Wishlist';
 import Shop from './pages/Shop';
 import Account from './pages/Account';
 import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
         <Route path='/payment' element={<Payment />} />  
         <Route path='/profile' element={<Account />} />  
         <Route path='/forgot-password' element={<ForgotPassword />} />  
+        <Route path='/reset-password/:resetToken' element={<ResetPassword />} /> 
         <Route path='/admin' element={<Admin />} />
         <Route path='/shop/:category/' element={<Shop />}/>
         <Route path='/shop/:category/:subCategory' element={<Shop />}/>
