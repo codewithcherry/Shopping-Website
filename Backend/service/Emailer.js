@@ -97,8 +97,90 @@ const sendWelcomeEmail = (recipientEmail, userName, dashboardLink) => {
     });
 };
 
+const sendResetPasswordLinkEmail = (recipientEmail, userName, resetLink) => {
+    const messageData = {
+        from: "MyShop Team <no-reply@myshop.com>",
+        to: [recipientEmail], // Specify the recipient(s)
+        subject: "Reset Your Password - MyShop",
+        text: "Password reset request received.",
+        html: `<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Reset Your Password</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f4f4f9;
+                        color: #333;
+                        padding: 20px;
+                    }
+                    .email-container {
+                        background-color: #ffffff;
+                        padding: 30px;
+                        border-radius: 8px;
+                        width: 600px;
+                        margin: 0 auto;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        color: #4CAF50;
+                    }
+                    p {
+                        font-size: 16px;
+                        line-height: 1.6;
+                    }
+                    .btn {
+                        display: inline-block;
+                        padding: 12px 25px;
+                        background-color: #4CAF50;
+                        color: #fff;
+                        text-decoration: none;
+                        border-radius: 4px;
+                        margin-top: 20px;
+                        font-weight: bold;
+                    }
+                    .footer {
+                        font-size: 14px;
+                        color: #999;
+                        margin-top: 30px;
+                        text-align: center;
+                    }
+                    .footer a {
+                        color: #999;
+                        text-decoration: none;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="email-container">
+                    <h1>Password Reset Request</h1>
+                    <p>Hi ${userName},</p>
+                    <p>We received a request to reset your password for your MyShop account. If you requested this change, click the button below to reset your password:</p>
+                    <a href="${resetLink}" class="btn">Reset Your Password</a>
+                    <p>If you did not request a password reset, you can ignore this email. Your password will remain the same, and no changes will be made to your account.</p>
+                    <p>If you have any questions or concerns, feel free to reply to this email, and our support team will assist you.</p>
+                    <p><strong>The MyShop Team</strong></p>
+                    <div class="footer">
+                        <p>&copy; 2024 MyShop, All rights reserved.</p>
+                        <p><a href="http://unsubscribe-link.com">Unsubscribe</a> from our mailing list.</p>
+                    </div>
+                </div>
+            </body>
+            </html>`
+    };
+
+    // Send the email
+    mg.messages.create(mgDomain, messageData)
+        .then(msg => {
+            console.log("Password reset email sent successfully:", msg);
+        })
+        .catch(err => {
+            console.error("Error sending email:", err);
+        });
+};
 
 
 
-
-module.exports = {sendWelcomeEmail};
+module.exports = {sendWelcomeEmail,sendResetPasswordLinkEmail};
