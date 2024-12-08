@@ -1,23 +1,23 @@
 // models/User.js
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // Define Address Schema
 const addressSchema = new mongoose.Schema({
-  fullName: {type:String},
-    doorNumber: {type:String},
-    streetArea: {type:String},
-    landmark: {type:String},
-    city: {type:String},
-    state: {type:String},
-    postalCode: {type:Number},
-    phoneNumber: {type:Number}
+  fullName: { type: String },
+  doorNumber: { type: String },
+  streetArea: { type: String },
+  landmark: { type: String },
+  city: { type: String },
+  state: { type: String },
+  postalCode: { type: Number },
+  phoneNumber: { type: Number },
 });
 
 // Define Cart Item Schema
 const cartItemSchema = new mongoose.Schema({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product',
+    ref: "Product",
     required: true,
   },
   quantity: {
@@ -25,10 +25,10 @@ const cartItemSchema = new mongoose.Schema({
     required: true,
     default: 1,
   },
-  size:{
-    type:String,
-    default:"os"
-  }
+  size: {
+    type: String,
+    default: "os",
+  },
 });
 
 // Define Order Schema
@@ -41,7 +41,7 @@ const orderSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: 'Pending',
+    default: "Pending",
   },
   shippingAddress: addressSchema,
 });
@@ -50,24 +50,25 @@ const orderSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required:false
+    required: false,
   },
   firstname: {
     type: String,
-    required:false
+    required: false,
   },
   lastname: {
     type: String,
-    required:false
+    required: false,
   },
   phone: {
     type: Number,
-    required:false
+    required: false,
   },
-  imageUrl:{
-    type:String,
-    required:false,
-    default: "https://res.cloudinary.com/demlcxzrb/image/upload/v1733217270/default-profile_hvlm0x.jpg"
+  imageUrl: {
+    type: String,
+    required: false,
+    default:
+      "https://res.cloudinary.com/demlcxzrb/image/upload/v1733217270/default-profile_hvlm0x.jpg",
   },
   useremail: {
     type: String,
@@ -82,20 +83,26 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['customer', 'admin'],
-    default: 'customer',
+    enum: ["customer", "admin"],
+    default: "customer",
   },
   cart: {
-    products:[cartItemSchema]  
+    products: [cartItemSchema],
   }, // Array of items in the cart
   wishlist: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product',
+      ref: "Product",
     },
   ], // Array of product IDs for the wishlist
   orders: [orderSchema], // Array of order history
   addresses: [addressSchema], // Array of saved addresses
+  resetPasswordToken: {
+    type: String, // Store the hashed token
+  },
+  resetPasswordTokenExpires: {
+    type: Date, // Store the expiration timestamp
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -103,6 +110,6 @@ const userSchema = new mongoose.Schema({
 });
 
 // Create the User model
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;
