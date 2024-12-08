@@ -1,9 +1,10 @@
 const User = require("../models/user");
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const jwt_secret=process.env.JWT_SECRET;
 const jwt=require('jsonwebtoken')
 
-const {sendWelcomeEmail}=require('../service/Emailer')
+const {sendWelcomeEmail,sendResetPasswordLinkEmail}=require('../service/Emailer')
 
 exports.registerAccount = async (req, res, next) => {
   const { email, password } = req.body;
@@ -70,3 +71,36 @@ exports.loginToAccount = async (req, res, next) => {
   }
 };
 
+exports.forgotPassword = async (req, res, next) => {
+  const { email } = req.body;
+  // console.log(email);
+
+  try {
+      // Find the user by email
+      const user = await User.findOne({ useremail: email });
+      if (!user) {
+          return res.status(404).json({ type: "error", message: "User does not exist" });
+      }
+
+      // Generate reset token and hash it
+      const resetToken = crypto.randomBytes(32).toString("hex");
+      const resetTokenHash = crypto.createHash("sha256").update(resetToken).digest("hex");
+
+      // Save hashed token and expiration in DB
+      user.resetPasswordToken = resetTokenHash;
+      user.resetPasswordTokenExpires = Date.now() + 15 * 60 * 1000; // 15 minutes
+      await user.save();
+
+      // Create reset link
+      const resetLink = `http://localhost:5173/reset-password/${resetToken}`;
+
+      // Send reset password email
+      await sendResetPasswordLinkEmail(user.useremail, user.username, resetLink);
+
+      // Respond to the client
+      return res.status(200).json({ type: "success", message: `Password reset email sent successfully to ${user.useremail}` });
+  } catch (err) {
+      // console.error(err);
+      return res.status(500).json({ type: "error", message: "Internal server error" });
+  }
+};
