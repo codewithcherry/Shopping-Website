@@ -12,7 +12,7 @@ const ForgotPassword = () => {
     const [loading,setLoading]=useState(false);
 
     const handleSubmit=async (e) => {
-        console.log(email)
+        // console.log(email)
         e.preventDefault();
         setLoading(true)
         try {
@@ -25,7 +25,7 @@ const ForgotPassword = () => {
             )
             setMessage(response.data.message)
             setLoading(false)           
-            console.log(response.data)
+            // console.log(response.data)
         } catch (err) {
             setAlert(err.response.data)
             setLoading(false)
