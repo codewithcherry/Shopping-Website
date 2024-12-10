@@ -135,3 +135,58 @@ exports.getOrderlist=async(req,res,next)=>{
     })
     
 }
+
+exports.createTeam = async (req, res, next) => {
+    const adminId = req.user?.user?._id; // Ensure proper user object structure
+    const { firstname, lastname, username, email, password, phone, role } = req.body;
+  
+    // Validate required fields
+    if (!firstname || !lastname || !username || !email || !password || !phone || !role) {
+      return res.status(400).json({ type: 'error', message: 'All fields are required.' });
+    }
+  
+    try {
+      // Check if the username or email already exists
+      const existingAdmin = await Admin.findOne({
+        $or: [{ username }, { email }],
+      });
+  
+      if (existingAdmin) {
+        return res.status(409).json({
+          type: 'error',
+          message: 'An admin already exists with the same username or email.',
+        });
+      }
+  
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      // Create the new admin
+      const newAdmin = new Admin({
+        firstname,
+        lastname,
+        username,
+        email,
+        password: hashedPassword,
+        phone,
+        role,
+        createdBy: adminId,
+      });
+  
+      // Save to database
+      await newAdmin.save();
+  
+      // Return success response
+      return res.status(201).json({
+        type: 'success',
+        message: 'Successfully added new teammate.',
+      });
+    } catch (error) {
+      console.error('Error creating team:', error);
+      return res.status(500).json({
+        type: 'error',
+        message: 'Internal Server Error. Please try again later.',
+      });
+    }
+  };
+  
