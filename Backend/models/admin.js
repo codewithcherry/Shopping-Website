@@ -14,6 +14,10 @@ const adminSchema = new Schema({
     lastname:{
         type: String
     },
+    imageUrl:{
+        type:String,
+        default:'https://res.cloudinary.com/demlcxzrb/image/upload/v1733217270/default-profile_hvlm0x.jpg'
+    },
     email: {
         type: String,
         required: true,
@@ -28,12 +32,17 @@ const adminSchema = new Schema({
         type: String,
         required: true,
         minlength: 6,
+        default:'admin1234'
     },
     role: {
         type: String,
         enum: ['admin', 'superadmin','moderator'],
         default: 'admin',
     },
+    createdBy:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Admin",
+      }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Admin', adminSchema);
