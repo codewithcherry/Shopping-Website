@@ -8,12 +8,21 @@ const adminSchema = new Schema({
         unique: true,
         trim: true,
     },
+    firstname:{
+        type: String
+    },
+    lastname:{
+        type: String
+    },
     email: {
         type: String,
         required: true,
         unique: true,
         match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email'],
         lowercase: true,
+    },
+    phone:{
+        type: Number
     },
     password: {
         type: String,
@@ -22,7 +31,7 @@ const adminSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'superadmin'],
+        enum: ['admin', 'superadmin','moderator'],
         default: 'admin',
     },
 }, { timestamps: true });
