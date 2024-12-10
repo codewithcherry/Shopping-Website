@@ -8,5 +8,6 @@ router.get("/dashboard",validateController.adminAuthenticate,adminController.get
 router.get("/products",validateController.adminAuthenticate,adminController.getProducts);
 router.post("/add-product",validateController.adminAuthenticate,adminController.addProduct);
 router.get('/order-list',validateController.adminAuthenticate,adminController.getOrderlist);
+router.post('/add-team',validateController.adminAuthenticate,adminController.createTeam);
 
 module.exports=router;
