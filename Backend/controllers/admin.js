@@ -190,3 +190,14 @@ exports.createTeam = async (req, res, next) => {
     }
   };
   
+
+  exports.getAdmins = async (req, res, next) => {
+    try {
+        // Exclude specific fields like "password" and "__v" by prefixing with a minus (-)
+        const admins = await Admin.find().select('-password -__v');
+
+        res.status(200).json(admins); // Send filtered admin data
+    } catch (error) {
+        res.status(500).json({ type: 'error', message: "Internal server error" });
+    }
+};
