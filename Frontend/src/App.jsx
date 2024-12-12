@@ -31,6 +31,8 @@ import Account from "./pages/Account";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import ContactUs from "./pages/ContactUs";
+import ViewAdminProduct from "./components/Admin/Dashboard/components/products/ViewAdminProduct";
+import AdminAllProducts from "./components/Admin/Dashboard/components/products/AdminAllProducts";
 
 function App() {
   return (
@@ -60,7 +62,10 @@ function App() {
             <Route path="/product/:productId" element={<ProductDetails />} />
             <Route path="/admin/dashboard" element={<Dashboard />}>
               <Route path="" element={<AdminHome />} />
-              <Route path="products" element={<AdminProducts />} />
+              <Route path="products" element={<AdminProducts />}>
+                <Route path="" element={<AdminAllProducts />}/>
+                <Route path=":productId" element={<ViewAdminProduct />} />
+              </Route>
               <Route path="add-product" element={<AdminAddProduct />} />
               <Route path="inbox" element={<AdminInbox />} />
               <Route path="orders" element={<AdminOrderlist />} />

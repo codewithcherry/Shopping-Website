@@ -1,11 +1,21 @@
 import React from 'react'
 import {TrashIcon,PencilSquareIcon} from "@heroicons/react/24/outline"
+import { useNavigate } from 'react-router-dom';
 
 const AdminProductCard = ({product,onEdit,onDelete}) => {
     const { title, sku, status, images } = product;
 
+    const navigate=useNavigate()
+
+    const handleViewProduct=(id)=>{
+      console.log(id)
+      navigate(`/admin/dashboard/products/${id}`)
+    }
+
     return (
-      <div className="max-w-sm w-full bg-white shadow-lg rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
+      <div 
+      onClick={()=>handleViewProduct(product._id)}
+      className="max-w-sm w-full bg-white shadow-lg rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
         <img
           className="w-full h-48 object-contain"
           src={images[0]}
@@ -22,7 +32,7 @@ const AdminProductCard = ({product,onEdit,onDelete}) => {
               onClick={onEdit}
               className="text-blue-500 hover:text-blue-600 transition-colors duration-200"
             >
-              <PencilSquareIcon className='w-6 h-6' />
+              <PencilSquareIcon className='w-6 h-6' />  
             </button>
             <button
               onClick={onDelete}
