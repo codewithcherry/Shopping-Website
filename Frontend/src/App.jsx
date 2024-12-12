@@ -33,6 +33,7 @@ import ResetPassword from "./pages/ResetPassword";
 import ContactUs from "./pages/ContactUs";
 import ViewAdminProduct from "./components/Admin/Dashboard/components/products/ViewAdminProduct";
 import AdminAllProducts from "./components/Admin/Dashboard/components/products/AdminAllProducts";
+import EditAdminProductForm from "./components/Admin/Dashboard/components/products/EditAdminProductForm";
 
 function App() {
   return (
@@ -64,6 +65,7 @@ function App() {
               <Route path="" element={<AdminHome />} />
               <Route path="products" element={<AdminProducts />}>
                 <Route path="" element={<AdminAllProducts />}/>
+                <Route path="edit" element={<EditAdminProductForm />}/>
                 <Route path=":productId" element={<ViewAdminProduct />} />
               </Route>
               <Route path="add-product" element={<AdminAddProduct />} />
