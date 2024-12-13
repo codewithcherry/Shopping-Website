@@ -201,3 +201,33 @@ exports.createTeam = async (req, res, next) => {
         res.status(500).json({ type: 'error', message: "Internal server error" });
     }
 };
+
+
+exports.getProductStock=async (req,res,next) => {
+    const pageno=Number(req.query.pageno);
+    const limit=10;
+    Product.countDocuments().then(totalProducts=>{
+        const pagination={
+            total:totalProducts,
+            totalPages:Math.ceil(totalProducts/limit),
+            currentpage:pageno,
+            nextPage:pageno<(Math.ceil(totalProducts/limit))?true:false,
+            prevPage:pageno>1?true:false
+           }
+           return Product.find()
+           .sort({ _id: -1 })
+           .skip((pageno-1)*limit)
+           .limit(limit)
+           .then(products=>{
+               res.status(200).json({
+                   success: true,
+                   products: products,
+                   pagination:pagination
+                   });
+           })
+    })
+    .catch(err=>{
+        res.status(500).json({type:"error",message:"Internal Server Error"});
+    })
+    
+}
