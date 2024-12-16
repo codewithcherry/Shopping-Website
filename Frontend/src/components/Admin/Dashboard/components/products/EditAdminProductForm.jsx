@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Loading from "../../../../Alert/Loading";
 import Alert from "../../../../Alert/Alert";
 import axios from "axios";
+import EditProductImages from "./EditProductImages";
 
 const categories = {
   Electronics: [
@@ -191,12 +192,12 @@ const EditAdminProductForm = () => {
           },
         }
       );
-      console.log(response.data);
+      // console.log(response.data);
       setProduct(response.data);
       setSelectedCategory(response.data.category || "");
       setSelectedSubCategory(response.data.subCategory || "");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       setAlert(error.response.data);
     } finally {
       setLoading(false);
@@ -221,6 +222,8 @@ const EditAdminProductForm = () => {
       {loading ? (
         <Loading />
       ) : (
+        <div>
+          <EditProductImages images={product.images} id={product._id} setAlert={setAlert}/>
         <form
           onSubmit={handleSubmit}
           className="max-w-4xl mx-auto p-6 mt-10 bg-white shadow-lg rounded-lg"
@@ -506,6 +509,7 @@ const EditAdminProductForm = () => {
           </button>
           </div>
         </form>
+        </div>
       )}
     </>
   );
