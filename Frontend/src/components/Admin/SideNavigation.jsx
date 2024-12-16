@@ -67,6 +67,17 @@ const SideNavigation = () => {
     }
 
     useEffect(() => {
+      const token = localStorage.getItem("adminToken");
+      if (isTokenExpired(token)) {
+        console.log("Token removed");
+        localStorage.removeItem("adminToken");
+        navigate('/admin', { 
+          state: { 
+            type: "error", 
+            message: "Login to your account/session expired" 
+          } 
+        });
+      }
       const interval = setInterval(() => {
         const token = localStorage.getItem("adminToken");
         if (isTokenExpired(token)) {
@@ -74,7 +85,7 @@ const SideNavigation = () => {
           localStorage.removeItem("adminToken");
           navigate('/admin', { 
             state: { 
-              type: "info", 
+              type: "error", 
               message: "Login to your account/session expired" 
             } 
           });
