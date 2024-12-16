@@ -46,11 +46,11 @@ exports.adminAuthenticate=(req,res,next)=>{
             next();
          }
          catch (err) {
-            res.status(401).json("unauthorised user login to access")
+            res.status(401).json({type:"error",message:"unauthorised user login to access"})
           }          
     }
     else{
-        res.status(403).json("unauthorised user login to access")
+        res.status(403).json({type:"error",message:"unauthorised user login to access"})
     }
 
 }

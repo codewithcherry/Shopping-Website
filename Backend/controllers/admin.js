@@ -256,3 +256,39 @@ exports.editProductInfo=async (req,res,next) => {
     res.status(500).json({ type:"error", error: 'An error occurred while updating the product.' });
   }
 }
+
+exports.updateProductImages = async (req, res, next) => {
+    const { productImages, removedImages } = req.body; // Extract images data from the request body
+    const productId = req.query.id; // Extract the product ID from the query params
+  
+    // Check if images data is provided
+    if (!productImages) {
+      return res.status(400).json({ type:'error', message: "productImages are required." });
+    }
+  
+    try {
+      // Find the product by ID and update its images
+      const product = await Product.findByIdAndUpdate(
+        productId, // Find product by ID
+        { $set: { images: productImages } }, // Set the new product images
+        { new: true } // Return the updated product
+      );
+  
+      if (!product) {
+        return res.status(404).json({ type:'error', message: "Product not found" });
+      }
+  
+      // Optionally, if you need to process removed images (e.g., delete them from cloud storage), handle it here
+      // for example, delete images from Cloudinary or another service
+  
+      // Send response with updated product
+      res.status(200).json({
+        type:"success",
+        message: "Product images updated successfully",
+        updatedProduct: product,
+      });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ type:'error', message: "Internal Server Error" });
+    }
+  };
