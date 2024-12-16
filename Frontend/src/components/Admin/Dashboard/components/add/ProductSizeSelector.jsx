@@ -4,6 +4,9 @@ const sizeOptions = {
   Shoes: ["6", "7", "8", "9", "10", "11", "12"],
   Tops: ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
   Pants: ["28", "30", "32", "34", "36", "40", "42"],
+  Phones:['64 GB',"128 GB","512 GB",'1 TB','2 Tb'],
+  kids:['1yr','2-3 yrs','4-6 yrs','7-9 yrs','10-12 yrs'],
+  other:['os']
 };
 
 const ProductSizeSelector = ({ onSizeSelectionChange }) => {
@@ -36,7 +39,7 @@ const ProductSizeSelector = ({ onSizeSelectionChange }) => {
       <h2 className="text-lg font-semibold text-gray-700 mb-4">Select Product Size</h2>
       <div className="space-y-4">
         <div>
-          <label className="block text-gray-600 text-sm font-medium mb-2">Clothing Type:</label>
+          <label className="block text-gray-600 text-sm font-medium mb-2">Size Type:</label>
           <select
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
             value={selectedClothingType}

@@ -7,7 +7,7 @@ const ProductPriceDetails = ({ onPriceChange }) => {
 
   // Effect to calculate final price based on base price and discount
   useEffect(() => {
-    const calculatedFinalPrice = basePrice - (basePrice * (discount / 100));
+    const calculatedFinalPrice =Math.ceil( basePrice - (basePrice * (discount / 100)));
     setFinalPrice(calculatedFinalPrice);
   }, [basePrice, discount]);
 
