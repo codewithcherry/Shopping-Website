@@ -9,6 +9,7 @@ router.get("/dashboard",validateController.adminAuthenticate,adminController.get
 router.get("/products",validateController.adminAuthenticate,adminController.getProducts);
 router.get('/get-product/:productId',validateController.adminAuthenticate,shopController.getProductDetails);
 router.post("/add-product",validateController.adminAuthenticate,adminController.addProduct);
+router.post('/edit-product-info',validateController.adminAuthenticate,adminController.editProductInfo);
 router.get('/order-list',validateController.adminAuthenticate,adminController.getOrderlist);
 router.get('/product-stock',validateController.adminAuthenticate,adminController.getProductStock);
 router.post('/add-team',validateController.adminAuthenticate,adminController.createTeam);
