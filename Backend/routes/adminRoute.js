@@ -10,6 +10,7 @@ router.get("/products",validateController.adminAuthenticate,adminController.getP
 router.get('/get-product/:productId',validateController.adminAuthenticate,shopController.getProductDetails);
 router.post("/add-product",validateController.adminAuthenticate,adminController.addProduct);
 router.post('/edit-product-info',validateController.adminAuthenticate,adminController.editProductInfo);
+router.post('/update-product-image',validateController.adminAuthenticate,adminController.updateProductImages);
 router.get('/order-list',validateController.adminAuthenticate,adminController.getOrderlist);
 router.get('/product-stock',validateController.adminAuthenticate,adminController.getProductStock);
 router.post('/add-team',validateController.adminAuthenticate,adminController.createTeam);
