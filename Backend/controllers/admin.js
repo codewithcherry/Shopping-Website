@@ -292,3 +292,38 @@ exports.updateProductImages = async (req, res, next) => {
       return res.status(500).json({ type:'error', message: "Internal Server Error" });
     }
   };
+
+  exports.deleteProduct = async (req, res, next) => {
+    const productId = req.params.productId; // Extract productId from request parameters
+  
+    try {
+      // Find the product by ID
+      const product = await Product.findById(productId);
+  
+      // If the product doesn't exist, return a 404 error
+      if (!product) {
+        return res.status(404).json({ type:"error", message: 'Product not found' });
+      }
+  
+      // Optional: If the product has images associated with it, delete those images from Cloudinary
+      // if (product.images && product.images.length > 0) {
+      //   for (let imageUrl of product.images) {
+      //     // Extract the public ID of the image from the URL
+      //     const publicId = imageUrl.split('/').pop().split('.')[0];
+          
+      //     // Delete the image from Cloudinary using its public ID
+      //     await cloudinary.uploader.destroy(publicId);
+      //     console.log(`Deleted image: ${imageUrl}`);
+      //   }
+      // }
+  
+      // Delete the product from the database
+      await Product.findByIdAndDelete(productId);
+  
+      // Send a success response after product deletion
+      return res.status(200).json({type:'success', message: 'Product deleted successfully' });
+    } catch (err) {
+      console.error('Error deleting product:', err);
+      return res.status(500).json({type:'error', message: 'An error occurred while deleting the product' });
+    }
+  };
