@@ -231,3 +231,28 @@ exports.getProductStock=async (req,res,next) => {
     })
     
 }
+
+exports.editProductInfo=async (req,res,next) => {
+  const { _id, ...updateData } = req.body;
+
+  if (!_id) {
+    return res.status(400).json({ error: 'Product _id is required.' });
+  }
+
+  try {
+    // Find and update the product
+    const updatedProduct = await Product.findByIdAndUpdate(_id, updateData, {
+      new: true, // Return the updated document
+      runValidators: true, // Ensure validation rules are applied
+    });
+
+    if (!updatedProduct) {
+      return res.status(404).json({ error: 'Product not found.' });
+    }
+
+    res.status(200).json({ type:"success", message: 'Product updated successfully.', product: updatedProduct });
+  } catch (error) {
+    console.error('Error updating product:', error);
+    res.status(500).json({ type:"error", error: 'An error occurred while updating the product.' });
+  }
+}
