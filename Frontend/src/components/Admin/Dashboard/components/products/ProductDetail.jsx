@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { FaStar, FaRegStar } from 'react-icons/fa'; // Importing star icons for ratings
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 // ProductDetail Component
-const ProductDetail = ({ product }) => {
+const ProductDetail = ({ product ,setLoading, setAlert }) => {
   // Destructuring the product object
   const {
     _id,
@@ -32,6 +33,10 @@ const ProductDetail = ({ product }) => {
   //useNavigate hook to navigate
   const navigate=useNavigate()
 
+  //admin token fetch from localStorage
+
+  const adminToken=localStorage.getItem('adminToken');
+
   // Helper function to render the rating stars
   const renderRating = (rating) => {
     const fullStars = Array.from({ length: 5 }, (_, index) => 
@@ -54,6 +59,48 @@ const ProductDetail = ({ product }) => {
   const handleEdit=(id)=>{
         navigate(`/admin/dashboard/products/edit?pid=${id}`)
   }
+
+  const handleDelete = async (id) => {
+    try {
+      setLoading(true)
+      // Confirm the deletion with the user before making the request
+      const confirmDelete = window.confirm("Are you sure you want to delete this product?");
+      if (!confirmDelete) return;
+  
+      // Make the API call to delete the product using Axios
+      const response = await axios.delete(`http://localhost:3000/admin/delete-product/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${adminToken}`, // Authorization token for admin
+        },
+      });
+  
+      // Handle the response after successful deletion
+      console.log(response.data);  // You can log it or process it to update your UI
+      // setAlert();
+      const data={
+        type: 'success',
+        message: 'Product deleted successfully!',
+      }
+
+      navigate('/admin/dashboard/products',{state:data});
+  
+      // Optionally, you might want to update the state of the products list to reflect the deletion
+      // Example: Remove deleted product from state (if you have a state like `products`)
+      // setProducts((prevProducts) => prevProducts.filter(product => product.id !== id));
+  
+    } catch (err) {
+      // Handle any errors from the API request
+      console.error('Error deleting product:', err);
+      setAlert({
+        type: 'error',
+        message: err?.response?.data?.message || 'An error occurred while deleting the product.',
+      });
+    }
+    finally{
+      setLoading(false)
+    }
+  };
+  
 
   return (
     <div className="max-w-screen-lg mx-auto p-6 lg:p-10 bg-white shadow-xl rounded-lg my-10">
@@ -112,18 +159,26 @@ const ProductDetail = ({ product }) => {
           </div>
 
           {/* Pricing Info */}
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex justify-between items-center mb-8 mt-2">
             <div>
               <p className="text-2xl font-bold text-gray-900">
                 <span className="line-through text-gray-500">${basePrice}</span> ${finalPrice}
               </p>
               <p className="text-lg text-gray-600">You save {discount}%</p>
             </div>
+            <div className='flex flex-col gap-2'>
             <button 
             onClick={()=>{handleEdit(_id)}}
-            className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-3 px-8 rounded-lg text-xl hover:scale-105 transform transition-all">
+            className="bg-indigo-500 hover:bg-indigo-600 text-white p-2 rounded-lg text-md font-medium ">
               Edit Product
             </button>
+            <button 
+            onClick={()=>{handleDelete(_id)}}
+            className="bg-red-400 hover:bg-red-500 text-white p-2 rounded-lg text-md font-medium ">
+              Delete Product
+            </button>
+            </div>
+            
           </div>
 
           {/* Product Details */}

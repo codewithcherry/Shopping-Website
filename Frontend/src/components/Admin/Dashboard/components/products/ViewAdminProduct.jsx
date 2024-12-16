@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import EditAdminProductForm from './EditAdminProductForm';
 import Loading from '../../../../Alert/Loading'
 import ProductDetail from './ProductDetail';
+import Alert from '../../../../Alert/Alert';
 
 const ViewAdminProduct = () => {
 
@@ -23,7 +24,7 @@ const ViewAdminProduct = () => {
                     Authorization:`Bearer ${adminToken}`
                 }
             })
-            console.log(response.data);
+            // console.log(response.data);
             setProduct(response.data)
         } catch (error) {
             console.log(error)
@@ -38,7 +39,8 @@ const ViewAdminProduct = () => {
     },[])
   return (
     <div>
-      {loading?<Loading />:<ProductDetail product={product}/>}
+      {alert && <Alert type={alert.type } message={alert.message} onClose={()=>{setAlert(null)}}/>}
+      {loading?<Loading />:<ProductDetail product={product} setLoading={setLoading} setAlert={setAlert}/>}
     </div>
   )
 }
