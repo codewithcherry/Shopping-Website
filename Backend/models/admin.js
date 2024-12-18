@@ -42,6 +42,41 @@ const adminSchema = new Schema({
     location:{
         type:String,
     },
+    tasks:[
+        { 
+            title:{
+                type:String
+            },
+            descriptiom:{
+                type:String
+            },
+            importance:{
+                type:String,
+                enum:['low','medium','high']
+            },
+            deadline:{
+                type:Date
+            }, 
+            status:{
+                type:String,
+                enum:['pending','incomplete','completed','cancel'],
+                default:'incomplete'
+            },
+            starred:{
+                type:Boolean,
+                default:false
+            },
+            pinned:{
+                type:Boolean,
+                default:false
+            },
+            taskDate:{
+                type:Date,
+                default: Date.now
+            }
+
+        }
+    ],
     createdBy:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Admin",
