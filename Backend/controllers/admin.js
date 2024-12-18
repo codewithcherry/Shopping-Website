@@ -401,5 +401,23 @@ exports.updateProductImages = async (req, res, next) => {
         .json({ type: "error", message: "An internal server error occurred" });
     }
   };
+
+  exports.getAdminTasks=async (req,res,next) => {
+    const adminId=req.user.user._id;
+    try {
+      const admin=await Admin.findById(adminId);
+      if (!admin) {
+        return res.status(404).json({ type: "error", message: "User not found" });
+      }
+      const tasks=admin.tasks
+      res.status(200).json({type:"success",message:"tasks fetched successfully",tasks:tasks})
+      
+    } catch (err) {
+      console.error("Error adding admin task:", err); // Log error for debugging
+      return res
+        .status(500)
+        .json({ type: "error", message: "An internal server error occurred" });
+    }
+  }
   
   

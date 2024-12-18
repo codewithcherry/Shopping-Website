@@ -19,5 +19,6 @@ router.get('/get-admin',validateController.adminAuthenticate,adminController.get
 router.post('/update-admin',validateController.adminAuthenticate,adminController.updateAdminData);
 router.delete('/delete-product/:productId',validateController.adminAuthenticate,adminController.deleteProduct);
 router.post('/add-task',validateController.adminAuthenticate,adminController.addNewAdminTask);
+router.get('/get-tasks',validateController.adminAuthenticate,adminController.getAdminTasks);
 
 module.exports=router;

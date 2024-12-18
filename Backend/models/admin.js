@@ -47,7 +47,7 @@ const adminSchema = new Schema({
             title:{
                 type:String
             },
-            descriptiom:{
+            description:{
                 type:String
             },
             importance:{
