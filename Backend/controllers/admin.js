@@ -327,3 +327,17 @@ exports.updateProductImages = async (req, res, next) => {
       return res.status(500).json({type:'error', message: 'An error occurred while deleting the product' });
     }
   };
+
+  exports.getAdminData=async (req,res,next) => {
+    const adminId=req.user.user._id
+    try {
+      const admin=await Admin.findById(adminId).select('-password');
+      if(!admin){
+        return res.status(404).json({ type:"error", message: 'user not found' });
+      }
+      res.status(200).json({type:'success',message:"user fetched successfully",admin:admin});
+    } catch (err) {
+      console.error('Error deleting product:', err);
+      return res.status(500).json({type:'error', message: 'An Internal server error occured' });
+    }
+  }

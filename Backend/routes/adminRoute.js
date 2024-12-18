@@ -15,6 +15,7 @@ router.get('/order-list',validateController.adminAuthenticate,adminController.ge
 router.get('/product-stock',validateController.adminAuthenticate,adminController.getProductStock);
 router.post('/add-team',validateController.adminAuthenticate,adminController.createTeam);
 router.get('/get-team-members',validateController.adminAuthenticate,adminController.getAdmins);
+router.get('/get-admin',validateController.adminAuthenticate,adminController.getAdminData);
 router.delete('/delete-product/:productId',validateController.adminAuthenticate,adminController.deleteProduct);
 
 module.exports=router;
