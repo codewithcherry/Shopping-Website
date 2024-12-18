@@ -40,17 +40,17 @@ const SideNavigation = () => {
       { name: 'Dashboard', icon: HomeIcon, path: '/admin/dashboard' },
       { name: 'Products', icon: TableCellsIcon, path: '/admin/dashboard/products' },
       { name: 'Add Product', icon: PlusIcon, path: '/admin/dashboard/add-product' },
-      { name: 'Inbox', icon: InboxIcon, path: '/admin/dashboard/inbox' },
+      // { name: 'Inbox', icon: InboxIcon, path: '/admin/dashboard/inbox' },
       { name: 'Order Lists', icon: ClipboardIcon, path: '/admin/dashboard/orders' },
       { name: 'Product Stock', icon: ClipboardIcon, path: '/admin/dashboard/product-stock' },
     ];
   
     const pages = [
-      { name: 'Calendar', icon: CalendarIcon, path: '/admin/dashboard/calendar' },
-      { name: 'To-Do', icon: CheckCircleIcon, path: '/admin/dashboard/to-do' },
       { name: 'Account', icon: UserIcon, path: '/admin/dashboard/account' },
-      { name: 'Invoice', icon: DocumentTextIcon, path: '/admin/dashboard/invoice' },
       { name: 'Team', icon: UserIcon, path: '/admin/dashboard/team' },
+      { name: 'To-Do', icon: CheckCircleIcon, path: '/admin/dashboard/to-do' },
+      { name: 'Calendar', icon: CalendarIcon, path: '/admin/dashboard/calendar' },
+      { name: 'Invoice', icon: DocumentTextIcon, path: '/admin/dashboard/invoice' },
      
     ];
   
