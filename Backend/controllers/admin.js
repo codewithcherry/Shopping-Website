@@ -341,3 +341,34 @@ exports.updateProductImages = async (req, res, next) => {
       return res.status(500).json({type:'error', message: 'An Internal server error occured' });
     }
   }
+
+  exports.updateAdminData = async (req, res, next) => {
+    const adminId = req.user.user._id;
+    const { firstname, lastname, email, phone, location, imageUrl } = req.body;
+    
+    try {
+      // Await the result of the asynchronous findById
+      const admin = await Admin.findById(adminId);
+  
+      if (!admin) {
+        return res.status(404).json({ type: "error", message: 'user not found' });
+      }
+  
+      // Update fields
+      admin.firstname = firstname;
+      admin.lastname = lastname;
+      admin.email = email;
+      admin.imageUrl = imageUrl;
+      admin.phone = phone;
+      admin.location = location;
+  
+      // Save the updated admin info
+      await admin.save();
+  
+      res.status(200).json({ type: 'success', message: "Successfully updated the user info" });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ type: 'error', message: 'An internal server error occurred' });
+    }
+  };
+  
