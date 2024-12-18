@@ -1,6 +1,6 @@
 import React from 'react'
 
-const AdminContact = () => {
+const AdminProfile = () => {
   return (
     <div>
       Admin contact page
@@ -8,4 +8,4 @@ const AdminContact = () => {
   )
 }
 
-export default AdminContact
+export default AdminProfile

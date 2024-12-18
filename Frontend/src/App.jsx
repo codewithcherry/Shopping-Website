@@ -16,7 +16,7 @@ import AdminOrderlist from "./components/Admin/Dashboard/AdminOrderlist";
 import AdminProductStock from "./components/Admin/Dashboard/AdminProductStock";
 import AdminCalender from "./components/Admin/Dashboard/AdminCalender";
 import AdminTodo from "./components/Admin/Dashboard/AdminTodo";
-import AdminContact from "./components/Admin/Dashboard/AdminContact";
+import AdminContact from "./components/Admin/Dashboard/AdminProfile";
 import AdminInvoice from "./components/Admin/Dashboard/AdminInvoice";
 import AdminTeam from "./components/Admin/Dashboard/AdminTeam";
 import AdminSettings from "./components/Admin/Dashboard/AdminSettings";
@@ -34,6 +34,7 @@ import ContactUs from "./pages/ContactUs";
 import ViewAdminProduct from "./components/Admin/Dashboard/components/products/ViewAdminProduct";
 import AdminAllProducts from "./components/Admin/Dashboard/components/products/AdminAllProducts";
 import EditAdminProductForm from "./components/Admin/Dashboard/components/products/EditAdminProductForm";
+import AdminProfile from "./components/Admin/Dashboard/AdminProfile";
 
 function App() {
   return (
@@ -74,7 +75,7 @@ function App() {
               <Route path="product-stock" element={<AdminProductStock />} />
               <Route path="calendar" element={<AdminCalender />} />
               <Route path="to-do" element={<AdminTodo />} />
-              <Route path="contact" element={<AdminContact />} />
+              <Route path="account" element={<AdminProfile />} />
               <Route path="invoice" element={<AdminInvoice />} />
               <Route path="team" element={<AdminTeam />} />
               <Route path="settings" element={<AdminSettings />} />

@@ -48,7 +48,7 @@ const SideNavigation = () => {
     const pages = [
       { name: 'Calendar', icon: CalendarIcon, path: '/admin/dashboard/calendar' },
       { name: 'To-Do', icon: CheckCircleIcon, path: '/admin/dashboard/to-do' },
-      { name: 'Contact', icon: UserIcon, path: '/admin/dashboard/contact' },
+      { name: 'Account', icon: UserIcon, path: '/admin/dashboard/account' },
       { name: 'Invoice', icon: DocumentTextIcon, path: '/admin/dashboard/invoice' },
       { name: 'Team', icon: UserIcon, path: '/admin/dashboard/team' },
      
