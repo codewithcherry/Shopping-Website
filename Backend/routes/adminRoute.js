@@ -18,5 +18,6 @@ router.get('/get-team-members',validateController.adminAuthenticate,adminControl
 router.get('/get-admin',validateController.adminAuthenticate,adminController.getAdminData);
 router.post('/update-admin',validateController.adminAuthenticate,adminController.updateAdminData);
 router.delete('/delete-product/:productId',validateController.adminAuthenticate,adminController.deleteProduct);
+router.post('/add-task',validateController.adminAuthenticate,adminController.addNewAdminTask);
 
 module.exports=router;

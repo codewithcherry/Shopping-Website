@@ -371,4 +371,35 @@ exports.updateProductImages = async (req, res, next) => {
       return res.status(500).json({ type: 'error', message: 'An internal server error occurred' });
     }
   };
+
+  
+  exports.addNewAdminTask = async (req, res, next) => {
+    const adminId = req.user.user._id; // Adjust based on req.user structure
+    const newTask = req.body;
+  
+    // Validate newTask
+    if (!newTask.title || !newTask.deadline ||!newTask.deadline) {
+      return res.status(400).json({ type: "error", message: "Task data is incomplete" });
+    }
+  
+    try {
+      const admin = await Admin.findById(adminId);
+  
+      if (!admin) {
+        return res.status(404).json({ type: "error", message: "User not found" });
+      }
+  
+      // Add new task to admin tasks
+      admin.tasks.push(newTask);
+      await admin.save();
+  
+      res.status(201).json({ type: "success", message: "Task added successfully" });
+    } catch (err) {
+      console.error("Error adding admin task:", err); // Log error for debugging
+      return res
+        .status(500)
+        .json({ type: "error", message: "An internal server error occurred" });
+    }
+  };
+  
   
