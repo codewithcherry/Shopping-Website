@@ -39,6 +39,9 @@ const adminSchema = new Schema({
         enum: ['admin', 'superadmin','moderator'],
         default: 'admin',
     },
+    location:{
+        type:String,
+    },
     createdBy:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Admin",
