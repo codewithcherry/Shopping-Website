@@ -23,6 +23,7 @@ router.get('/get-tasks',validateController.adminAuthenticate,adminController.get
 router.post('/update-pinned',validateController.adminAuthenticate,adminController.updateTaskPinned);
 router.post('/update-starred',validateController.adminAuthenticate,adminController.updateTaskStarred);
 router.post('/update-task-status',validateController.adminAuthenticate,adminController.updateTaskStatus);
+router.post('/edit-task',validateController.adminAuthenticate,adminController.editTaskData);
 router.delete('/delete-task',validateController.adminAuthenticate,adminController.deleteTask);
 
 module.exports=router;

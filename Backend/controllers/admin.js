@@ -559,6 +559,40 @@ exports.updateProductImages = async (req, res, next) => {
       res.status(500).json({ type: 'error', message: 'Failed to delete the task' });
     }
   };
+
+  exports.editTaskData = async (req, res, next) => {
+    const adminId = req.user.user._id;
+    const { title, description, importance, deadline } = req.body;
+    const { taskId } = req.query;
+
+    try {
+        const admin = await Admin.findById(adminId);
+        if (!admin) {
+            return res.status(404).json({ message: 'Admin not found' });
+        }
+
+        const taskToEdit = admin.tasks.find((task) => task._id.toString() === taskId);
+        if (!taskToEdit) {
+            return res.status(404).json({ type: 'error', message: 'Task not found' });
+        }
+
+        // Update the task properties
+        taskToEdit.title = title;
+        taskToEdit.description = description;
+        taskToEdit.importance = importance;
+        taskToEdit.deadline = deadline;
+
+        // There's no need to reassign the entire tasks array. Just save the changes
+        await admin.save();
+
+        res.status(200).json({ type: 'success', message: 'Task updated successfully' });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ type: 'error', message: 'Failed to update the task' });
+    }
+};
+
   
   
   
