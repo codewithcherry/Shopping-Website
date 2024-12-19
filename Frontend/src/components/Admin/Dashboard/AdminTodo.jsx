@@ -19,7 +19,7 @@ const AdminTodo = () => {
 
   const [type, setType] = useState('All'); // Default state is 'all'
 
-  const statuses = ['All', 'To Do', 'Starred', 'In Progress', 'Completed', 'Cancelled'];
+  const statuses = ['All', 'To Do', 'Starred', 'In Progress', 'Completed','On Hold', 'Cancelled'];
 
   const token = localStorage.getItem('adminToken');
 
