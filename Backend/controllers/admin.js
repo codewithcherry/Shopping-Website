@@ -402,23 +402,60 @@ exports.updateProductImages = async (req, res, next) => {
     }
   };
 
-  exports.getAdminTasks=async (req,res,next) => {
-    const adminId=req.user.user._id;
+  exports.getAdminTasks = async (req, res, next) => {
+    const adminId = req.user.user._id;
+    const { status } = req.query; // Get the status from the query
+    
     try {
-      const admin=await Admin.findById(adminId);
+      const admin = await Admin.findById(adminId);
       if (!admin) {
         return res.status(404).json({ type: "error", message: "User not found" });
       }
-      const tasks=admin.tasks
-      res.status(200).json({type:"success",message:"tasks fetched successfully",tasks:tasks})
-      
+  
+      let tasks = admin.tasks; // All tasks by default
+  
+      // Filter tasks based on the selected status
+      if (status && status !== 'All') {
+        if (status === 'Starred') {
+          // If the status is 'Starred', filter tasks where starred is true
+          tasks = tasks.filter(task => task.starred === true);
+        } else {
+          // Otherwise, filter tasks based on the status (e.g., 'To Do', 'In Progress')
+          tasks = tasks.filter(task => task.status === status);
+        }
+      }
+  
+      // Sort tasks: pinned tasks (assuming there's a 'pinned' property) come first
+      tasks.sort((a, b) => {
+        if (a.pinned === true && b.pinned === false) {
+          return -1; // 'a' (pinned) should come before 'b' (non-pinned)
+        }
+        if (a.pinned === false && b.pinned === true) {
+          return 1; // 'b' (pinned) should come before 'a' (non-pinned)
+        }
+        return 0; // Keep their original order if both have the same 'pinned' status
+      });
+  
+      // Sorting tasks by _id in descending order (latest first) for the final list
+      tasks = tasks.sort((a, b) => {
+        return new Date(b._id).getTime() - new Date(a._id).getTime();
+      });
+  
+      res.status(200).json({
+        type: "success",
+        message: "Tasks fetched successfully",
+        tasks: tasks
+      });
+  
     } catch (err) {
-      console.error("Error adding admin task:", err); // Log error for debugging
-      return res
-        .status(500)
-        .json({ type: "error", message: "An internal server error occurred" });
+      console.error("Error fetching admin tasks:", err); // Log error for debugging
+      return res.status(500).json({ type: "error", message: "An internal server error occurred" });
     }
-  }
+  };
+  
+  
+  
+  
   
   exports.updateTaskPinned = async (req, res, next) => {
     const adminId = req.user.user._id;
