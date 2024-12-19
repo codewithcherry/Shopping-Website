@@ -20,5 +20,9 @@ router.post('/update-admin',validateController.adminAuthenticate,adminController
 router.delete('/delete-product/:productId',validateController.adminAuthenticate,adminController.deleteProduct);
 router.post('/add-task',validateController.adminAuthenticate,adminController.addNewAdminTask);
 router.get('/get-tasks',validateController.adminAuthenticate,adminController.getAdminTasks);
+router.post('/update-pinned',validateController.adminAuthenticate,adminController.updateTaskPinned);
+router.post('/update-starred',validateController.adminAuthenticate,adminController.updateTaskStarred);
+router.post('/update-task-status',validateController.adminAuthenticate,adminController.updateTaskStatus);
+router.delete('/delete-task',validateController.adminAuthenticate,adminController.deleteTask);
 
 module.exports=router;
