@@ -59,11 +59,11 @@ const AddTaskForm = ({isOpen, setIsOpen,setAlert}) => {
   };
 
   return (
-    <div className='w-full'>
+    <div className='w-full z-50'>
       
 
       {isOpen && (
-        <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50">
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-gray-800 bg-opacity-50">
           <div className="bg-white p-6 rounded-lg w-96 lg:w-1/2 ">
             <h2 className="text-xl font-bold mb-4">Add a new task</h2>
             {
