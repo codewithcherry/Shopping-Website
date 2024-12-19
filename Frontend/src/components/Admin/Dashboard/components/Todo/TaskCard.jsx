@@ -5,7 +5,7 @@ import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
 
-const TaskCard = ({ task,setAlert,handleEditData,toggleEditTask }) => {
+const TaskCard = ({ task,setAlert,handleEditData,toggleEditTask ,setRefresh}) => {
   const {
     _id,
     title,
@@ -45,7 +45,7 @@ const TaskCard = ({ task,setAlert,handleEditData,toggleEditTask }) => {
     }
     finally{
       setMenuOpen(false)
-      toggleEditTask()
+      setRefresh(prev=>prev+1)
     }
   };
 
@@ -122,6 +122,7 @@ const TaskCard = ({ task,setAlert,handleEditData,toggleEditTask }) => {
     }
     finally{
       setMenuOpen(false)
+      setRefresh(prev=>prev+1)
     }
   };
 
