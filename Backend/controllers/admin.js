@@ -420,4 +420,145 @@ exports.updateProductImages = async (req, res, next) => {
     }
   }
   
+  exports.updateTaskPinned = async (req, res, next) => {
+    const adminId = req.user.user._id;
+    const taskId = req.query.id; // Fixed `id` to `taskId`
+    const { pinned } = req.body;
+  
+    try {
+      // Validate input
+      if (!taskId) {
+        return res.status(400).json({ type: "error", message: "Task ID is required" });
+      }
+  
+      // Find admin by ID
+      const admin = await Admin.findById(adminId);
+      if (!admin) {
+        return res.status(404).json({ type: "error", message: "Admin not found" });
+      }
+  
+      // Locate the task
+      const targetTask = admin.tasks.find((task) => (task._id).toString() === taskId); // Ensure task._id is used correctly
+      if (!targetTask) {
+        return res.status(404).json({ type: "error", message: "Task not found" });
+      }
+  
+      // Update the task's pinned status
+      targetTask.pinned = pinned;
+  
+      // Save changes to the admin document
+      await admin.save();
+  
+      // Respond with success and updated task
+      res.status(200).json({
+        type: "success",
+        message: "Task pinned status updated successfully",
+        task: targetTask,
+      });
+    } catch (err) {
+      console.error("Error updating task pinned status:", err);
+      res.status(500).json({
+        type: "error",
+        message: "An error occurred while updating the task",
+      });
+    }
+  };
+
+  exports.updateTaskStarred = async (req, res, next) => {
+    const adminId = req.user.user._id;
+    const taskId = req.query.id; // Fixed `id` to `taskId`
+    const { starred } = req.body;
+  
+    try {
+      // Validate input
+      if (!taskId) {
+        return res.status(400).json({ type: "error", message: "Task ID is required" });
+      }
+  
+      // Find admin by ID
+      const admin = await Admin.findById(adminId);
+      if (!admin) {
+        return res.status(404).json({ type: "error", message: "Admin not found" });
+      }
+  
+      // Locate the task
+      const targetTask = admin.tasks.find((task) => (task._id).toString() === taskId); // Ensure task._id is used correctly
+      if (!targetTask) {
+        return res.status(404).json({ type: "error", message: "Task not found" });
+      }
+  
+      // Update the task's pinned status
+      targetTask.starred = starred;
+  
+      // Save changes to the admin document
+      await admin.save();
+  
+      // Respond with success and updated task
+      res.status(200).json({
+        type: "success",
+        message: "Task pinned status updated successfully",
+        task: targetTask,
+      });
+    } catch (err) {
+      console.error("Error updating task pinned status:", err);
+      res.status(500).json({
+        type: "error",
+        message: "An error occurred while updating the task",
+      });
+    }
+  };
+
+  exports.updateTaskStatus = async (req, res) => {
+    const adminId=req.user.user._id;
+    const taskId = req.query.id;
+    const { status } = req.body;
+  
+    try {
+      const admin = await Admin.findById(adminId);
+      if (!admin) {
+        return res.status(404).json({ message: 'Admin not found' });
+      }
+  
+      const task = admin.tasks.find((task) => task._id.toString() === taskId);
+      if (!task) {
+        return res.status(404).json({type:'error', message: 'Task not found' });
+      }
+  
+      task.status = status;
+      await admin.save();
+  
+      res.status(200).json({type:'success', message: 'Task status updated', task });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({type:'error', message: 'Failed to update task status' });
+    }
+  };
+
+  exports.deleteTask = async (req, res, next) => {
+    const adminId = req.user.user._id;
+    const taskId = req.query.id;
+  
+    try {
+      const admin = await Admin.findById(adminId);
+      if (!admin) {
+        return res.status(404).json({ message: 'Admin not found' });
+      }
+  
+      const taskToDelete = admin.tasks.find((task) => task._id.toString() === taskId);
+      if (!taskToDelete) {
+        return res.status(404).json({ type: 'error', message: 'Task not found' });
+      }
+  
+      const updatedTasks = admin.tasks.filter((task) => task._id.toString() !== taskId);
+      admin.tasks = updatedTasks;
+      await admin.save();
+  
+      res.status(200).json({ type: 'success', message: 'Task deleted successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ type: 'error', message: 'Failed to delete the task' });
+    }
+  };
+  
+  
   
