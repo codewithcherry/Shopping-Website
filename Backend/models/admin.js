@@ -59,8 +59,8 @@ const adminSchema = new Schema({
             }, 
             status:{
                 type:String,
-                enum:['pending','incomplete','completed','cancel'],
-                default:'incomplete'
+                enum:['To Do','In Progress','Completed','Cancelled','On Hold'],
+                default:'To Do'
             },
             starred:{
                 type:Boolean,
