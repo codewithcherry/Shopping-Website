@@ -5,7 +5,7 @@ import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
 
-const TaskCard = ({ task,setAlert }) => {
+const TaskCard = ({ task,setAlert,handleEditData,toggleEditTask }) => {
   const {
     _id,
     title,
@@ -45,6 +45,7 @@ const TaskCard = ({ task,setAlert }) => {
     }
     finally{
       setMenuOpen(false)
+      toggleEditTask()
     }
   };
 
@@ -124,6 +125,13 @@ const TaskCard = ({ task,setAlert }) => {
     }
   };
 
+  const handleEdit = () => {
+    console.log('edit clicked');
+    handleEditData(task);      // Set the edit ID
+    setMenuOpen(false);  // Close the dropdown menu
+    toggleEditTask();    // Toggle the Edit modal state
+  };
+
   const date = new Date(deadline);
 
   const dateData = {
@@ -187,8 +195,8 @@ const TaskCard = ({ task,setAlert }) => {
               <button
                 className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                 onClick={() => {
-                  onEdit(task);
-                  setMenuOpen(false);
+                  handleEdit();
+                  
                 }}
               >
                 <PencilIcon className="w-4 h-4 text-gray-700" />

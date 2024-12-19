@@ -4,12 +4,16 @@ import Alert from '../../Alert/Alert';
 import Loading from '../../Alert/Loading';
 import TaskCard from './components/Todo/TaskCard';
 import axios from 'axios';
+import EditTaskForm from './components/Todo/EditTaskForm';
 
 const AdminTodo = () => {
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isEditOpen,setIsEditOpen]=useState(false);
+  const [editData,setEditData]=useState('');
   const [alert,setAlert]=useState();
   const [loading,setLoading]=useState(false)
+  const [refresh,setRefresh]=useState(0)
 
   const [tasks,setTasks]=useState([]);
 
@@ -22,6 +26,14 @@ const AdminTodo = () => {
   const toggleAddTask=()=>{
       setIsOpen(!isOpen)
   }
+  const toggleEditTask = () => {
+    setIsEditOpen(!isEditOpen);
+  };
+
+  const handleEditData = (task) => {
+    setEditData(task);
+    toggleEditTask();  // Open the modal immediately after setting data
+};
 
   const fetchTasks=async () => {
     try{
@@ -44,7 +56,7 @@ const AdminTodo = () => {
   }
   useEffect(()=>{
     fetchTasks()
-  },[])
+  },[refresh])
   return (
     <div className='w-full bg-gray-100'>
       {alert && <Alert type={alert.type} message={alert.message} onClose={()=>setAlert(null)} />}
@@ -52,7 +64,8 @@ const AdminTodo = () => {
       <h1 className='text-xl font-semibold text-gray-800'>To-do List</h1>
       <button className='p-2 bg-indigo-500 text-white text-md font-semibold  rounded-lg' onClick={toggleAddTask}>Add Task</button>
      </div>
-     <AddTaskForm isOpen={isOpen} setIsOpen={setIsOpen} setAlert={setAlert}/>
+     <AddTaskForm isOpen={isOpen} setIsOpen={setIsOpen} setAlert={setAlert} setRefresh={setRefresh}/>
+     <EditTaskForm isEditOpen={isEditOpen} setIsEditOpen={setIsEditOpen} setAlert={setAlert} editData={editData} setRefresh={setRefresh}/>
      <div className="flex gap-6 justify-center my-10">
       {statuses.map((status) => (
         <button
@@ -77,7 +90,7 @@ const AdminTodo = () => {
         </div>:
         <div className='grid grid-cols-4 gap-4 mx-2 p-2'>
         {tasks.map((task,index)=>{
-          return <TaskCard task={task} key={index} setAlert={setAlert}/>
+          return <TaskCard task={task} key={index} setAlert={setAlert} handleEditData={handleEditData} toggleEditTask={toggleEditTask}/>
         })}
       </div> 
       }

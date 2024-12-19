@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import Loading from '../../../../Alert/Loading';
 
-const AddTaskForm = ({isOpen, setIsOpen,setAlert}) => {
+const AddTaskForm = ({isOpen, setIsOpen,setAlert,setRefresh}) => {
   
   const [task, setTask] = useState({
     title: '',
@@ -53,6 +53,7 @@ const AddTaskForm = ({isOpen, setIsOpen,setAlert}) => {
         } 
         finally{
             setLoading(false);
+            setRefresh(prev=>prev+1)
         }
     }
     return setMessage("Please fill all the fields")
