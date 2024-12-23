@@ -111,7 +111,7 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
+},{timestamps:true});
 
 // Pre-save hook to handle estimated delivery date and mask card number
 orderSchema.pre('save', function(next) {
