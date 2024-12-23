@@ -1,9 +1,11 @@
 const Admin = require("../models/admin");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const moment = require('moment'); // You can install it via npm if you haven't already
 const jwt_secret=process.env.JWT_SECRET
 const Product=require("../models/product")
 const Order=require('../models/order');
+const User = require("../models/user");
 
 exports.adminLogin = async (req, res, next) => {
     const { username, password } = req.body;
@@ -75,10 +77,108 @@ exports.addProduct = async (req, res, next) => {
     }
 };
 
-exports.getDashboard=(req,res,next)=>{
-    const user=req.user;
-    console.log("dashboard rendered");
-}
+exports.getDashboard = async (req, res, next) => {
+  const user = req.user; // Assuming authentication middleware sets req.user
+  try {
+      // Count total users, orders, and products
+      const users = await User.countDocuments();
+      const orders = await Order.countDocuments();
+      const products = await Product.countDocuments();
+
+      // Calculate total sales
+      const totalSalesResult = await Order.aggregate([
+          {
+              $group: {
+                  _id: null,
+                  totalSales: { $sum: "$transactionDetails.amount" }, // Sum up the transaction amounts
+              },
+          },
+      ]);
+
+      const totalSales = totalSalesResult[0]?.totalSales || 0; // Handle case where no orders exist
+
+      // Log the results for debugging
+      // console.log(users, orders, products, totalSales);
+
+      // Send response
+      res.status(200).json({
+          success: true,
+          data: {
+              totalUsers: users,
+              totalOrders: orders,
+              totalProducts: products,
+              totalSales,
+          },
+      });
+  } catch (err) {
+      console.error("Error fetching dashboard data:", err);
+      res.status(500).json({
+          type: "error",
+          message: "Internal Server Error",
+      });
+  }
+};
+
+exports.getSalesChart = async (req, res, next) => {
+  const { month } = req.query; // Expecting month as a query parameter (e.g., '2023-12')
+  
+  if (!month) {
+    return res.status(400).json({ type: 'error', message: "Month parameter is required" });
+  }
+
+  try {
+    // Start date for the beginning of the month (00:00:00 in UTC)
+    const startDate = new Date(`${month}-01T00:00:00.000Z`);
+    
+    // End date for the last moment of the month (23:59:59.999 in UTC)
+    const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + 1);
+    endDate.setDate(0);  // Set to the last day of the month
+    endDate.setHours(23, 59, 59, 999);  // Set to the last moment of the day
+
+    // Aggregation pipeline
+    const salesData = await Order.aggregate([
+      {
+        $match: {
+          orderDate: {
+            $gte: startDate,   // Orders greater than or equal to startDate
+            $lte: endDate,     // Orders less than or equal to endDate
+          },
+        },
+      },
+      {
+        $group: {
+          _id: { $dayOfMonth: "$orderDate" }, // Group by day of the month
+          totalSales: { $sum: "$transactionDetails.amount" }, // Sum of sales for each day
+        },
+      },
+      {
+        $sort: { _id: 1 }, // Sort by day of the month
+      },
+    ]);
+
+    // Check if no sales data was found and return an error message
+    if (!salesData || salesData.length === 0) {
+      return res.status(404).json({ type: "error", message: "No sales data found for the given month." });
+    }
+
+    // Return the sales data if found
+    return res.json({ type: 'success', message: 'Successfully fetched sales chart data', Data: salesData });
+
+  } catch (err) {
+    // Log and handle errors properly, only sending one response
+    console.error("Error Fetching Sales Chart Data:", err);
+    if (!res.headersSent) {
+      return res.status(500).json({ type: 'error', message: "Failed to fetch sales data" });
+    }
+  }
+};
+
+
+
+
+
+
 
 exports.getProducts=(req,res,next)=>{
     const page=req.query.page;
