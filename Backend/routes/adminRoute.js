@@ -6,6 +6,7 @@ const router=express.Router();
 
 router.post("/login",adminController.adminLogin);
 router.get("/dashboard",validateController.adminAuthenticate,adminController.getDashboard);
+router.get('/dashboard/sales',validateController.adminAuthenticate,adminController.getSalesChart);
 router.get("/products",validateController.adminAuthenticate,adminController.getProducts);
 router.get('/get-product/:productId',validateController.adminAuthenticate,shopController.getProductDetails);
 router.post("/add-product",validateController.adminAuthenticate,adminController.addProduct);
