@@ -61,9 +61,12 @@ const AdminAllProducts = () => {
           />
         )}
       </div>
-      <div className="p-8 w-full flex justify-center">
+      <div className="px-2 ">
+        <h1 className="text-2xl font-semibold text-gray-700 mx-10 mt-4 px-2 ">All Products</h1>
+      </div>
+      <div className="p-2 w-full flex justify-center">
         {products.length > 0 ? (
-          <div className="w-[80%] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-10">
             {products.map((product, index) => (
               <div
                 key={product.sku}
