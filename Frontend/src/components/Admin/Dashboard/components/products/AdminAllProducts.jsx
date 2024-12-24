@@ -18,7 +18,7 @@ const AdminAllProducts = () => {
 
     const handleAlert=()=>{
       setAlert(null)
-      navigate('/admin/dashboard')
+      // navigate('/admin/dashboard')
     }
   
     const handlePagination=useCallback((page)=>{
