@@ -1,55 +1,121 @@
-import React, { useState } from "react";
-import { FunnelIcon, ArrowPathIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
+import React, { useState, useEffect } from "react";
+import {
+  FunnelIcon,
+  ArrowPathIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+} from "@heroicons/react/24/outline";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const OrderFilter = () => {
-  const [selectedDate, setSelectedDate] = useState(null);
+const OrderFilter = ({ date }) => {
+  const [selectedDate, setSelectedDate] = useState(date || null);
   const [isOrderTypeModalOpen, setOrderTypeModalOpen] = useState(false);
   const [selectedOrderTypes, setSelectedOrderTypes] = useState([]);
   const [isOrderStatusModalOpen, setOrderStatusModalOpen] = useState(false);
   const [selectedOrderStatuses, setSelectedOrderStatuses] = useState([]);
+  const navigate = useNavigate();
+  const orderTypes = ["Prepaid", "COD"];
+  const orderStatuses = ["successfull", "pending", "cancelled", "processing"];
 
-  const orderTypes = [
-    "Health & Medicine",
-    "Book & Stationary",
-    "Services & Industry",
-    "Fashion & Beauty",
-    "Home & Living",
-    "Electronics",
-    "Mobile & Phone",
-    "Accessories",
-  ];
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const orderStatuses = ["Successful", "Pending", "Cancelled", "Processing"];
+  // Update query parameters while preserving existing ones
+  const updateQueryParams = () => {
+    const params = new URLSearchParams(searchParams);
 
+    // Date handling (timezone issue)
+    if (selectedDate) {
+      const formattedDate = selectedDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+      params.set("date", formattedDate);
+    } else {
+      params.delete("date");
+    }
+
+    // Order Type filter
+    if (selectedOrderTypes.length > 0) {
+      params.set("orderType", selectedOrderTypes.join(","));
+    } else {
+      params.delete("orderType");
+    }
+
+    // Order Status filter
+    if (selectedOrderStatuses.length > 0) {
+      params.set("orderStatus", selectedOrderStatuses.join(","));
+    } else {
+      params.delete("orderStatus");
+    }
+
+    setSearchParams(params);
+  };
+
+  // Toggle selected order types
   const toggleOrderType = (type) => {
-    if (selectedOrderTypes.includes(type)) {
-      setSelectedOrderTypes((prev) => prev.filter((t) => t !== type));
-    } else {
-      setSelectedOrderTypes((prev) => [...prev, type]);
-    }
+    const updatedTypes = selectedOrderTypes.includes(type)
+      ? selectedOrderTypes.filter((t) => t !== type)
+      : [...selectedOrderTypes, type];
+    setSelectedOrderTypes(updatedTypes);
   };
 
+  // Toggle selected order statuses
   const toggleOrderStatus = (status) => {
-    if (selectedOrderStatuses.includes(status)) {
-      setSelectedOrderStatuses((prev) => prev.filter((s) => s !== status));
+    const updatedStatuses = selectedOrderStatuses.includes(status)
+      ? selectedOrderStatuses.filter((s) => s !== status)
+      : [...selectedOrderStatuses, status];
+    setSelectedOrderStatuses(updatedStatuses);
+  };
+
+  // Apply filters when selected date changes
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+
+    // Ensure correct timezone adjustment for the date
+    const adjustedDate = new Date(
+      date.getTime() - date.getTimezoneOffset() * 60000
+    );
+
+    const params = new URLSearchParams(searchParams);
+    if (adjustedDate) {
+      params.set("date", adjustedDate.toISOString().split("T")[0]);
     } else {
-      setSelectedOrderStatuses((prev) => [...prev, status]);
+      params.delete("date");
     }
+
+    // Update the URL with the new query params
+    navigate(`?${params.toString()}`);
   };
 
-  const applyOrderTypeFilter = () => {
-    setOrderTypeModalOpen(false);
+  // Reset all filters
+  const resetFilters = () => {
+    setSelectedDate(null);
+    setSelectedOrderTypes([]);
+    setSelectedOrderStatuses([]);
+    navigate("/admin/dashboard/orders"); // Reset to the base URL without query params
   };
 
-  const applyOrderStatusFilter = () => {
-    setOrderStatusModalOpen(false);
-  };
+  useEffect(() => {
+    // When query params change, update the state values accordingly
+    const dateParam = searchParams.get("date");
+    const orderTypeParam = searchParams.get("orderType");
+    const orderStatusParam = searchParams.get("orderStatus");
+
+    if (dateParam) {
+      setSelectedDate(new Date(dateParam));
+    }
+
+    if (orderTypeParam) {
+      setSelectedOrderTypes(orderTypeParam.split(","));
+    }
+
+    if (orderStatusParam) {
+      setSelectedOrderStatuses(orderStatusParam.split(","));
+    }
+  }, [searchParams]);
 
   return (
-    <div className="w-2/3 bg-white mx-4  relative rounded-lg shadow-md mt-4">
-      <div className="flex  items-center">
+    <div className="w-2/3 bg-white mx-4 relative rounded-lg shadow-md mt-4">
+      <div className="flex items-center">
         {/* Filter By Section */}
         <div className="w-1/5 flex justify-center items-center py-4 px-4 border-r-2 border-gray-300">
           <FunnelIcon className="h-5 w-5 text-gray-600" />
@@ -57,10 +123,10 @@ const OrderFilter = () => {
         </div>
 
         {/* Date Filter */}
-        <div className="w-1/5 py-4 px-4 border-gray-300 border-r-2 ">
+        <div className="w-1/5 py-4 px-4 border-gray-300 border-r-2">
           <DatePicker
             selected={selectedDate}
-            onChange={(date) => setSelectedDate(date)}
+            onChange={handleDateChange}
             dateFormat="dd MMM yyyy"
             className="appearance-none bg-transparent text-gray-700 text-sm focus:outline-none cursor-pointer"
             placeholderText="Date"
@@ -68,7 +134,7 @@ const OrderFilter = () => {
         </div>
 
         {/* Order Type Filter */}
-        <div className="w-1/5 flex flex-col justify-between items-center py-4 px-4 border-gray-300 border-r-2  relative">
+        <div className="w-1/5 flex flex-col justify-between items-center py-4 px-4 border-gray-300 border-r-2 relative">
           <button
             className="flex items-center text-gray-700 text-sm focus:outline-none"
             onClick={() => setOrderTypeModalOpen((prev) => !prev)}
@@ -100,12 +166,12 @@ const OrderFilter = () => {
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-gray-500 mt-2">
-                *You can choose multiple Order Types
-              </p>
               <button
                 className="mt-3 px-4 py-2 bg-blue-500 text-white text-xs font-medium rounded-md shadow hover:bg-blue-600"
-                onClick={applyOrderTypeFilter}
+                onClick={() => {
+                  setOrderTypeModalOpen(false);
+                  updateQueryParams();
+                }}
               >
                 Apply Now
               </button>
@@ -146,35 +212,30 @@ const OrderFilter = () => {
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-gray-500 mt-2">
-                *You can choose multiple Order Statuses
-              </p>
               <button
                 className="mt-3 px-4 py-2 bg-blue-500 text-white text-xs font-medium rounded-md shadow hover:bg-blue-600"
-                onClick={applyOrderStatusFilter}
+                onClick={() => {
+                  setOrderStatusModalOpen(false);
+                  updateQueryParams();
+                }}
               >
                 Apply Now
               </button>
             </div>
           )}
         </div>
-         {/* Reset Filter Button */}
-      <div className=" w-1/5 flex  justify-between items-center py-4 px-4">
-        <button
-          className="flex items-center text-red-500 hover:text-red-600 text-sm font-medium"
-          onClick={() => {
-            setSelectedDate(null);
-            setSelectedOrderTypes([]);
-            setSelectedOrderStatuses([]);
-          }}
-        >
-          <ArrowPathIcon className="h-5 w-5 mr-1" />
-          Reset Filter
-        </button>
-      </div>
-      </div>
 
-     
+        {/* Reset Filter Button */}
+        <div className="w-1/5 flex justify-between items-center py-4 px-4">
+          <button
+            className="flex items-center text-red-500 hover:text-red-600 text-sm font-medium"
+            onClick={resetFilters}
+          >
+            <ArrowPathIcon className="h-5 w-5 mr-1" />
+            Reset Filter
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
