@@ -207,34 +207,58 @@ exports.getProducts=(req,res,next)=>{
     })
 }
 
-exports.getOrderlist=async(req,res,next)=>{
-    const pageno=req.query.pageno;
-    const limit=10;
-    Order.countDocuments().then(totalOrders=>{
-        const pagination={
-            total:totalOrders,
-            totalPages:Math.ceil(totalOrders/limit),
-            currentpage:pageno,
-            nextPage:pageno<(Math.ceil(totalOrders/limit))?true:false,
-            prevPage:pageno>1?true:false
-           }
-           return Order.find()
-           .sort({ _id: -1 })
-           .skip((pageno-1)*limit)
-           .limit(limit)
-           .then(orders=>{
-               res.status(200).json({
-                   success: true,
-                   orders: orders,
-                   pagination:pagination
-                   });
-           })
-    })
-    .catch(err=>{
-        res.status(500).json({type:"error",message:"Internal Server Error"});
-    })
-    
-}
+exports.getOrderlist = async (req, res, next) => {
+  const pageno = parseInt(req.query.pageno) || 1;
+  const limit = 10;
+
+  // Build dynamic filter
+  const filter = {};
+
+  if (req.query.date) {
+    // Assuming the date is stored as a string in 'YYYY-MM-DD' format or as a Date object
+    const date = new Date(req.query.date);
+    const nextDate = new Date(date);
+    nextDate.setDate(nextDate.getDate() + 1);
+    filter.orderDate = { $gte: date, $lt: nextDate }; // Filter by date range for the specified day
+  }
+
+  if (req.query.orderType) {
+    filter.paymentType = { $in: req.query.orderType.split(",") }; // Handle multiple order types
+  }
+
+  if (req.query.orderStatus) {
+    filter.orderStatus = { $in: req.query.orderStatus.split(",") }; // Handle multiple order statuses
+  }
+
+  try {
+    // Count total documents matching the filter
+    const totalOrders = await Order.countDocuments(filter);
+
+    const pagination = {
+      total: totalOrders,
+      totalPages: Math.ceil(totalOrders / limit),
+      currentPage: pageno,
+      nextPage: pageno < Math.ceil(totalOrders / limit) ? true : false,
+      prevPage: pageno > 1 ? true : false,
+    };
+
+    // console.log(pagination);
+    // Fetch the filtered orders
+    const orders = await Order.find(filter)
+      .sort({ _id: -1 })
+      .skip((pageno - 1) * limit)
+      .limit(limit);
+
+    res.status(200).json({
+      success: true,
+      orders: orders,
+      pagination: pagination,
+    });
+  } catch (err) {
+    res.status(500).json({ type: "error", message: "Internal Server Error" });
+  }
+};
+
 
 exports.createTeam = async (req, res, next) => {
     const adminId = req.user?.user?._id; // Ensure proper user object structure
