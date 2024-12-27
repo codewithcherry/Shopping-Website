@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const StockDataTable = ({ data, pagination, setPage }) => {
   const statusClass = (status) => {
@@ -20,6 +21,12 @@ const StockDataTable = ({ data, pagination, setPage }) => {
     setPage(page);
     // console.log("page button clicked", page);
   };
+
+  const navigate=useNavigate()
+
+  const hanldeProductIdClick=(id)=>{
+    navigate(`/admin/dashboard/products/${id}`);
+  }
 
   // Ensure pagination values are valid
   const currentPage = Number(pagination?.currentPage) || 1;
@@ -54,7 +61,7 @@ const StockDataTable = ({ data, pagination, setPage }) => {
               ) : (
                 data.map((row, index) => (
                   <tr key={index} className="border-b hover:bg-gray-50">
-                    <td className="px-3 py-3 text-sm text-gray-700">{row._id}</td>
+                    <td className="px-3 py-3 text-sm text-blue-700 hover:cursor-pointer hover:underline" onClick={()=>hanldeProductIdClick(row._id)}>{row._id.slice(15, row._id.length)}</td>
                     <td className="px-3 py-3 text-sm text-gray-700">
                       {row.title}
                     </td>
@@ -67,7 +74,7 @@ const StockDataTable = ({ data, pagination, setPage }) => {
                     <td className="px-3 py-3 text-sm text-gray-700">{row.stockQuantity}</td>
                     <td className="px-3 py-3">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${statusClass(row.status)}`}
+                        className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${statusClass(row.status)}`}
                       >
                         {row.status}
                       </span>
