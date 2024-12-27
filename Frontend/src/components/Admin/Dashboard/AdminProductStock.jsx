@@ -1,56 +1,74 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios';
-import Alert from '../../Alert/Alert';
-import Loading from '../../Alert/Loading';
-import OrderFilter from './components/orders/OrderFilter';
-import StockDataTable from './components/Stock/StockDataTable';
+import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import axios from "axios";
+import Alert from "../../Alert/Alert";
+import Loading from "../../Alert/Loading";
+import StockFilter from "./components/Stock/StockFilter";
+import StockDataTable from "./components/Stock/StockDataTable";
 
 const AdminProductStock = () => {
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState();
+  const [products, setProducts] = useState([]);
+  const [pagination, setPagination] = useState();
+  const [page, setPage] = useState(1);
 
-  const [loading,setLoading]=useState(false);
-  const [alert,setALert]=useState();
-  const [products,setProducts]=useState([])
-  const [pagination,setPagination]=useState();
-  const [page,setPage]=useState(1)
+  const token = localStorage.getItem("adminToken");
 
-  const token=localStorage.getItem('adminToken');
+  const [searchParams] = useSearchParams(); // using useSearchParams to manage query parameters
 
-  const fetchProductStock=async (page) => {
+  const fetchProductStock = async () => {
     try {
-      setLoading(true)
-      const response=await axios.get(`http://localhost:3000/admin/product-stock?pageno=${page}`,
-        {
-          headers:{
-            Authorization:`Bearer ${token}`
-          }
-        }
-      )
-      // console.log(response.data.products)
-      // console.log(response.data.pagination)
-      setProducts(response.data.products)
-      setPagination(response.data.pagination)
+      setLoading(true);
+
+      // Construct query parameters
+      const queryParams = {
+        pageno: page,
+        category: searchParams.get("category"),
+        subcategory: searchParams.get("subcategory"),
+        stock: searchParams.get("stock"),
+      };
+
+      // console.log("Fetching products with params:", queryParams);
+
+      const response = await axios.get("http://localhost:3000/admin/product-stock", {
+        params: queryParams,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setLoading(false);
+      setProducts(response.data.products);
+      setPagination(response.data.pagination);
+
+      // console.log("Received pagination data:", response.data.pagination);
+
     } catch (err) {
-      console.log(err)
-      setALert(err.response.data)
+      const error = err.response?.data || { type: "error", message: "An error occurred" };
+      setAlert(error);
+      setLoading(false);
     }
-    finally{
-      setLoading(false)
-    }
-  }
+  };
 
-  useEffect(()=>{
-      fetchProductStock(page)
-  },[page])
+  useEffect(() => {
+    fetchProductStock();
+  }, [page, searchParams]); // refetch when page or query params change
+
   return (
-    <div className='w-full mx-auto bg-gray-100 '>
-     {alert &&  <Alert type={alert.type} message={alert.message} onClose={()=>setAlert(null)}  />}
-      {loading? <Loading /> : <div>
-          <h1 className='text-2xl px-4 mt-4 font-semibold mx-1'>Order List</h1>
-          <OrderFilter />
-          <StockDataTable data={products} pagination={pagination} setPage={setPage}/>
-        </div>}
+    <div className="w-full mx-auto bg-gray-100">
+      {alert && <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
+      {loading ? (
+        <Loading />
+      ) : (
+        <div>
+          <h1 className="text-2xl px-4 mt-4 font-semibold mx-1">Product Stock List</h1>
+          <StockFilter />
+          <StockDataTable data={products} pagination={pagination} setPage={setPage} />
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default AdminProductStock
+export default AdminProductStock;
