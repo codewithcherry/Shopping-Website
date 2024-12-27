@@ -327,34 +327,52 @@ exports.createTeam = async (req, res, next) => {
 };
 
 
-exports.getProductStock=async (req,res,next) => {
-    const pageno=Number(req.query.pageno);
-    const limit=10;
-    Product.countDocuments().then(totalProducts=>{
-        const pagination={
-            total:totalProducts,
-            totalPages:Math.ceil(totalProducts/limit),
-            currentpage:pageno,
-            nextPage:pageno<(Math.ceil(totalProducts/limit))?true:false,
-            prevPage:pageno>1?true:false
-           }
-           return Product.find()
-           .sort({ _id: -1 })
-           .skip((pageno-1)*limit)
-           .limit(limit)
-           .then(products=>{
-               res.status(200).json({
-                   success: true,
-                   products: products,
-                   pagination:pagination
-                   });
-           })
-    })
-    .catch(err=>{
-        res.status(500).json({type:"error",message:"Internal Server Error"});
-    })
-    
-}
+exports.getProductStock = async (req, res, next) => {
+  const page = parseInt(req.query.pageno) || 1;
+  const limit = 10;
+
+  // Build dynamic filter
+  const filter = {};
+
+  if (req.query.category) {
+    filter.category = { $in: req.query.category.split(",") }; // Multiple categories allowed
+  }
+
+  if (req.query.subcategory) {
+    filter.subCategory = { $in: req.query.subcategory.split(",") }; // Multiple subcategories allowed
+  }
+
+  if (req.query.stock) {
+    filter.status = { $in: req.query.stock.split(",") }; // Multiple stock statuses allowed
+  }
+
+  try {
+    // Count total documents matching the filter
+    const totalProducts = await Product.countDocuments(filter);
+
+    const pagination = {
+      total: totalProducts,
+      totalPages: Math.ceil(totalProducts / limit),
+      currentPage: page,
+      nextPage: page < Math.ceil(totalProducts / limit),
+      prevPage: page > 1,
+    };
+
+    // Fetch the filtered products
+    const products = await Product.find(filter)
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    res.status(200).json({
+      success: true,
+      products: products,
+      pagination: pagination,
+    });
+  } catch (err) {
+    res.status(500).json({ type: "error", message: "Internal Server Error" });
+  }
+};
+
 
 exports.editProductInfo=async (req,res,next) => {
   const { _id, ...updateData } = req.body;
