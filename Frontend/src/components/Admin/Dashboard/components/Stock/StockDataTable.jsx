@@ -61,7 +61,7 @@ const StockDataTable = ({ data, pagination, setPage }) => {
               ) : (
                 data.map((row, index) => (
                   <tr key={index} className="border-b hover:bg-gray-50">
-                    <td className="px-3 py-3 text-sm text-blue-700 hover:cursor-pointer hover:underline" onClick={()=>hanldeProductIdClick(row._id)}>{row._id.slice(15, row._id.length)}</td>
+                    <td className="px-3 py-3 text-sm text-blue-700 hover:cursor-pointer hover:underline" onClick={()=>hanldeProductIdClick(row._id)}>{row._id.slice(19, row._id.length)}</td>
                     <td className="px-3 py-3 text-sm text-gray-700">
                       {row.title}
                     </td>
