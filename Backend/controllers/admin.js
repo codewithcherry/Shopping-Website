@@ -176,36 +176,106 @@ exports.getSalesChart = async (req, res, next) => {
 
 
 
+exports.getProducts = async (req, res, next) => {
+    try {
+        const page = parseInt(req.query.page) || 1; // Default to 1 if invalid
+        const { category = [], subCategory = [], gender = [], price = [], sort = 'price-asc' } = req.query;
+        const limit = 9;
+        const skip = (parseInt(page) - 1) * limit; // Ensure we subtract 1 to get the correct offset
 
+        // Validate page number to ensure it's a positive integer
+        if (isNaN(page) || page < 1) {
+            return res.status(400).json({
+                type: 'error',
+                message: 'Invalid page number'
+            });
+        }
 
+        // Building the filter query
+        let filterQuery = {};
 
+        // Filter by category
+        if (category.length > 0) {
+            filterQuery.category = { $in: category };
+        }
 
-exports.getProducts=(req,res,next)=>{
-    const page=req.query.page;
-    const limit=8;
-    Product.countDocuments().then(totaldoc=>{
-       const pagination={
-        total:totaldoc,
-        totalPages:Math.ceil(totaldoc/limit),
-        currentpage:page,
-        nextPage:page<(Math.ceil(totaldoc/limit))?true:false,
-        prevPage:page>1?true:false
-       }
-       return    Product.find()
-                        .skip((page-1)*limit)
-                        .limit(limit)
-                        .then(products=>{
-                            res.status(200).json({
-                                success: true,
-                                products: products,
-                                pagination:pagination
-                                });
-                        })
-    })
-    .catch(err=>{
-        res.status(500).json({type:"error",message:"Internal Server Error"})
-    })
-}
+        // Filter by subCategory
+        if (subCategory.length > 0) {
+            filterQuery.subCategory = { $in: subCategory };
+        }
+
+        // Filter by gender
+        if (gender.length > 0) {
+            filterQuery.gender = { $in: gender };
+        }
+
+        // Filter by price range
+        if (price.length === 2) {
+            const [minPrice, maxPrice] = price;
+            filterQuery.finalPrice = { $gte: minPrice, $lte: maxPrice };
+        }
+
+        // Sorting options
+        let sortQuery = {};
+        switch (sort) {
+            case 'price-asc':
+                sortQuery = { finalPrice: 1 };
+                break;
+            case 'price-desc':
+                sortQuery = { finalPrice: -1 };
+                break;
+            case 'newest':
+                sortQuery = { createdAt: -1 }; // Assuming you have a createdAt field
+                break;
+            default:
+                sortQuery = { finalPrice: 1 };
+                break;
+        }
+
+        // Fetch total number of products for pagination
+        const totalDocs = await Product.countDocuments(filterQuery);
+
+        // Calculate total pages and check if current page is out of range
+        const totalPages = Math.ceil(totalDocs / limit);
+        if (page > totalPages) {
+            return res.status(400).json({
+                type: 'error',
+                message: 'Page number exceeds the total number of pages'
+            });
+        }
+
+        // Pagination object
+        const pagination = {
+            total: totalDocs,
+            totalPages: totalPages,
+            currentpage: parseInt(page),
+            nextPage: parseInt(page) < totalPages,
+            prevPage: parseInt(page) > 1
+        };
+
+        // Fetch filtered and paginated products
+        const products = await Product.find(filterQuery)
+            .skip(skip)
+            .limit(limit)
+            .sort(sortQuery);
+
+        // Send the response
+        res.status(200).json({
+            success: true,
+            products: products,
+            pagination: pagination
+        });
+
+    } catch (err) {
+        // Error handling
+        console.error(err); // Log the error for debugging purposes
+        res.status(500).json({
+            type: 'error',
+            message: 'Internal Server Error'
+        });
+    }
+};
+
 
 exports.getOrderlist = async (req, res, next) => {
   const pageno = parseInt(req.query.pageno) || 1;
