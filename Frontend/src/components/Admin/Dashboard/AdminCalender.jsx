@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -100,6 +100,14 @@ const AdminCalendar = () => {
     setSelectedEvent(null);
     setDetailsModalOpen(false);
   };
+
+  const fetchEvents=()=>{
+
+  }
+
+  useEffect(()=>{
+    fetchEvents();
+  })
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen w-full">
