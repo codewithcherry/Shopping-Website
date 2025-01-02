@@ -842,6 +842,135 @@ exports.updateProductImages = async (req, res, next) => {
     }
 };
 
+exports.getAdminEvents=async (req,res,next) => {
+  const adminId=req.user.user._id;
+  // console.log(adminId);
+  try {
+    const admin=await Admin.findById(adminId);
+    if(!admin){
+      res.status(404).json({type:'error',message:"user not found"})
+    }
+    const events=admin.events;
+    // console.log(events)
+    res.status(200).json({type:'success',message:"events fetched successfully",events:events})
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ type: 'error', message: 'Internal server error' });
+  }
+}
+
+exports.CreateNewEvent=async (req,res,next) => {
+  const adminId=req.user.user._id;
+  const eventData=req.body;
+  // console.log(adminId,eventData);
+  try {
+    const admin=await Admin.findById(adminId);
+    if(!admin){
+      res.status(404).json({type:'error',message:"user not found"})
+    }
+    const events=admin.events;
+    const updatedEvents=[...events,eventData]
+    admin.events=updatedEvents
+    await admin.save();
+
+    res.status(201).json({type:"success",message:'event created/updated successfully',event:eventData});
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ type: 'error', message: 'Internal server error' });
+  }
+}
   
-  
-  
+
+exports.updateAdminEvent = async (req, res, next) => {
+  try {
+    const adminId = req.user.user._id;  // Extract admin ID from the JWT
+    const { EventId } = req.params;      // Extract EventId from params
+    const eventData = req.body;          // Extract event data from request body
+
+    // Log for debugging purposes
+    // console.log('Admin ID:', adminId);
+    // console.log('Event ID:', EventId);
+    // console.log('Event Data:', eventData);
+
+    // Find the admin by ID
+    const admin = await Admin.findById(adminId);
+
+    // If admin doesn't exist, return an error
+    if (!admin) {
+      return res.status(404).json({type:"error", message: 'Admin not found' });
+    }
+
+    // Find the event within the admin's events array
+    const eventIndex = admin.events.findIndex(event => event._id.toString() === EventId);
+
+    // If the event is not found, return an error
+    if (eventIndex === -1) {
+      return res.status(404).json({type:"error", message: 'Event not found' });
+    }
+
+    // Update the event at the found index with the new event data
+    admin.events[eventIndex] = {
+      ...admin.events[eventIndex].toObject(), // Ensure we don't modify the Mongoose doc directly
+      ...eventData,  // Update with the new data
+    };
+
+    // Save the updated admin document
+    await admin.save();
+
+    // Respond with a success message and the updated event
+    res.status(200).json({
+      type:"success",
+      message: 'Event updated successfully',
+      updatedEvent: admin.events[eventIndex],
+    });
+  } catch (err) {
+    // Handle errors and return a response
+    console.error(err);
+    res.status(500).json({ type:'error',message: 'Server error', error: err });
+  }
+};
+
+exports.deleteAdminEvent = async (req, res, next) => {
+  try {
+    const adminId = req.user.user._id;  // Extract admin ID from the JWT
+    const { EventId } = req.params;      // Extract EventId from the request parameters
+
+    // Log for debugging
+    // console.log('Admin ID:', adminId);
+    // console.log('Event ID:', EventId);
+
+    // Find the admin by ID
+    const admin = await Admin.findById(adminId);
+
+    // If admin doesn't exist, return an error
+    if (!admin) {
+      return res.status(404).json({ type:"error",message: 'Admin not found' });
+    }
+
+    // Find the event index in the admin's events array
+    const eventIndex = admin.events.findIndex(event => event._id.toString() === EventId);
+
+    // If event is not found, return an error
+    if (eventIndex === -1) {
+      return res.status(404).json({ type:"error",message: 'Event not found' });
+    }
+
+    // Remove the event from the array
+    admin.events.splice(eventIndex, 1);
+
+    // Save the updated admin document
+    await admin.save();
+
+    // Send a success response
+    res.status(200).json({
+      type:'success',
+      message: 'Event deleted successfully',
+      eventId: EventId,
+    });
+  } catch (err) {
+    // Handle errors and return a response
+    console.error(err);
+    res.status(500).json({ type:'error',message: 'Server error', error: err });
+  }
+};
