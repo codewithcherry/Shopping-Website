@@ -53,7 +53,7 @@ const AdminCalendar = () => {
           },
         }
       );
-      setEvents([...events, response.data.event]); // Add the new event to the state
+      setEvents(response.data.events); // Add the new event to the state
       setAlert(response.data)
     } catch (error) {
       console.error(error);
@@ -108,7 +108,7 @@ const AdminCalendar = () => {
 
   useEffect(() => {
     fetchEvents();
-  }, []);
+  }, [alert]);
 
   const handleSaveEvent = async () => {
     setLoading(true); // Start loading
@@ -191,7 +191,12 @@ const AdminCalendar = () => {
           events={events.map((event) => ({
             ...event,
             id: event._id,
-            className: event.category === 'Work' ? 'bg-blue-500' : 'bg-green-500',
+            className: event.category === 'Work' 
+                                          ? 'bg-blue-500' 
+                                          : event.category === 'Other' 
+                                          ? 'bg-green-500' 
+                                          : 'bg-red-500',
+
           }))}
           dateClick={dateClick}
           eventClick={eventClick}
