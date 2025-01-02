@@ -873,7 +873,7 @@ exports.CreateNewEvent=async (req,res,next) => {
     admin.events=updatedEvents
     await admin.save();
 
-    res.status(201).json({type:"success",message:'event created/updated successfully',event:eventData});
+    res.status(201).json({type:"success",message:'event created successfully',events:admin.events});
 
   } catch (error) {
     console.error(error);
