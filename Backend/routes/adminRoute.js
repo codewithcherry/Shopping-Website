@@ -26,5 +26,9 @@ router.post('/update-starred',validateController.adminAuthenticate,adminControll
 router.post('/update-task-status',validateController.adminAuthenticate,adminController.updateTaskStatus);
 router.post('/edit-task',validateController.adminAuthenticate,adminController.editTaskData);
 router.delete('/delete-task',validateController.adminAuthenticate,adminController.deleteTask);
+router.get('/get-admin-events',validateController.adminAuthenticate,adminController.getAdminEvents);
+router.post('/create-new-event',validateController.adminAuthenticate,adminController.CreateNewEvent);
+router.put('/update-event/:EventId',validateController.adminAuthenticate,adminController.updateAdminEvent);
+router.delete('/delete-event/:EventId',validateController.adminAuthenticate,adminController.deleteAdminEvent);
 
 module.exports=router;
