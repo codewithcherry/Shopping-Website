@@ -77,6 +77,35 @@ const adminSchema = new Schema({
 
         }
     ],
+    events:[
+        { 
+            title:{
+                type:String
+            },
+            description:{
+                type:String
+            },
+            start:{
+                type:Date
+            },
+            end:{
+                type:Date
+            }, 
+            category:{
+                type:String,
+                enum:['Work','Personal','Other'],
+                default:'Work'
+            },
+            link:{
+                type:String,
+            },
+            eventDate:{
+                type:Date,
+                default: Date.now
+            }
+
+        }
+    ],
     createdBy:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Admin",
