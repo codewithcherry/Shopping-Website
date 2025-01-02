@@ -5,112 +5,183 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import Modal from 'react-modal';
 import { XMarkIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'; // Heroicons
+import axios from 'axios';
+import Alert from '../../Alert/Alert';
 
 const AdminCalendar = () => {
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title: 'Meeting',
-      description: 'Team sync meeting',
-      start: '2024-12-31T10:00:00',
-      end: '2024-12-31T11:00:00',
-      category: 'Work',
-      link: ''
-    },
-    {
-      id: 2,
-      title: 'Conference',
-      description: 'Tech conference',
-      start: '2024-12-31T14:00:00',
-      end: '2024-12-31T16:00:00',
-      category: 'Personal',
-      link: 'https://example.com'
-    },
-  ]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [newEvent, setNewEvent] = useState({ title: '', description: '', start: '', end: '', category: '', link: '' });
-  const [isEditing, setIsEditing] = useState(false);
+  const [events, setEvents] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false); // First modal: view event
+  const [editModalOpen, setEditModalOpen] = useState(false); // Second modal: edit event
+  const [eventData, setEventData] = useState({
+    title: '',
+    description: '',
+    start: '',
+    end: '',
+    category: '',
+    link: '',
+    id: null,
+  });
+  const [isEditing, setIsEditing] = useState(false); // Flag to determine whether we're editing or creating
+  const [loading, setLoading] = useState(false); // Loading state to show spinner
+  const [alert,setAlert] = useState();
+  const token = localStorage.getItem('adminToken');
 
-  const handleDateClick = (info) => {
-    setNewEvent({ title: '', description: '', start: info.dateStr, end: info.dateStr, category: '', link: '' });
-    setIsEditing(false);
-    setModalOpen(true);
+  const fetchEvents = async () => {
+    console.log("events")
+    try {
+      const response = await axios.get('http://localhost:3000/admin/get-admin-events', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setEvents(response.data.events); // Assuming each event includes 'id' (_id from DB)
+      
+    } catch (err) {
+      console.error(err);
+      setAlert(err.response.data)
+    }
   };
 
-  const handleEventClick = (info) => {
+  const createNewEvent = async (eventData) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/admin/create-new-event',
+        eventData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setEvents([...events, response.data.event]); // Add the new event to the state
+      setAlert(response.data)
+    } catch (error) {
+      console.error(error);
+      setAlert(error.response.data)
+    }
+  };
+
+  const updateEvent = async () => {
+    if (eventData.id) {
+      try {
+        const response = await axios.put(
+          `http://localhost:3000/admin/update-event/${eventData.id}`,
+          eventData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const updatedEvents = events.map((event) =>
+          event.id === eventData.id ? response.data.event : event
+        );
+        setEvents(updatedEvents); // Update the event in the state
+        setAlert(response.data)
+      } catch (error) {
+        console.error('Error updating event:', error);
+        setAlert(error.response.data)
+      }
+    }
+  };
+
+  const deleteEvent = async () => {
+    if (eventData.id) {
+      try {
+        setLoading(true); // Start loading
+        const response = await axios.delete(`http://localhost:3000/admin/delete-event/${eventData.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setEvents(events.filter((event) => event.id !== eventData.id)); // Remove the deleted event from state
+        setModalOpen(false);
+        setAlert(response.data);
+      } catch (error) {
+        console.error('Error deleting event:', error);
+        setAlert(error.response.data)
+      } finally {
+        setLoading(false); // End loading
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const handleSaveEvent = async () => {
+    setLoading(true); // Start loading
+    try {
+      if (isEditing) {
+        await updateEvent(); // Update existing event
+      } else {
+        await createNewEvent(eventData); // Create new event
+      }
+    } catch (error) {
+      console.error('Error saving event:', error);
+    } finally {
+      setLoading(false); // End loading
+      setEditModalOpen(false);
+      setEventData({
+        title: '',
+        description: '',
+        start: '',
+        end: '',
+        category: '',
+        link: '',
+        id: null,
+      });
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditModalOpen(false);
+  };
+
+  const handleCancelView = () => {
+    setModalOpen(false);
+  };
+
+  const handleEdit = () => {
+    setModalOpen(false);
+    setIsEditing(true); // Edit mode
+    setEditModalOpen(true);
+  };
+
+  const dateClick = (info) => {
+    const clickedDate = info.dateStr;
+    setEventData({
+      title: '',
+      description: '',
+      start: clickedDate + "T09:00", // Set to 9 AM by default
+      end: clickedDate + "T10:00", // Set to 10 AM by default
+      category: '',
+      link: '',
+      id: null,
+    });
+    setIsEditing(false); // Set to false because it's a new event
+    setEditModalOpen(true); // Open the form modal for event creation
+  };
+
+  const eventClick = (info) => {
     const event = info.event;
-    setSelectedEvent(event);
-    
-    // Strip the seconds from start and end times to match datetime-local format
-    const start = event.startStr.slice(0, 16);  // "YYYY-MM-DDTHH:MM"
-    const end = event.endStr.slice(0, 16);      // "YYYY-MM-DDTHH:MM"
-    
-    setNewEvent({
+    setEventData({
       title: event.title,
       description: event.extendedProps.description,
-      start: start,  // Correctly formatted start time
-      end: end,      // Correctly formatted end time
+      start: event.startStr.slice(0, 16),
+      end: event.endStr.slice(0, 16),
       category: event.extendedProps.category,
-      link: event.extendedProps.link
+      link: event.extendedProps.link,
+      id: event.id,
     });
-    
-    setIsEditing(true);
-    setDetailsModalOpen(true);
+    setIsEditing(true); // Edit mode
+    setModalOpen(true); // First open the view modal
   };
-
-  const saveEvent = () => {
-    if (selectedEvent) {
-      selectedEvent.setProp('title', newEvent.title);
-      selectedEvent.setExtendedProp('description', newEvent.description);
-      selectedEvent.setExtendedProp('link', newEvent.link);
-      selectedEvent.setExtendedProp('category', newEvent.category);
-      selectedEvent.setDates(newEvent.start, newEvent.end);
-    } else {
-      setEvents([ 
-        ...events, 
-        { 
-          id: events.length + 1, 
-          title: newEvent.title, 
-          description: newEvent.description, 
-          start: newEvent.start, 
-          end: newEvent.end, 
-          category: newEvent.category, 
-          link: newEvent.link 
-        }
-      ]);
-    }
-    setModalOpen(false);
-    setSelectedEvent(null);
-  };
-
-  const deleteEvent = () => {
-    if (selectedEvent) {
-      selectedEvent.remove();
-    }
-    setModalOpen(false);
-    setSelectedEvent(null);
-    setDetailsModalOpen(false);
-  };
-
-  const discardChanges = () => {
-    setModalOpen(false);
-    setIsEditing(false);
-    setSelectedEvent(null);
-    setDetailsModalOpen(false);
-  };
-
-  const fetchEvents=()=>{
-
-  }
-
-  useEffect(()=>{
-    fetchEvents();
-  })
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen w-full">
+      {alert && <Alert type={alert.type} message={alert.message} onClose={()=>{setAlert(null)}} />}
       <div className="bg-white shadow-lg rounded-xl p-6 w-full max-w-screen-xl mx-auto min-h-screen">
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -119,170 +190,219 @@ const AdminCalendar = () => {
           selectable
           events={events.map((event) => ({
             ...event,
+            id: event._id,
             className: event.category === 'Work' ? 'bg-blue-500' : 'bg-green-500',
           }))}
-          dateClick={handleDateClick}
-          eventClick={handleEventClick}
+          dateClick={dateClick}
+          eventClick={eventClick}
           headerToolbar={{
             left: 'prev,next today',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay',
           }}
-          height="auto"  // Let FullCalendar manage height dynamically based on content
-          contentHeight="auto" // Ensures the calendar scales properly within the available space
+          height="auto"
+          contentHeight="auto"
         />
       </div>
 
-      {/* Modal for adding/editing events */}
+      {/* First Modal: View Event */}
       <Modal
         isOpen={modalOpen}
-        onRequestClose={discardChanges}
+        onRequestClose={handleCancelView}
+        appElement={document.getElementById('root')}
+        className="bg-white p-8 rounded-2xl shadow-xl max-w-lg mx-auto mt-24 bg-gradient-to-r from-blue-100 to-blue-50 transition-all transform"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center"
+      >
+        <button
+          onClick={handleCancelView}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-all"
+        >
+          <XMarkIcon className="w-6 h-6" />
+        </button>
+
+        {/* Event Card Design */}
+        <div className="relative p-6">
+          <h2 className="text-2xl font-bold text-center mb-4 text-gray-800">Event Details</h2>
+
+          <div className="space-y-4">
+            {/* Title Section */}
+            <div className="flex items-center space-x-4">
+              <span className="text-lg font-semibold text-gray-700">Title:</span>
+              <p className="text-lg text-gray-800 font-medium">{eventData.title}</p>
+            </div>
+
+            {/* Description Section */}
+            <div className="flex items-start space-x-4">
+              <span className="text-lg font-semibold text-gray-700">Description:</span>
+              <p className="text-gray-700 text-md">{eventData.description}</p>
+            </div>
+
+            {/* Category Section */}
+            <div className="flex items-center space-x-4">
+              <span className="text-lg font-semibold text-gray-700">Category:</span>
+              <span className={`px-4 py-2 rounded-full text-white text-sm ${eventData.category === 'Work' ? 'bg-blue-500' : 'bg-green-500'}`}>
+                {eventData.category}
+              </span>
+            </div>
+
+            {/* Link Section */}
+            {eventData.link && (
+              <div className="flex items-center space-x-4">
+                <span className="text-lg font-semibold text-gray-700">Link:</span>
+                <a
+                  href={eventData.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 transition-all"
+                >
+                  {eventData.link}
+                </a>
+              </div>
+            )}
+
+            {/* Time Section */}
+            <div className="grid grid-cols-2 gap-6">
+              <div className="flex items-center space-x-2 ">
+                <span className="text-lg font-semibold text-gray-700">Start:</span>
+                <p className="text-gray-700 whitespace-nowrap">
+                  {new Date(eventData.start).toLocaleString()}
+                </p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <span className="text-lg font-semibold text-gray-700">End:</span>
+                <p className="text-gray-700 whitespace-nowrap">
+                  {new Date(eventData.end).toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Buttons */}
+          <div className="mt-6 flex justify-between space-x-2">
+            <button
+              onClick={handleEdit}
+              className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600 transition-all flex items-center space-x-2"
+            >
+              <PencilIcon className="w-5 h-5" />
+              <span>Edit</span>
+            </button>
+            <button
+              onClick={deleteEvent}
+              className="bg-red-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-red-600 transition-all flex items-center space-x-2"
+              disabled={loading} // Disable button when loading
+            >
+              {loading ? (
+                <span className="spinner-border animate-spin"></span>
+              ) : (
+                <>
+                  <TrashIcon className="w-5 h-5" />
+                  <span>Delete</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Second Modal: Edit Event */}
+      <Modal
+        isOpen={editModalOpen}
+        onRequestClose={handleCancelEdit}
+        appElement={document.getElementById('root')}
         className="bg-white p-8 rounded-2xl shadow-xl max-w-lg mx-auto mt-24 transition-all transform"
         overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center"
       >
         <button
-            onClick={discardChanges}
-            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-all"
-          >
-            <XMarkIcon className="w-6 h-6" />
-          </button>
+          onClick={handleCancelEdit}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-all"
+        >
+          <XMarkIcon className="w-6 h-6" />
+        </button>
         <div className="relative">
-          <h2 className="text-xl font-semibold text-center mb-6 text-gray-800">
-            {isEditing ? 'Edit Event' : 'Add Calendar Event'}
-          </h2>
-          
+          <h2 className="text-xl font-semibold text-center mb-6 text-gray-800">Edit Event</h2>
           <form className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700">Title</label>
               <input
                 type="text"
-                value={newEvent.title}
-                onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+                value={eventData.title}
+                onChange={(e) => setEventData({ ...eventData, title: e.target.value })}
                 className="w-full border border-gray-300 rounded-xl p-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Description</label>
               <textarea
-                value={newEvent.description}
-                onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
+                value={eventData.description}
+                onChange={(e) => setEventData({ ...eventData, description: e.target.value })}
                 className="w-full border border-gray-300 rounded-xl p-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               ></textarea>
             </div>
-            <div className='grid grid-cols-2 gap-2'>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Category</label>
-              <select
-                value={newEvent.category}
-                onChange={(e) => setNewEvent({ ...newEvent, category: e.target.value })}
-                className="w-full border border-gray-300 rounded-xl p-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Category</label>
+                <select
+                  value={eventData.category}
+                  onChange={(e) => setEventData({ ...eventData, category: e.target.value })}
+                  className="w-full border border-gray-300 rounded-xl p-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                >
+                  <option value="">Select a category</option>
+                  <option value="Work">Work</option>
+                  <option value="Personal">Personal</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Link</label>
+                <input
+                  type="url"
+                  value={eventData.link}
+                  onChange={(e) => setEventData({ ...eventData, link: e.target.value })}
+                  className="w-full border border-gray-300 rounded-xl p-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Start</label>
+                <input
+                  type="datetime-local"
+                  value={eventData.start}
+                  onChange={(e) => setEventData({ ...eventData, start: e.target.value })}
+                  className="w-full border border-gray-300 rounded-xl p-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">End</label>
+                <input
+                  type="datetime-local"
+                  value={eventData.end}
+                  onChange={(e) => setEventData({ ...eventData, end: e.target.value })}
+                  className="w-full border border-gray-300 rounded-xl p-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                />
+              </div>
+            </div>
+
+            {/* Save and Cancel Buttons */}
+            <div className="mt-6 flex justify-end space-x-4">
+              <button
+                type="button"
+                onClick={handleCancelEdit}
+                className="bg-gray-500 text-white px-6 py-3 rounded-xl text-lg hover:bg-gray-600 transition-all"
               >
-                <option value="">Select a category</option>
-                <option value="Work">Work</option>
-                <option value="Personal">Personal</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Link</label>
-              <input
-                type="url"
-                value={newEvent.link}
-                onChange={(e) => setNewEvent({ ...newEvent, link: e.target.value })}
-                className="w-full border border-gray-300 rounded-xl p-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-              />
-            </div>
-            <div>
-  <label className="block text-sm font-medium text-gray-700">Start Time</label>
-  <input
-    type="datetime-local"
-    value={newEvent.start}  // Populated with the start time of the event
-    onChange={(e) => setNewEvent({ ...newEvent, start: e.target.value })}
-    className="w-full border border-gray-300 rounded-xl p-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-  />
-</div>
-<div>
-  <label className="block text-sm font-medium text-gray-700">End Time</label>
-  <input
-    type="datetime-local"
-    value={newEvent.end}    // Populated with the end time of the event
-    onChange={(e) => setNewEvent({ ...newEvent, end: e.target.value })}
-    className="w-full border border-gray-300 rounded-xl p-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-  />
-</div>
-
-
-            
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveEvent}
+                disabled={loading} // Disable save button when loading
+                className="bg-blue-500 text-white px-6 py-3 rounded-xl text-lg hover:bg-blue-600 transition-all"
+              >
+                {loading ? (
+                  <span className="spinner-border animate-spin"></span>
+                ) : (
+                  'Save'
+                )}
+              </button>
             </div>
           </form>
-          <div className="mt-6 flex justify-end space-x-4">
-            {isEditing && (
-              <button
-                onClick={deleteEvent}
-                className="bg-red-500 text-white px-6 py-3 rounded-xl text-lg hover:bg-red-600 transition-all flex items-center space-x-2"
-              >
-                <TrashIcon className="w-5 h-5" />
-                <span>Delete</span>
-              </button>
-            )}
-            <button
-              onClick={discardChanges}
-              className="bg-gray-400 text-white px-6 py-3 rounded-xl text-lg hover:bg-gray-500 transition-all flex items-center space-x-2"
-            >
-              <XMarkIcon className="w-5 h-5" />
-              <span>Discard</span>
-            </button>
-            <button
-              onClick={saveEvent}
-              className="bg-blue-500 text-white px-6 py-3 rounded-xl text-lg hover:bg-blue-600 transition-all flex items-center space-x-2"
-            >
-              <PencilIcon className="w-5 h-5" />
-              <span>Save</span>
-            </button>
-          </div>
-        </div>
-      </Modal>
-
-      {/* Event Details Modal */}
-      <Modal
-        isOpen={detailsModalOpen}
-        onRequestClose={() => setDetailsModalOpen(false)}
-        className="bg-white p-8 rounded-2xl shadow-xl max-w-lg mx-auto mt-24 transition-all transform"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center"
-      >
-        <button
-          onClick={() => setDetailsModalOpen(false)}
-          className="absolute top-3 right-3 bg-gray-50 rounded-full"
-        >
-          <XMarkIcon className="h-5 w-5 text-gray-600" />
-        </button>
-        <div className="space-y-4">
-          <div className="flex justify-center items-center space-x-4">
-            <h2 className="text-3xl font-semibold text-center text-gray-800">{selectedEvent?.title}</h2>
-            <button
-              onClick={() => {
-                setDetailsModalOpen(false);
-                setModalOpen(true);
-              }}
-              className="flex items-center gap-1 text-blue-500"
-            >
-              <PencilIcon className="h-4 w-4 text-blue-500" />
-              edit
-            </button>
-          </div>
-          <p className="text-lg text-gray-600">{selectedEvent?.extendedProps.description}</p>
-          <p className="text-sm text-gray-500">Category: {selectedEvent?.extendedProps.category}</p>
-          <p className="text-sm text-gray-500">
-            Start Time: {new Date(selectedEvent?.start).toLocaleString()}
-          </p>
-          <p className="text-sm text-gray-500">
-            End Time: {new Date(selectedEvent?.end).toLocaleString()}
-          </p>
-          <p className="text-sm text-blue-500">
-            <a href={selectedEvent?.extendedProps.link} target="_blank" rel="noopener noreferrer">
-              {selectedEvent?.extendedProps.link}
-            </a>
-          </p>
         </div>
       </Modal>
     </div>
