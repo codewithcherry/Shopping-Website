@@ -974,3 +974,11 @@ exports.deleteAdminEvent = async (req, res, next) => {
     res.status(500).json({ type:'error',message: 'Server error', error: err });
   }
 };
+
+exports.addProductToFlashSale=async (req,res,next) => {
+  const adminId=req.user.user._id;
+  const productId=req.body;
+
+  console.log(adminId);
+  console.log(productId);
+}
