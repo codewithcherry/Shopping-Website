@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaStar, FaRegStar } from 'react-icons/fa'; // Importing star icons for ratings
 import { useNavigate } from 'react-router-dom';
+import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 import axios from 'axios';
 
 // ProductDetail Component
@@ -29,6 +30,12 @@ const ProductDetail = ({ product ,setLoading, setAlert }) => {
 
   // Check if images array is empty and use a fallback image if necessary
   const [selectedImage, setSelectedImage] = useState(images.length > 0 ? images[0] : ''); // Safe fallback
+
+  const [isOptionsVisible, setOptionsVisible] = useState(false);
+
+  const toggleOptions = () => {
+    setOptionsVisible(!isOptionsVisible);
+  };
 
   //useNavigate hook to navigate
   const navigate=useNavigate()
@@ -100,10 +107,56 @@ const ProductDetail = ({ product ,setLoading, setAlert }) => {
       setLoading(false)
     }
   };
+
+  const handleAddBestSelling =async (id) => {
+    try {
+      
+    } catch (err) {
+      
+    }
+  }
+
+  const handleAddFlashSale= async (id) => {
+    try {
+      
+    } catch (err) {
+      
+    }
+  }
   
 
   return (
     <div className="max-w-screen-lg mx-auto p-6 lg:p-10 bg-white shadow-xl rounded-lg my-10">
+      <div className="relative w-full">
+      <div className="absolute top-2 right-2">
+        {/* Ellipsis Icon */}
+        <EllipsisVerticalIcon
+          className="w-5 h-5 text-gray-800 hover:text-black hover:cursor-pointer"
+          onClick={toggleOptions}
+        />
+
+        {/* Options Menu */}
+        {isOptionsVisible && (
+          <div
+            className="absolute w-48 right-0 mt-2 bg-white border border-gray-200 rounded shadow-lg flex flex-col"
+            style={{ zIndex: 10 }}
+          >
+            <button
+              className="px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
+              onClick={() => handleAddFlashSale(_id)}
+            >
+              Add to Flash Sale
+            </button>
+            <button
+              className="px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
+              onClick={() => handleAddBestSelling(_id)}
+            >
+              Add to Best-Selling
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
       {/* Product Title and Short Description */}
       <div className="text-center mb-8">
         <h1 className="text-4xl font-extrabold text-gray-800 tracking-tight">{title}</h1>
