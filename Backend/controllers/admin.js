@@ -975,10 +975,74 @@ exports.deleteAdminEvent = async (req, res, next) => {
   }
 };
 
-exports.addProductToFlashSale=async (req,res,next) => {
-  const adminId=req.user.user._id;
-  const productId=req.body;
+exports.addProductToFlashSale = async (req, res, next) => {
+  try {
+    const adminId = req.user?.user?._id; // Use optional chaining to avoid errors if user is undefined
+    const { productId } = req.body;
 
-  console.log(adminId);
-  console.log(productId);
-}
+    if (!adminId) {
+      return res.status(401).json({ type: 'error', message: 'Unauthorized access.' });
+    }
+
+    if (!productId) {
+      return res.status(400).json({ type: 'error', message: 'Product ID is required.' });
+    }
+
+    // console.log('Admin ID:', adminId);
+    // console.log('Product ID:', productId);
+
+    // Find the product by ID
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ type: 'error', message: 'Product not found.' });
+    }
+
+    // Update the product's flashSale property
+    product.flashSale = true;
+    await product.save();
+
+    res.status(200).json({ type: 'success', message: 'Product successfully added to flash sale.' });
+  } catch (err) {
+    // console.error('Error adding product to flash sale:', err);
+    res.status(500).json({
+      type: 'error',
+      message: 'Internal server error. Please try again later.',
+    });
+  }
+};
+
+exports.addProductToBestSelling = async (req, res, next) => {
+  try {
+    const adminId = req.user?.user?._id; // Use optional chaining to avoid errors if user is undefined
+    const { productId } = req.body;
+
+    if (!adminId) {
+      return res.status(401).json({ type: 'error', message: 'Unauthorized access.' });
+    }
+
+    if (!productId) {
+      return res.status(400).json({ type: 'error', message: 'Product ID is required.' });
+    }
+
+    // console.log('Admin ID:', adminId);
+    // console.log('Product ID:', productId);
+
+    // Find the product by ID
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ type: 'error', message: 'Product not found.' });
+    }
+
+    // Update the product's flashSale property
+    product.bestSelling = true;
+    await product.save();
+
+    res.status(200).json({ type: 'success', message: 'Product successfully added to Best selling.' });
+  } catch (err) {
+    // console.error('Error adding product to Best selling:', err);
+    res.status(500).json({
+      type: 'error',
+      message: 'Internal server error. Please try again later.',
+    });
+  }
+};
