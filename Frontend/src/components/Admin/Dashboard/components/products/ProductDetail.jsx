@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { FaStar, FaRegStar } from 'react-icons/fa'; // Importing star icons for ratings
 import { useNavigate } from 'react-router-dom';
-import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
+import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
+import Alert from '../../../../Alert/Alert';
 import axios from 'axios';
 
 // ProductDetail Component
@@ -30,7 +31,7 @@ const ProductDetail = ({ product ,setLoading, setAlert }) => {
 
   // Check if images array is empty and use a fallback image if necessary
   const [selectedImage, setSelectedImage] = useState(images.length > 0 ? images[0] : ''); // Safe fallback
-
+  
   const [isOptionsVisible, setOptionsVisible] = useState(false);
 
   const toggleOptions = () => {
@@ -108,25 +109,45 @@ const ProductDetail = ({ product ,setLoading, setAlert }) => {
     }
   };
 
-  const handleAddBestSelling =async (id) => {
+  const handleAddBestSelling =async (productId) => {
     try {
-      
+      const response = await axios.post('http://localhost:3000/admin/add-product-best-selling',{productId},
+        {
+          headers:{
+            Authorization:`Bearer ${adminToken}`
+          }
+        }
+      )
+      // console.log(response.data);
+      setAlert(response.data);
     } catch (err) {
-      
+      // console.log(err)
+      setAlert(err.response.data)
     }
   }
 
-  const handleAddFlashSale= async (id) => {
+  const handleAddFlashSale= async (productId) => {
+    
     try {
-      
+      const response = await axios.post('http://localhost:3000/admin/add-product-flashsale',{productId},
+        {
+          headers:{
+            Authorization:`Bearer ${adminToken}`
+          }
+        }
+      )
+      // console.log(response.data);
+      setAlert(response.data);
     } catch (err) {
-      
+      // console.log(err)
+      setAlert(err.response.data)
     }
   }
   
 
   return (
     <div className="max-w-screen-lg mx-auto p-6 lg:p-10 bg-white shadow-xl rounded-lg my-10">
+     
       <div className="relative w-full">
       <div className="absolute top-2 right-2">
         {/* Ellipsis Icon */}
