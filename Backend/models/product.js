@@ -11,6 +11,8 @@ const productSchema = new mongoose.Schema({
   images: [{ type: String }], // Array of image URLs
   stockQuantity: { type: Number, default: 0 },
   status: { type: String, enum: ["in stock", "out of stock", "selling fast", "only few left"], default: "in stock" },
+  flashSale:{ type: Boolean , default:false},
+  bestSelling:{ type: Boolean, default:false},
   sku: { type: String },
   restockDate: { type: Date },
   basePrice: { type: Number, required: true },
