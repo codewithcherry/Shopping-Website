@@ -31,5 +31,6 @@ router.post('/create-new-event',validateController.adminAuthenticate,adminContro
 router.put('/update-event/:EventId',validateController.adminAuthenticate,adminController.updateAdminEvent);
 router.delete('/delete-event/:EventId',validateController.adminAuthenticate,adminController.deleteAdminEvent);
 router.post('/add-product-flashsale',validateController.adminAuthenticate,adminController.addProductToFlashSale);
+router.post('/add-product-best-selling',validateController.adminAuthenticate,adminController.addProductToBestSelling);
 
 module.exports=router;
