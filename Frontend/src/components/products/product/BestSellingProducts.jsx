@@ -3,6 +3,7 @@ import axios from 'axios';
 import Loading from '../../Alert/Loading'; // Assuming you have a Loading component
 import ProductCard from '../ProductCard'; // Assuming you have a ProductCard component
 import { ChevronLeftIcon, ChevronRightIcon,ArrowTrendingUpIcon } from '@heroicons/react/24/outline';
+import { useNavigate } from 'react-router-dom';
 
 const BestSellingProducts = () => {
 
@@ -14,40 +15,33 @@ const BestSellingProducts = () => {
   const productsToShow = 4; // Number of products visible at a time
   const cardWidthPercentage = 100 / productsToShow; // Percentage width of a single card
 
-  const productIds = [
-    '672a2fe3f6b154e9260229d3',
-    '6724fa6e4bc1b5a041a4128f',
-    '6724f5744bc1b5a041a41277',
-    '6724fe7b4bc1b5a041a412a0',
-    '672513894bc1b5a041a412ef',
-    '6724fb6f4bc1b5a041a41295',
-    '672a2901f6b154e92602299c',
-    '6724fa6e4bc1b5a041a4128f',
-    '672a2d92f6b154e9260229bd',
-    '67250fc64bc1b5a041a412d7',
-  ];
+  const navigate=useNavigate();
 
   const now = new Date();
   const targetDate = new Date();
   targetDate.setDate(now.getDate() + 3); // Countdown to 3 days from now
 
-  const fetchRecentProductsFromServer = async (productIds) => {
+  const fetchBestSellingProducts=async () => {
+    setLoading(true)
     try {
-      const response = await axios.post(
-        'http://localhost:3000/products/get-recent-products',
-        { products: productIds }
-      );
-      const reversedProducts = response.data.reverse();
-      setProducts(reversedProducts);
-      setLoading(false);
-    } catch (err) {
-      console.error('Error fetching products:', err);
+      const response=await axios.get('http://localhost:3000/products/get-best-selling-products');
+      setProducts(response.data.products)
+    } catch (error) {
+      console.log('error fetching flash sale products',error)
     }
-  };
+    finally{
+      setLoading(false)
+    }
+  }
 
-  useEffect(() => {
-    fetchRecentProductsFromServer(productIds);
-  }, [productIds]);
+  const handleViewMore=()=>{
+    navigate('/products?bestSelling=true')
+  }
+
+  useEffect(()=>{
+      fetchBestSellingProducts();
+  },[])
+    
 
   const handleNextProduct = () => {
     if (productIndex < products.length - 1) {
@@ -117,7 +111,9 @@ const BestSellingProducts = () => {
         </div>
       )}
       <div className="flex justify-center mt-6">
-        <button className="text-white font-medium bg-indigo-500 hover:bg-indigo-600 p-2 rounded-lg">
+        <button 
+        onClick={handleViewMore}
+        className="text-white font-medium bg-indigo-500 hover:bg-indigo-600 p-2 rounded-lg">
           View All Products
         </button>
       </div>
