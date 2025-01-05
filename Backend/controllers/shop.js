@@ -381,3 +381,32 @@ exports.getFlashSaleProducts = async (req, res, next) => {
         });
     }
 };
+
+
+exports.getBestSellingProducts=async (req,res,next) => {
+    try {
+        // Query for products on flash sale, sorted by newest, limited to 8
+        const products = await Product.find({ bestSelling: true })
+            .sort({ _id: -1 })
+            .limit(8);
+
+        if (!products.length) {
+            return res.status(404).json({
+                type: 'error',
+                message: 'No products found',
+            });
+        }
+
+        return res.status(200).json({
+            type: 'success',
+            message: 'Successfully fetched the products',
+            products,
+        });
+    } catch (error) {
+        console.error('Error fetching Best selling products:', error.message);
+        return res.status(500).json({
+            type: 'error',
+            message: 'Internal server error',
+        });
+    }
+}
