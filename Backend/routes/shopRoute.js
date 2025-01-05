@@ -18,5 +18,6 @@ router.post('/remove-userAddress',validateController.authenticate,shopController
 router.post('/get-recent-products',shopController.getRecentProducts);
 router.post('/post-review',validateController.authenticate,shopController.postProductReview);
 router.get('/get-reviews/productId=:productId',shopController.getReviews);
+router.get('/get-flash-sale-products',shopController.getFlashSaleProducts);
 
 module.exports=router;
