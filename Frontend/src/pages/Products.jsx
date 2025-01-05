@@ -8,6 +8,7 @@ import Breadcrumbs from '../components/Navigation/BreadCrumbs';
 import ProductPagination from "../components/pagination/ProductPagination";
 import Footer from "../components/Footer/Footer";
 import Loading from "../components/Alert/Loading";
+import ProductFilter from "../components/products/product/ProductFilter";
 
 const Products = () => {
   const [loading, setLoading] = useState(true);
@@ -24,6 +25,8 @@ const Products = () => {
   const subCategory = searchParams.get("subCategory") || "";
   const priceRange = searchParams.get("priceRange") || "";
   const sort = searchParams.get("sort") || "";
+  const flashSale = searchParams.get("flashSale") || false;
+  const bestSelling=searchParams.get('bestSelling') || false;
 
   // Breadcrumbs array
   const breadcrumbs = [
@@ -33,6 +36,7 @@ const Products = () => {
 
   // Handle pagination change
   const handlePagination = (newPage) => {
+    console.log(newPage)
     setPage(newPage);
   };
 
@@ -47,10 +51,12 @@ const Products = () => {
           subCategory,
           priceRange,
           sort,
+          flashSale,
+          bestSelling
         },
       });
       setProducts(response.data.products);
-      console.log(response.data.pagination);
+      // console.log(response.data.pagination);
       setPagination(response.data.pagination);
     } catch (err) {
       console.error("Error fetching products:", err);
@@ -62,7 +68,7 @@ const Products = () => {
   // Trigger fetchProducts when dependencies change
   useEffect(() => {
     fetchProducts();
-  }, [query, category, subCategory, priceRange, sort, page]);
+  }, [query,page, searchParams]);
   return (
     <div className="bg-gray-100">
       <Navbar />
@@ -73,23 +79,31 @@ const Products = () => {
                 <p className="text-sm">Search results for <span className="text-blue-600 font-medium">{`${query}`}</span></p>
         </div>
         </div>
-        {loading ? (
-          <Loading />
-        ) : (
-          <div className="flex justify-center w-full">
-            <div className={`${products.length == 0?"flex":"grid"} grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:w-[80%] lg:grid-cols-4 gap-8 p-4`}>
-              {products.length == 0 ? (
-                <div className="mx-auto">
-                  <h1 className="text-lg font-medium text-gray-600 ">No products to display</h1>
-                </div>
-              ) : (
-                products.map((product) => (
-                  <ProductCard key={product._id} product={product} />
-                ))
+        <div className="flex mx-2">
+          <div className="p-4">
+            <ProductFilter setPage={setPage} />
+          </div>
+          <div>
+          {loading ? (
+              <Loading />
+            ) : (
+              <div className="flex justify-center w-full">
+                <div className={`${products.length == 0?"flex":"grid"} grid-cols-1 sm:grid-cols-2 md:grid-cols-3  lg:grid-cols-4 gap-8 p-4`}>
+                  {products.length == 0 ? (
+                    <div className="mx-auto">
+                      <h1 className="text-lg font-medium text-gray-600 ">No products to display</h1>
+                    </div>
+                  ) : (
+                    products.map((product) => (
+                      <ProductCard key={product._id} product={product} />
+                    ))
               )}
             </div>
           </div>
         )}
+          </div>
+        </div>
+        
       </div>
       <ProductPagination
         paginationData={pagination}
