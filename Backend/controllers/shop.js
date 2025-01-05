@@ -42,58 +42,55 @@ exports.getShopProducts = (req, res, next) => {
   };
   
 
-exports.getHome = (req, res, next) => {
-    const page = req.query.page || 1;
-    const query = req.query.query || '';
-    const limit = 8;
+  exports.getHome = async (req, res, next) => {
+    try {
+        // Safely extract and set defaults for query and page
+        const page = parseInt(req.query?.page) || 1; // Default to page 1 if not provided
+        const query = req.query?.query?.trim() || ''; // Default to empty string if not provided
+        const limit = 8; // Number of products per page
 
-    const terms = query.split(' ').map(term => new RegExp(term, 'i'));
+        // Build the filter: If query is empty, fetch all products
+        const filter = query
+            ? { $text: { $search: query } } // Search products based on query
+            : {}; // No filter when query is empty
 
-    Product.find({
-        $or: [
-            { title: { $in: terms } },
-            { shortDescription: { $in: terms } },
-            { category: { $in: terms } },
-            { subCategory: { $in: terms } },
-            { brand: { $in: terms } }
-        ]
-    })
-    .then(filteredProducts => {
-        const totaldoc = filteredProducts.length;
+        // Count total documents matching the filter
+        const totaldoc = await Product.countDocuments(filter);
+
+        // Calculate pagination details
+        const totalPages = Math.ceil(totaldoc / limit);
         const pagination = {
             total: totaldoc,
-            totalPages: Math.ceil(totaldoc / limit),
+            totalPages: totalPages,
             currentpage: page,
-            nextPage: page < Math.ceil(totaldoc / limit),
-            prevPage: page > 1
+            nextPage: page < totalPages,
+            prevPage: page > 1,
         };
 
-        return Product.find({
-            $or: [
-                { title: { $in: terms } },
-                { shortDescription: { $in: terms } },
-                { category: { $in: terms } },
-                { subCategory: { $in: terms } },
-                { brand: { $in: terms } }
-            ]
-        })
-        .sort({finalPrice: 1 })
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .then(products => {
-            res.status(200).json({
-                success: true,
-                products: products,
-                pagination: pagination
-            });
-        });
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({ success: false, message: 'Server error' });
-    });
-};
+        // Set sort criteria: relevance for query, latest added for no query
+        const sortCriteria = query
+            ? { score: { $meta: "textScore" } } // Sort by relevance for query
+            : { _id: -1 }; // Sort by latest added when no query
 
+        // Fetch paginated products
+        const products = await Product.find(filter)
+            .sort(sortCriteria)
+            .skip((page - 1) * limit)
+            .limit(limit);
+
+        res.status(200).json({
+            success: true,
+            products,
+            pagination,
+        });
+    } catch (err) {
+        console.error('Error fetching products:', err.message);
+        res.status(500).json({
+            success: false,
+            message: 'Server error',
+        });
+    }
+};
 
 
 
