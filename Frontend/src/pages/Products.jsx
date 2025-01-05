@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "../components/Navigation/Navbar";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import ProductCard from "../components/products/ProductCard";
 import axios from "axios";
@@ -15,41 +15,54 @@ const Products = () => {
   const [pagination, setPagination] = useState({});
   const [page, setPage] = useState(1);
 
+  // React Router hooks to manage URL search parameters
+  const [searchParams] = useSearchParams();
 
-  const useQuery = () => new URLSearchParams(useLocation().search);
-  const query = useQuery().get("query");
+  // Extracting search parameters
+  const query = searchParams.get("query") || "";
+  const category = searchParams.get("category") || "";
+  const subCategory = searchParams.get("subCategory") || "";
+  const priceRange = searchParams.get("priceRange") || "";
+  const sort = searchParams.get("sort") || "";
 
+  // Breadcrumbs array
   const breadcrumbs = [
     { label: 'Home', link: '/' },
-    
-    { label: "products", link: `/products?query=${query}` },
-   ]
+    { label: 'Products', link: `/products` },
+  ];
 
-  const handlePagination = (page) => {
-    console.log("page updated");
-    setPage(page);
+  // Handle pagination change
+  const handlePagination = (newPage) => {
+    setPage(newPage);
   };
 
+  // Fetch products based on URL parameters
   const fetchProducts = async () => {
+    setLoading(true);
     try {
-      const response = await axios.get(
-        `http://localhost:3000/products?query=${query}&page=` + page
-      );
-      // Use result.data instead of result.json() since Axios automatically parses JSON
-      // console.log(result.data.products);
-      // console.log(result.data.pagination);
+      const response = await axios.get(`http://localhost:3000/products?page=${page}`, {
+        params: {
+          query,
+          category,
+          subCategory,
+          priceRange,
+          sort,
+        },
+      });
       setProducts(response.data.products);
+      console.log(response.data.pagination);
       setPagination(response.data.pagination);
-      setLoading(false);
     } catch (err) {
-      console.log(err);
+      console.error("Error fetching products:", err);
+    } finally {
       setLoading(false);
     }
   };
 
+  // Trigger fetchProducts when dependencies change
   useEffect(() => {
     fetchProducts();
-  }, [page, query]);
+  }, [query, category, subCategory, priceRange, sort, page]);
   return (
     <div className="bg-gray-100">
       <Navbar />
