@@ -19,5 +19,6 @@ router.post('/get-recent-products',shopController.getRecentProducts);
 router.post('/post-review',validateController.authenticate,shopController.postProductReview);
 router.get('/get-reviews/productId=:productId',shopController.getReviews);
 router.get('/get-flash-sale-products',shopController.getFlashSaleProducts);
+router.get('/get-best-selling-products',shopController.getBestSellingProducts);
 
 module.exports=router;
