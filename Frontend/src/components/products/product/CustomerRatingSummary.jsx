@@ -6,8 +6,10 @@ const CustomerRatingSummary = ({ ratings }) => {
 
   const totalRatings = ratings.reduce((sum, { count }) => sum + count, 0);
   const averageRating =
-    ratings.reduce((sum, { rating, count }) => sum + rating * count, 0) /
-    totalRatings;
+    totalRatings > 0
+      ? ratings.reduce((sum, { rating, count }) => sum + rating * count, 0) /
+        totalRatings
+      : 0;
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 max-w-md mx-auto w-full sm:w-96">
@@ -24,31 +26,35 @@ const CustomerRatingSummary = ({ ratings }) => {
           />
         ))}
         <span className="ml-2 text-gray-600 text-lg font-medium">
-          {averageRating.toFixed(1)} out of 5
+          {totalRatings > 0 ? `${averageRating.toFixed(1)} out of 5` : "No ratings yet"}
         </span>
       </div>
       <p className="text-center text-sm text-gray-500 mt-1">
-        {totalRatings} customer ratings
+        {totalRatings > 0
+          ? `${totalRatings} customer ratings`
+          : "Be the first to review this product!"}
       </p>
-      <div className="mt-4 space-y-3">
-        {ratings.map(({ rating, count }) => {
-          const percentage = ((count / totalRatings) * 100).toFixed(0);
-          return (
-            <div key={rating} className="flex items-center">
-              <span className="text-sm font-medium text-gray-600 w-12">
-                {rating} Star
-              </span>
-              <div className="flex-1 h-3 bg-gray-200 rounded-lg mx-2 relative">
-                <div
-                  className="h-3 bg-yellow-400 rounded-lg"
-                  style={{ width: `${percentage}%` }}
-                ></div>
+      {totalRatings > 0 ? (
+        <div className="mt-4 space-y-3">
+          {ratings.map(({ rating, count }) => {
+            const percentage = totalRatings > 0 ? ((count / totalRatings) * 100).toFixed(0) : 0;
+            return (
+              <div key={rating} className="flex items-center">
+                <span className="text-sm font-medium text-gray-600 w-12">
+                  {rating} Star
+                </span>
+                <div className="flex-1 h-3 bg-gray-200 rounded-lg mx-2 relative">
+                  <div
+                    className="h-3 bg-yellow-400 rounded-lg"
+                    style={{ width: `${percentage}%` }}
+                  ></div>
+                </div>
+                <span className="text-sm text-gray-600">{percentage}%</span>
               </div>
-              <span className="text-sm text-gray-600">{percentage }%</span>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      ) : null}
       <div className="mt-4">
         <button
           className="text-center text-sm text-blue-500 cursor-pointer hover:underline focus:outline-none"
