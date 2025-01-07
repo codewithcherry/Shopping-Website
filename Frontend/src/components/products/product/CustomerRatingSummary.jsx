@@ -64,6 +64,7 @@ const CustomerRatingSummary = ({ ratings }) => {
             ? "Hide explanation"
             : "How do we calculate ratings?"}
         </button>
+        
         {isExplanationVisible && (
           <div className="mt-2 text-gray-600 text-sm">
             <p>
