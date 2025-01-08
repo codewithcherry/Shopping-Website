@@ -27,7 +27,10 @@ const ProductCard = ({product}) => {
     };
   return (
     <div>
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105" onClick={()=>openInNewTab(product._id)}>
+      <div className="bg-white relative shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105" onClick={()=>openInNewTab(product._id)}>
+        <div className='absolute top-3'>
+          {product.bestSelling?<span className='bg-red-500 px-1 rounded-r-lg text-sm font-medium text-white'>Best Selling</span>:<span></span>}
+        </div>
       <img
         src={product.images[0]}
         alt={product.title}
