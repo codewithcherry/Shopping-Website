@@ -24,7 +24,7 @@ const BestSellingProducts = () => {
   const fetchBestSellingProducts=async () => {
     setLoading(true)
     try {
-      const response=await axios.get('http://localhost:3000/products/get-best-selling-products');
+      const response=await axios.get('https://16.171.36.90:3000/products/get-best-selling-products');
       setProducts(response.data.products)
     } catch (error) {
       console.log('error fetching flash sale products',error)
