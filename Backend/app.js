@@ -15,7 +15,7 @@ const app = express();
 
 const URI=process.env.MONGO_URI;
 const corsOptions={
-  origin: ['http://localhost:3000','http://localhost:5173', 'https://yourfrontenddomain.com'], // Replace with your allowed domains
+  origin: ['http://localhost:3000','http://localhost:5173','https://shopping-website-liard-zeta.vercel.app', 'https://yourfrontenddomain.com'], // Replace with your allowed domains
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods
   credentials: true, // Allow cookies and credentials (like tokens)
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'], // Allow authorization and other headers
