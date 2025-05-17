@@ -14,15 +14,15 @@ const userRouter=require('./routes/userRoute');
 const app = express();
 
 const URI=process.env.MONGO_URI;
-const corsOptions={
-  origin: ['http://localhost:3000','http://localhost:5173','https://shopping-website-liard-zeta.vercel.app', 'https://yourfrontenddomain.com'], // Replace with your allowed domains
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods
-  credentials: true, // Allow cookies and credentials (like tokens)
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'], // Allow authorization and other headers
-}
+// const corsOptions={
+//   origin: ['http://localhost:3000','http://localhost:5173','https://shopping-website-liard-zeta.vercel.app', 'https://yourfrontenddomain.com'], // Replace with your allowed domains
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods
+//   credentials: true, // Allow cookies and credentials (like tokens)
+//   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'], // Allow authorization and other headers
+// }
 
-//cnfigure cors
-app.use(cors(corsOptions));
+// //cnfigure cors
+// app.use(cors(corsOptions));
 //configure body-parser to deal incoming json
 app.use(bodyParser.json())
 // Define a simple route
