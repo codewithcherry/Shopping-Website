@@ -6,6 +6,8 @@ import CountDown from './CountDown';
 import { ChevronLeftIcon, ChevronRightIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 
+const API=import.meta.env.API_DOMAIN;
+
 const FlashSale = () => {
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
@@ -25,7 +27,7 @@ const FlashSale = () => {
   const fetchFlashSaleProducts=async () => {
     setLoading(true)
     try {
-      const response=await axios.get('http://localhost:3000/products/get-flash-sale-products');
+      const response=await axios.get(API+'/products/get-flash-sale-products');
       setProducts(response.data.products)
     } catch (error) {
       console.log('error fetching flash sale products',error)
