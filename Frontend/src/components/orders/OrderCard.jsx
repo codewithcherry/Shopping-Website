@@ -3,6 +3,8 @@ import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import OrderProductCard from './OrderProductCard';
 import axios from 'axios';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 
 const OrderCard = ({ order }) => {
   const [isTransactionOpen, setTransactionOpen] = useState(false);
@@ -15,7 +17,7 @@ const OrderCard = ({ order }) => {
     
     try {
       const response = await axios.post(
-        'http://localhost:3000/orders/generate-invoice',
+        baseURL+'/orders/generate-invoice',
         { orderId },
         {
           headers: {

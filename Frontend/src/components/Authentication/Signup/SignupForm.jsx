@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Alert from '../../Alert/Alert';
 import axios from 'axios';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const SignupForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,7 +29,7 @@ const SignupForm = () => {
       };
 
       axios
-        .post('http://localhost:3000/register', data, config)
+        .post(baseURL+'/register', data, config)
         .then((res) => {
           setAlert({ type: res.data.type, message: res.data.message });
 

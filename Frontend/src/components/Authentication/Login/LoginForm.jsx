@@ -5,6 +5,8 @@ import Alert from '../../Alert/Alert';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { AuthContext } from '../../Navigation/UserAuthContext';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const LoginForm = () => {
   const location = useLocation();
   const [email, setEmail] = useState('');
@@ -23,7 +25,7 @@ const LoginForm = () => {
       headers: { 'Content-Type': 'application/json' },
     };
     axios
-      .post('http://localhost:3000/login', data, config)
+      .post(baseURL+'/login', data, config)
       .then((res) => {
         setUser(res.data.user);
         setAlert({ type: res.data.type, message: res.data.message });

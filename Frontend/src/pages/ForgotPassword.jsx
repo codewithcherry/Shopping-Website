@@ -4,6 +4,8 @@ import Loading from '../components/Alert/Loading';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const ForgotPassword = () => {
 
     const [email,setEmail]=useState('');
@@ -16,7 +18,7 @@ const ForgotPassword = () => {
         e.preventDefault();
         setLoading(true)
         try {
-            const response=await axios.post('http://localhost:3000/forgot-password',{email},
+            const response=await axios.post(baseURL+'/forgot-password',{email},
                 {
                     headers:{
                         'Content-Type':'Application/json'

@@ -10,6 +10,8 @@ import {
 } from '@heroicons/react/24/outline';
 import axios from 'axios'
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const PaymentForm = ({cartItems,address,modalOpen,handleOrderData}) => {
   const [selectedOption, setSelectedOption] = useState('');
   const [formData, setFormData] = useState({
@@ -69,7 +71,7 @@ const PaymentForm = ({cartItems,address,modalOpen,handleOrderData}) => {
         try {
           
           const response = await axios.post(
-              'http://localhost:3000/orders/place-order', // Replace with your actual API endpoint
+              baseURL+'/orders/place-order', // Replace with your actual API endpoint
               data,
               {
                   headers: {

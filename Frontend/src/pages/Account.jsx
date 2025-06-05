@@ -11,6 +11,8 @@ import AddressForm from "../components/account/AddressForm";
 import { removeUserAddress } from "../components/Cart/checkout";
 import ChangePassword from "../components/account/ChangePassword";
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const Account = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState({});
@@ -39,7 +41,7 @@ const Account = () => {
       formData.append("image", file);
       try {
         const response = await axios.post(
-          "http://localhost:3000/upload/add-user-image",
+          baseURL+"/upload/add-user-image",
           formData,
           {
             headers: {

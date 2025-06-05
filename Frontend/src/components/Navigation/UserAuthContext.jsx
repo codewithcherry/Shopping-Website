@@ -1,6 +1,8 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 export const AuthContext = createContext();
 
 export const UserAuthContext = ({ children }) => {
@@ -13,7 +15,7 @@ export const UserAuthContext = ({ children }) => {
             const token = localStorage.getItem("jwtToken");
             if (token) {
                 try {
-                    const response=await axios.get("http://localhost:3000/validate", {
+                    const response=await axios.get(baseURL+"/validate", {
                         headers: { Authorization: `Bearer ${token}` },
                     });
                     // console.log(response.data);

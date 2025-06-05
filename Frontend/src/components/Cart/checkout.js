@@ -4,7 +4,7 @@ export const removeUserAddress=async(addressId)=>{
 
     try{
         const token=localStorage.getItem('jwtToken')
-        const result=await axios.post('http://localhost:3000/products/remove-userAddress',{addressId:addressId},{
+        const result=await axios.post(baseURL+'/products/remove-userAddress',{addressId:addressId},{
             headers:{
                 "Authorization":`Bearer ${token}`,
                 "Content-Type":"application/json"

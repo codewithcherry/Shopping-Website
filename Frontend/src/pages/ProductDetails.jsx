@@ -11,6 +11,8 @@ import Breadcrumbs from '../components/Navigation/BreadCrumbs';
 import Alert from '../components/Alert/Alert';
 import CustomerReview from '../components/products/product/CustomerReview';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const ProductDetails = () => {
     const { productId } = useParams(); // Extract the ID from the URL
     const [product, setProduct] = useState(null);
@@ -41,7 +43,7 @@ const ProductDetails = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/products/product/${productId}`);
+                const response = await axios.get(baseURL+`/products/product/${productId}`);
                 setProduct(response.data);
             } catch (err) {
                 setError(err.message);

@@ -10,6 +10,8 @@ import { useNavigate ,useLocation} from 'react-router-dom';
 import axios from 'axios';
 import PaymentStatusModal from '../components/payments/PaymentStatusModal';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const Payment = () => {
 
     const navigate=useNavigate()
@@ -42,7 +44,7 @@ const Payment = () => {
       const fetchCartfromServer = async () => {
         const token=localStorage.getItem('jwtToken')
         try {
-          const response = await axios.get("http://localhost:3000/products/cart", {
+          const response = await axios.get(baseURL+"/products/cart", {
             headers: { "Authorization": `Bearer ${token}` }, // Capitalize 'Bearer'
           });
         //   console.log(response.data);

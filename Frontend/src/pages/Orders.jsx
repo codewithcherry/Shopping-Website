@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import Breadcrumbs from '../components/Navigation/BreadCrumbs';
 import Footer from '../components/Footer/Footer';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const Orders = () => {
 
   const navigate=useNavigate()
@@ -25,7 +27,7 @@ const Orders = () => {
   const fetchUserOrders = async () => {
     const token = localStorage.getItem('jwtToken');
     try {
-      const response = await axios.get('http://localhost:3000/orders/get-user-orders', {
+      const response = await axios.get(baseURL+'/orders/get-user-orders', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -9,6 +9,8 @@ import Loading from "../components/Alert/Loading";
 import Breadcrumbs from '../components/Navigation/BreadCrumbs';
 import { useParams } from 'react-router-dom';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const Shop = () => {
     const [loading, setLoading] = useState(true);
     const [products, setProducts] = useState([]);
@@ -19,10 +21,10 @@ const Shop = () => {
     let api
 
     if(category && subCategory){
-        api=`http://localhost:3000/products/shop/${category}/${subCategory}?page=${page}`
+        api=baseURL+`/products/shop/${category}/${subCategory}?page=${page}`
     }
     else{
-        api=`http://localhost:3000/products/shop/${category}?page=${page}`
+        api=baseURL+`/products/shop/${category}?page=${page}`
     }
 
     const breadcrumbs = subCategory?[

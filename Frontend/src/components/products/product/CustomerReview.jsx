@@ -4,6 +4,8 @@ import CustomerReviewForm from './CustomerReviewForm';
 import ReviewCard from './ReviewCard';
 import axios from 'axios';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const CustomerReview = ({productId,setAlert}) => {
 
   const [reviews,setReviews]=useState([])
@@ -26,7 +28,7 @@ const CustomerReview = ({productId,setAlert}) => {
 
   const fetchReviewsFromServer=async(productId)=>{
     try{
-      const response=await axios.get(`http://localhost:3000/products/get-reviews/productId=${productId}?page=${page}&limit=5`)
+      const response=await axios.get(baseURL+`/products/get-reviews/productId=${productId}?page=${page}&limit=5`)
       // console.log(response.data)
       setReviews(response.data.reviews)
       setHasNext(response.data.hasNextPage)

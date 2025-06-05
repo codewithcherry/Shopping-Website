@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Alert from '../components/Alert/Alert';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const ResetPassword = () => {
   const { resetToken } = useParams(); // Get the reset token from the URL
   const navigate = useNavigate();
@@ -36,7 +38,7 @@ const ResetPassword = () => {
 
     try {
       setIsLoading(true);
-      const response = await axios.post('http://localhost:3000/update-password', data, {
+      const response = await axios.post(baseURL+'/update-password', data, {
         headers: { 'Content-Type': 'application/json' },
       });
 

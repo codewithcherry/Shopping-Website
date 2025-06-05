@@ -4,6 +4,8 @@ import Loading from '../../Alert/Loading'; // Assuming you have a Loading compon
 import ProductCard from '../ProductCard'; // Assuming you have a ProductCard component
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const RecentlyViewedProducts = () => {
   const [loading, setLoading] = useState(true);
   const [showProducts, setShowProducts] = useState(true);
@@ -17,7 +19,7 @@ const RecentlyViewedProducts = () => {
   // Fetch recent products from the server based on productIds
   const fetchRecentProductsFromServer = async (productIds) => {
     try {
-      const response = await axios.post('http://localhost:3000/products/get-recent-products', { products: productIds });
+      const response = await axios.post(baseURL+'/products/get-recent-products', { products: productIds });
       // Reverse the array here before setting it to state
       const reversedProducts = response.data.reverse();
       setProducts(reversedProducts); // Set the reversed products to state

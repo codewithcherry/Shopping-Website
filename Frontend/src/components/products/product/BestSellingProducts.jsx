@@ -5,6 +5,8 @@ import ProductCard from '../ProductCard'; // Assuming you have a ProductCard com
 import { ChevronLeftIcon, ChevronRightIcon,ArrowTrendingUpIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const BestSellingProducts = () => {
 
     const [loading, setLoading] = useState(true);
@@ -24,7 +26,7 @@ const BestSellingProducts = () => {
   const fetchBestSellingProducts=async () => {
     setLoading(true)
     try {
-      const response=await axios.get('http://16.171.36.90:3000/products/get-best-selling-products');
+      const response=await axios.get(baseURL+'/products/get-best-selling-products');
       setProducts(response.data.products)
     } catch (error) {
       console.log('error fetching flash sale products',error)

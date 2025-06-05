@@ -10,6 +10,8 @@ import ProductCard from '../components/products/ProductCard';
 import {TrashIcon} from '@heroicons/react/24/outline'
 import Alert from '../components/Alert/Alert';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const Wishlist = () => {
     const [loading, setLoading] = useState(true);
     const [alert, setAlert] = useState(false);
@@ -28,7 +30,7 @@ const Wishlist = () => {
     const fetchWishlistProductsFromServer = async () => {
         try {
             const token = localStorage.getItem('jwtToken');
-            const response = await axios.get('http://localhost:3000/user/get-wishlist', {
+            const response = await axios.get(baseURL+'/user/get-wishlist', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

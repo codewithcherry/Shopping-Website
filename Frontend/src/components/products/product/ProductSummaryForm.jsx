@@ -4,6 +4,8 @@ import { AuthContext } from '../../Navigation/UserAuthContext';
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios'
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const ProductSummaryForm = ({sizes,item}) => {
     const [quantity, setQuantity] = useState(1);
     const [isWished, setIsWished] = useState(false);
@@ -66,7 +68,7 @@ const ProductSummaryForm = ({sizes,item}) => {
 
     try {
       const response = await axios.post(
-        'http://localhost:3000/products/add-cartItem',
+        baseURL+'/products/add-cartItem',
         { productId,quantity,selectedSize },
         {
           headers: {

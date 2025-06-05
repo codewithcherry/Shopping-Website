@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 export const handleIncrementQuantityLocal = (productId) => {
     const cart = JSON.parse(localStorage.getItem('cart'));
 
@@ -111,7 +113,7 @@ export const removeProductFromServerCart = async (productId) => {
     try {
         const token=localStorage.getItem("jwtToken")
         const response = await axios.delete(
-            'http://localhost:3000/products/delete-cartItem', // Replace with your actual API endpoint
+            baseURL+'/products/delete-cartItem', // Replace with your actual API endpoint
             {
                 headers: {
                     Authorization: `Bearer ${token}`, // Add authorization token in header
@@ -135,7 +137,7 @@ export const updateServerCartItemQuantity = async (productId, quantity) => {
     try {
         const token=localStorage.getItem("jwtToken")
         const response = await axios.put(
-            'http://localhost:3000/products/update-cartItemQuantity', // Replace with your actual API endpoint
+            baseURL+'/products/update-cartItemQuantity', // Replace with your actual API endpoint
             {
                 productId: productId,
                 quantity: quantity

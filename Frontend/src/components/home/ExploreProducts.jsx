@@ -5,6 +5,8 @@ import Loading from '../Alert/Loading';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const ExploreProducts = () => {
     const [loading,setLoading] = useState(true);
     const [products,setProducts]=useState([]);
@@ -18,7 +20,7 @@ const ExploreProducts = () => {
 
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/products?page=`+page)
+        axios.get(baseURL+`/products?page=`+page)
         .then(result => {
             // Use result.data instead of result.json() since Axios automatically parses JSON
             // console.log(result.data.products);

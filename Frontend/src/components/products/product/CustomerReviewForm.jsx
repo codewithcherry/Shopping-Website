@@ -3,6 +3,8 @@ import { CameraIcon, PlusIcon, StarIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
 import { AuthContext } from "../../Navigation/UserAuthContext";
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const CustomerReviewForm = ({productId,setRefresh,setAlert}) => {
   const [isFormVisible, setIsFormVisible] = useState(false); // Toggle visibility
   const [rating, setRating] = useState(0); // Rating state
@@ -21,7 +23,7 @@ const CustomerReviewForm = ({productId,setRefresh,setAlert}) => {
 
       try {
         const response = await axios.post(
-          "http://localhost:3000/upload/add-review-image",
+          baseURL+"/upload/add-review-image",
           formData,
           {
             headers: {

@@ -7,6 +7,8 @@ import Alert from '../components/Alert/Alert'
 import { AuthContext } from '../components/Navigation/UserAuthContext';
 import Footer from '../components/Footer/Footer';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const Cart = () => {
 
   const {isLogged} =useContext(AuthContext);
@@ -20,7 +22,7 @@ const Cart = () => {
   
     const fetchCartfromServer = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/products/cart", {
+        const response = await axios.get(baseURL+"/products/cart", {
           headers: { "Authorization": `Bearer ${token}` }, // Capitalize 'Bearer'
         });
         // console.log(response.data);

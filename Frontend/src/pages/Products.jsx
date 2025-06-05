@@ -10,6 +10,8 @@ import Footer from "../components/Footer/Footer";
 import Loading from "../components/Alert/Loading";
 import ProductFilter from "../components/products/product/ProductFilter";
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const Products = () => {
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
@@ -44,7 +46,7 @@ const Products = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:3000/products?page=${page}`, {
+      const response = await axios.get(baseURL+`/products?page=${page}`, {
         params: {
           query,
           category,

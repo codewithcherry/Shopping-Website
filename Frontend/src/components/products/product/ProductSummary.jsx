@@ -6,6 +6,8 @@ import {HeartIcon} from '@heroicons/react/24/solid'
 import axios from 'axios';
 import { AuthContext } from '../../Navigation/UserAuthContext';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const ProductSummary = ({product,setAlert}) => {
     const [isWished,setIsWished]=useState(false)
     const [isExpanded, setIsExpanded] = useState(false);
@@ -22,7 +24,7 @@ const ProductSummary = ({product,setAlert}) => {
       console.log(productId)
       try{
         const token=localStorage.getItem('jwtToken');
-        const response=await axios.post('http://localhost:3000/user/add-to-wishlist',{productId},
+        const response=await axios.post(baseURL+'/user/add-to-wishlist',{productId},
           {
             headers:{
               "Authorization":`Bearer ${token}`,

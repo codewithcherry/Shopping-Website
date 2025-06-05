@@ -4,6 +4,8 @@ import {AuthContext} from '../Navigation/UserAuthContext'
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios'
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const CheckoutPayment = ({setAlert,selectedAddress}) => {
 
   const [loading,setLoading]=useState(true);
@@ -17,7 +19,7 @@ const CheckoutPayment = ({setAlert,selectedAddress}) => {
 
   const fetchCartfromServer = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/products/cart", {
+      const response = await axios.get(baseURL+"/products/cart", {
         headers: { "Authorization": `Bearer ${token}` }, // Capitalize 'Bearer'
       });
       // console.log(response.data);

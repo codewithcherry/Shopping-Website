@@ -9,6 +9,8 @@ import axios from 'axios';
 import Alert from '../components/Alert/Alert';
 import Footer from '../components/Footer/Footer';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const Checkout = () => {
 
   const navigate=useNavigate()
@@ -25,7 +27,7 @@ const Checkout = () => {
   const fetchUserAddresses = async () => {
     const token=localStorage.getItem("jwtToken")
     try {
-      const response = await axios.get("http://localhost:3000/products/user-address", {
+      const response = await axios.get(baseURL+"/products/user-address", {
         headers: { "Authorization": `Bearer ${token}` }, // Capitalize 'Bearer'
       });
       // console.log(response.data);
