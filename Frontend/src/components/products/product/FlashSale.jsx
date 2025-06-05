@@ -28,7 +28,7 @@ const FlashSale = () => {
   const fetchFlashSaleProducts=async () => {
     setLoading(true)
     try {
-      const response=await axios.get(`${baseURL}/products/get-flash-sale-products`);
+      const response=await axios.get(baseURL+'/products/get-flash-sale-products');
       setProducts(response.data.products)
     } catch (error) {
       console.log('error fetching flash sale products',error)
