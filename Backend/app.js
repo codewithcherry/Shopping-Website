@@ -17,7 +17,7 @@ const URI=process.env.MONGO_URI;
 const LOCAL_ORIGIN_1=process.env.LOCAL_ORIGIN_DOMAIN_AWS
 const PROD_ORIGIN_1=process.env.PRODUCTION_ORIGIN_DOMAIN_AWS
 const corsOptions={
-  origin: ['http://localhost:3000','http://localhost:5173','https://shopping-website-liard-zeta.vercel.app', 'https://yourfrontenddomain.com',LOCAL_ORIGIN_1,PROD_ORIGIN_1], // Replace with your allowed domains
+  origin: ['http://localhost:3000','http://localhost:5173','https://shopping-website-liard-zeta.vercel.app', 'https://yourfrontenddomain.com',LOCAL_ORIGIN_1,PROD_ORIGIN_1,], // Replace with your allowed domains
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods
   credentials: true, // Allow cookies and credentials (like tokens)
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'], // Allow authorization and other headers
