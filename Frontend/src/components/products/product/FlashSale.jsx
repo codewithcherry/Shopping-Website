@@ -6,7 +6,8 @@ import CountDown from './CountDown';
 import { ChevronLeftIcon, ChevronRightIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 
-const baseURL=import.meta.env.VITE_API_DOMAIN;
+// const baseURL=import.meta.env.VITE_API_DOMAIN;
+const baseURL=import.meta.env.VITE_API_BACKEND;
 
 const FlashSale = () => {
   const [loading, setLoading] = useState(true);
