@@ -23,7 +23,8 @@ const ProductCard = ({product}) => {
     const openInNewTab = (id) => {
         // Opens the URL in a new tab
         addToRecentViewedLocal(id)
-        window.open(`/product/${id}`, '_blank', 'noopener,noreferrer');
+        navigate(`/product/${id}`)
+        // window.open(`/product/${id}`, '_blank', 'noopener,noreferrer');
     };
   return (
     <div>
