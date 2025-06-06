@@ -7,6 +7,8 @@ import DashboardHomeHeader from './components/home/DashboardHomeHeader';
 import Loading from '../../Alert/Loading';
 import SalesChart from './components/home/SalesChart';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const AdminHome = () => {
   
     const navigate=useNavigate()
@@ -18,7 +20,7 @@ const AdminHome = () => {
      
         try {
           const config={headers: { "Authorization": `Bearer ${token}` }}
-          const response = await axios.get("http://localhost:3000/admin/dashboard", config);
+          const response = await axios.get(baseURL+"/admin/dashboard", config);
           console.log(response.data)
           setHeaderData(response.data.data)
         } catch (error) {

@@ -5,6 +5,8 @@ import Alert from "../../../../Alert/Alert";
 import axios from "axios";
 import EditProductImages from "./EditProductImages";
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const categories = {
   Electronics: [
     "Computers & Laptops",
@@ -149,7 +151,7 @@ const EditAdminProductForm = () => {
     }
     try {
       setUpdateStatus(true)
-      const response=await axios.post('http://localhost:3000/admin/edit-product-info',
+      const response=await axios.post(baseURL+'/admin/edit-product-info',
         updatedData,
         {
           headers:{
@@ -185,7 +187,7 @@ const EditAdminProductForm = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:3000/admin/get-product/${productId}`,
+        baseURL+`/admin/get-product/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${adminToken}`,

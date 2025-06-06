@@ -11,6 +11,8 @@ import Alert from "../../Alert/Alert"
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 
 const AdminAddProduct = () => {
   const [alert,setAlert]=useState('');
@@ -116,7 +118,7 @@ const AdminAddProduct = () => {
       
       try {
         const response = await axios.post(
-          'http://localhost:3000/admin/add-product',
+          baseURL+'/admin/add-product',
           JSON.stringify(product), // Convert data to JSON format
           {
             headers: {

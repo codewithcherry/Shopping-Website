@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import Loading from '../../../../Alert/Loading';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const AddTaskForm = ({isOpen, setIsOpen,setAlert,setRefresh}) => {
   
   const [task, setTask] = useState({
@@ -30,7 +32,7 @@ const AddTaskForm = ({isOpen, setIsOpen,setAlert,setRefresh}) => {
     //   console.log('Task added:', task);
         try {
             setLoading(true)
-            const response=await axios.post('http://localhost:3000/admin/add-task',task,
+            const response=await axios.post(baseURL+'/admin/add-task',task,
                 {
                     headers:{
                         Authorization:`Bearer ${token}`

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const SalesChart = ({setAlert}) => {
   // Get the current month in 'YYYY-MM' format (e.g., '2024-12')
   const currentMonth = new Date().toISOString().slice(0, 7);
@@ -39,7 +41,7 @@ const SalesChart = ({setAlert}) => {
     // Fetch sales data from the backend based on selectedMonth
     const fetchSalesData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/admin/dashboard/sales?month=${selectedMonth}`, {
+        const response = await axios.get(baseURL+`/admin/dashboard/sales?month=${selectedMonth}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

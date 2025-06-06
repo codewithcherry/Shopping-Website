@@ -8,6 +8,8 @@ import { XMarkIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'; 
 import axios from 'axios';
 import Alert from '../../Alert/Alert';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const AdminCalendar = () => {
   const [events, setEvents] = useState([]);
   const [modalOpen, setModalOpen] = useState(false); // First modal: view event
@@ -29,7 +31,7 @@ const AdminCalendar = () => {
   const fetchEvents = async () => {
     console.log("events")
     try {
-      const response = await axios.get('http://localhost:3000/admin/get-admin-events', {
+      const response = await axios.get(baseURL+'/admin/get-admin-events', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -45,7 +47,7 @@ const AdminCalendar = () => {
   const createNewEvent = async (eventData) => {
     try {
       const response = await axios.post(
-        'http://localhost:3000/admin/create-new-event',
+        baseURL+'/admin/create-new-event',
         eventData,
         {
           headers: {
@@ -65,7 +67,7 @@ const AdminCalendar = () => {
     if (eventData.id) {
       try {
         const response = await axios.put(
-          `http://localhost:3000/admin/update-event/${eventData.id}`,
+          baseURL+`/admin/update-event/${eventData.id}`,
           eventData,
           {
             headers: {
@@ -89,7 +91,7 @@ const AdminCalendar = () => {
     if (eventData.id) {
       try {
         setLoading(true); // Start loading
-        const response = await axios.delete(`http://localhost:3000/admin/delete-event/${eventData.id}`, {
+        const response = await axios.delete(baseURL+`/admin/delete-event/${eventData.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { TrashIcon, CloudArrowUpIcon } from "@heroicons/react/24/outline";
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const EditProductImages = ({ images = [], id,setAlert}) => {
   const [uploading, setUploading] = useState(false);
   const [productImages, setProductImages] = useState(images);
@@ -19,7 +21,7 @@ const EditProductImages = ({ images = [], id,setAlert}) => {
       formData.append("image", file);
       try {
         const response = await axios.post(
-          "http://localhost:3000/upload/add-product-image",
+          baseURL+"/upload/add-product-image",
           formData,
           {
             headers: {

@@ -5,6 +5,8 @@ import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const TaskCard = ({ task,setAlert,handleEditData,toggleEditTask ,setRefresh}) => {
   const {
     _id,
@@ -27,7 +29,7 @@ const TaskCard = ({ task,setAlert,handleEditData,toggleEditTask ,setRefresh}) =>
   const handlePinToggle = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/admin/update-pinned?id=${_id}`,
+        baseURL+`/admin/update-pinned?id=${_id}`,
         { pinned: !isPinned },
         {
           headers: {
@@ -52,7 +54,7 @@ const TaskCard = ({ task,setAlert,handleEditData,toggleEditTask ,setRefresh}) =>
   const handleStarToggle = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/admin/update-starred?id=${_id}`,
+        baseURL+`/admin/update-starred?id=${_id}`,
         { starred: !isStarred },
         {
           headers: {
@@ -76,7 +78,7 @@ const TaskCard = ({ task,setAlert,handleEditData,toggleEditTask ,setRefresh}) =>
   const handleStatusUpdate = async (newStatus) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/admin/update-task-status?id=${_id}`,
+        baseURL+`/admin/update-task-status?id=${_id}`,
         { status: newStatus },
         {
           headers: {
@@ -101,7 +103,7 @@ const TaskCard = ({ task,setAlert,handleEditData,toggleEditTask ,setRefresh}) =>
   const handleDeleteTask = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/admin/delete-task?id=${_id}`,
+        baseURL+`/admin/delete-task?id=${_id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

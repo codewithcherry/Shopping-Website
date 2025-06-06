@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { ExclamationCircleIcon, PlusIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const AddressForm = ({ formdata, setAlert, handleRefresh, newAddress, editindex ,setNewAddress}) => {
   const [formData, setFormData] = useState({
     fullName: '',
@@ -39,7 +41,7 @@ const AddressForm = ({ formdata, setAlert, handleRefresh, newAddress, editindex 
   const addNewAddress = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:3000/products/user-createAddress',
+        baseURL+'/products/user-createAddress',
         formData,
         {
           headers: {
@@ -62,7 +64,7 @@ const AddressForm = ({ formdata, setAlert, handleRefresh, newAddress, editindex 
   const editAddress = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/user/user-edit-address?index=${editindex}`,
+        baseURL+`/user/user-edit-address?index=${editindex}`,
         formData,
         {
           headers: {

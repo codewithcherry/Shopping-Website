@@ -6,6 +6,8 @@ import TaskCard from './components/Todo/TaskCard';
 import axios from 'axios';
 import EditTaskForm from './components/Todo/EditTaskForm';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const AdminTodo = () => {
 
   const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +42,7 @@ const AdminTodo = () => {
     try {
       setLoading(true);
       // Fetch tasks filtered by selected status
-      const response = await axios.get(`http://localhost:3000/admin/get-tasks?status=${type}`, {
+      const response = await axios.get(baseURL+`/admin/get-tasks?status=${type}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

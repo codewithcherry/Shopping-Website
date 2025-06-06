@@ -6,6 +6,8 @@ import Loading from "../../Alert/Loading";
 import OrderFilter from "./components/orders/OrderFilter";
 import DataTable from "./components/orders/DataTable";
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const AdminOrderlist = () => {
   const [loading, setLoading] = useState(true);
   const [alert, setAlert] = useState(false);
@@ -29,7 +31,7 @@ const AdminOrderlist = () => {
         orderStatus: searchParams.get("orderStatus"),
       };
 
-      const response = await axios.get("http://localhost:3000/admin/order-list", {
+      const response = await axios.get(baseURL+"/admin/order-list", {
         params: queryParams,
         headers: {
           Authorization: `Bearer ${token}`,

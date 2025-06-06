@@ -3,6 +3,8 @@ import { XMarkIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid';
 import Loading from '../../../../Alert/Loading';
 import axios from 'axios';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const AddTeamForm = ({ closeModal ,setAlert}) => {
   const [formData, setFormData] = useState({
     firstname: '',
@@ -31,7 +33,7 @@ const AddTeamForm = ({ closeModal ,setAlert}) => {
     try {
       setLoading(true); // Indicate loading state
       const response = await axios.post(
-        'http://localhost:3000/admin/add-team',
+        baseURL+'/admin/add-team',
         formData, // Send formData directly without wrapping in another object
         {
           headers: {

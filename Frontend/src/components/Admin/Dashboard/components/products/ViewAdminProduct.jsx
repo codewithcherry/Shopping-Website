@@ -6,6 +6,8 @@ import Loading from '../../../../Alert/Loading'
 import ProductDetail from './ProductDetail';
 import Alert from '../../../../Alert/Alert';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const ViewAdminProduct = () => {
 
     const [product,setProduct]=useState({});
@@ -19,7 +21,7 @@ const ViewAdminProduct = () => {
     const fetchProductDetails=async (productId) => {
         try {
             setLoading(true)
-            const response=await axios.get(`http://localhost:3000/admin/get-product/${productId}`,{
+            const response=await axios.get(baseURL+`/admin/get-product/${productId}`,{
                 headers:{
                     Authorization:`Bearer ${adminToken}`
                 }

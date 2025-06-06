@@ -5,6 +5,8 @@ import { PencilIcon } from '@heroicons/react/24/outline';
 import { MapPinIcon } from '@heroicons/react/24/solid';
 import Alert from '../../Alert/Alert';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const AdminProfile = () => {
 
   const [loading, setLoading] = useState(false);
@@ -32,7 +34,7 @@ const AdminProfile = () => {
 
     // Add API call to submit changes here
     try {
-      const response = await axios.post('http://localhost:3000/admin/update-admin', formData, {
+      const response = await axios.post(baseURL+'/admin/update-admin', formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -52,7 +54,7 @@ const AdminProfile = () => {
   const fetchAdminData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:3000/admin/get-admin', {
+      const response = await axios.get(baseURL+'/admin/get-admin', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -76,7 +78,7 @@ const AdminProfile = () => {
       formData.append("image", file);
       try {
         const response = await axios.post(
-          "http://localhost:3000/upload/add-user-image",
+          baseURL+"/upload/add-user-image",
           formData,
           {
             headers: {

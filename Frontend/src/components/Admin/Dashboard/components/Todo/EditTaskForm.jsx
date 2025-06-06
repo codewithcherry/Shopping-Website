@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Loading from '../../../../Alert/Loading';
 import axios from 'axios';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const EditTaskForm = ({ isEditOpen, editData, setIsEditOpen, setAlert,setRefresh }) => {
     const [task, setTask] = useState({
         title: '',

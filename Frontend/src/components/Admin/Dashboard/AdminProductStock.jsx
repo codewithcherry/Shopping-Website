@@ -6,6 +6,8 @@ import Loading from "../../Alert/Loading";
 import StockFilter from "./components/Stock/StockFilter";
 import StockDataTable from "./components/Stock/StockDataTable";
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const AdminProductStock = () => {
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState();
@@ -31,7 +33,7 @@ const AdminProductStock = () => {
 
       // console.log("Fetching products with params:", queryParams);
 
-      const response = await axios.get("http://localhost:3000/admin/product-stock", {
+      const response = await axios.get(baseURL+"/admin/product-stock", {
         params: queryParams,
         headers: {
           Authorization: `Bearer ${token}`,

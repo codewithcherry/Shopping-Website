@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { EyeIcon, EyeSlashIcon ,LockClosedIcon} from '@heroicons/react/24/solid';
 import axios from 'axios';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const ChangePassword = ({setAlert}) => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -44,7 +46,7 @@ const ChangePassword = ({setAlert}) => {
     };
   
     try {
-      const response = await axios.post('http://localhost:3000/user/change-password', data, {
+      const response = await axios.post(baseURL+'/user/change-password', data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

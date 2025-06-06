@@ -4,6 +4,8 @@ import Alert from '../Alert/Alert'
 import axios from 'axios';
 import { useNavigate,useLocation } from 'react-router-dom';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const AdminLogin = () => {
     const navigate=useNavigate()
     const location=useLocation()
@@ -28,7 +30,7 @@ const AdminLogin = () => {
                 }
             };
             // Await axios.post to get the response after the request completes
-            const response = await axios.post("http://localhost:3000/admin/login", data, config);
+            const response = await axios.post(baseURL+"/admin/login", data, config);
             
             setAlert({type:response.data.type,message:response.data.message})            
             const token=response.data.token

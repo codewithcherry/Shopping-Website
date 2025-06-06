@@ -5,6 +5,10 @@ import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
 import Alert from '../../../../Alert/Alert';
 import axios from 'axios';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
+
+
 // ProductDetail Component
 const ProductDetail = ({ product ,setLoading, setAlert }) => {
   // Destructuring the product object
@@ -76,7 +80,7 @@ const ProductDetail = ({ product ,setLoading, setAlert }) => {
       if (!confirmDelete) return;
   
       // Make the API call to delete the product using Axios
-      const response = await axios.delete(`http://localhost:3000/admin/delete-product/${id}`, {
+      const response = await axios.delete(baseURL+`/admin/delete-product/${id}`, {
         headers: {
           'Authorization': `Bearer ${adminToken}`, // Authorization token for admin
         },
@@ -111,7 +115,7 @@ const ProductDetail = ({ product ,setLoading, setAlert }) => {
 
   const handleAddBestSelling =async (productId) => {
     try {
-      const response = await axios.post('http://localhost:3000/admin/add-product-best-selling',{productId},
+      const response = await axios.post(baseURL+'/admin/add-product-best-selling',{productId},
         {
           headers:{
             Authorization:`Bearer ${adminToken}`
@@ -129,7 +133,7 @@ const ProductDetail = ({ product ,setLoading, setAlert }) => {
   const handleAddFlashSale= async (productId) => {
     
     try {
-      const response = await axios.post('http://localhost:3000/admin/add-product-flashsale',{productId},
+      const response = await axios.post(baseURL+'/admin/add-product-flashsale',{productId},
         {
           headers:{
             Authorization:`Bearer ${adminToken}`

@@ -6,6 +6,8 @@ import axios from 'axios';
 import ProductPagination from "../../../../pagination/ProductPagination";
 import ProductFilter from "./ProductFilter";
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const AdminAllProducts = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -41,7 +43,7 @@ const AdminAllProducts = () => {
             try {
                 const params = new URLSearchParams(searchParams);
                 const response = await axios.get(
-                    `http://localhost:3000/admin/products?page=${params.get('page') || 1}&${params.toString()}`,
+                    baseURL+`/admin/products?page=${params.get('page') || 1}&${params.toString()}`,
                     config
                 );
 

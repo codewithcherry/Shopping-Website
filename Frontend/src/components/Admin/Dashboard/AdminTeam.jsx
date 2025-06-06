@@ -6,6 +6,8 @@ import TeamMemberCard from './components/Team/TeamMemberCard';
 import axios from 'axios';
 import Loading from '../../Alert/Loading';
 
+const baseURL=import.meta.env.VITE_API_BACKEND;
+
 const AdminTeam = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alert,setAlert]=useState();
@@ -17,7 +19,7 @@ const AdminTeam = () => {
   const fetchTeamMembers=async () => {
     try {
       setLoading(true)
-      const response=await axios.get('http://localhost:3000/admin/get-team-members',
+      const response=await axios.get(baseURL+'/admin/get-team-members',
         {
           headers:{
             Authorization:`Bearer ${adminToken}`
