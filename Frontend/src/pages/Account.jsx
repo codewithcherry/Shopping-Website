@@ -74,7 +74,7 @@ const Account = () => {
   const handleSave = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/user/update-user-info",
+        baseURL+"/user/update-user-info",
         editedUser,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -97,7 +97,7 @@ const Account = () => {
 
   const getUserInfo = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/user/get-user-info", {
+      const response = await axios.get(baseURL+"/user/get-user-info", {
         headers: { Authorization: `Bearer ${token}` },
       });
       // console.log(response.data)
