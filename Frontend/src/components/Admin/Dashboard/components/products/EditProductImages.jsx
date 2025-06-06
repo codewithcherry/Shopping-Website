@@ -66,7 +66,7 @@ const EditProductImages = ({ images = [], id,setAlert}) => {
       
       // Make the API request to update product images
       const response = await axios.post(
-        `http://localhost:3000/admin/update-product-image?id=${id}`,
+        baseURL+`/admin/update-product-image?id=${id}`,
         { productImages, removedImages },
         {
           headers: {

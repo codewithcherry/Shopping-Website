@@ -30,7 +30,7 @@ const EditTaskForm = ({ isEditOpen, editData, setIsEditOpen, setAlert,setRefresh
         if (task.title && task.description && task.deadline) {
             try {
                 setLoading(true);
-                const response = await axios.post(`http://localhost:3000/admin/edit-task?taskId=${editData._id}`, task, {
+                const response = await axios.post(baseURL+`/admin/edit-task?taskId=${editData._id}`, task, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
